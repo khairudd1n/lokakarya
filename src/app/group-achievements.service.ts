@@ -27,4 +27,11 @@ export class GroupAchievementsService {
   getAllGroupAchievements(): Observable<GroupAchieveDto[]> {
     return this.http.get<GroupAchieveDto[]>(this.apiUrl);
   }
+
+  // Create a new group achievement
+  createGroupAchievement(
+    data: Partial<GroupAchieveDto>
+  ): Observable<GroupAchieveDto> {
+    return this.http.post<GroupAchieveDto>(`${this.apiUrl}`, data);
+  }
 }

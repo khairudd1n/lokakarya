@@ -31,6 +31,11 @@ export class GroupAchievementComponent implements OnInit {
   groupAchievements: GroupAchieveDto[] = [];
   isLoading: boolean = true;
   error: string | null = null;
+  displayCreateDialog: boolean = false; // State for the create dialog
+  newGroupAchievement: Partial<GroupAchieveDto> = {
+    group_achievement_name: '',
+    percentage: 0,
+  }; // Model for the new group achievement
 
   constructor(private groupAchieveService: GroupAchievementsService) {}
 
@@ -50,5 +55,37 @@ export class GroupAchievementComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  // Show the create dialog
+  showCreateDialog(): void {
+    this.displayCreateDialog = true;
+  }
+
+  // Create a new group achievement
+  createGroupAchievement(): void {
+    if (
+      !this.newGroupAchievement.group_achievement_name ||
+      this.newGroupAchievement.percentage === undefined
+    ) {
+      return;
+    }
+
+    this.groupAchieveService
+      .createGroupAchievement(this.newGroupAchievement)
+      .subscribe({
+        next: (newAchievement) => {
+          this.groupAchievements.push(newAchievement);
+          this.displayCreateDialog = false;
+          this.newGroupAchievement = {
+            group_achievement_name: '',
+            percentage: 0,
+          };
+        },
+        error: (err) => {
+          console.error('Error creating group achievement:', err);
+          this.error = 'Failed to create group achievement';
+        },
+      });
   }
 }

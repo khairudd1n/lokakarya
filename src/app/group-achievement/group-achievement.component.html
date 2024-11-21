@@ -30,5 +30,52 @@
   <p-button
     label="+ Create new group achievement"
     icon="pi pi-check"
+    (click)="showCreateDialog()"
   ></p-button>
 </div>
+
+<!-- PrimeNG Dialog for creating a new group achievement -->
+<p-dialog
+  header="Create Group Achievement"
+  [(visible)]="displayCreateDialog"
+  modal="true"
+  [closable]="true"
+  [style]="{ width: '400px' }"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="groupName">Group Achievement Name</label>
+      <input
+        id="groupName"
+        type="text"
+        pInputText
+        [(ngModel)]="newGroupAchievement.group_achievement_name"
+      />
+    </div>
+    <div class="p-field">
+      <label for="percentage">Percentage</label>
+      <input
+        id="percentage"
+        type="number"
+        pInputText
+        [(ngModel)]="newGroupAchievement.percentage"
+      />
+    </div>
+  </div>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Create"
+      icon="pi pi-check"
+      (click)="createGroupAchievement()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      (click)="displayCreateDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>
