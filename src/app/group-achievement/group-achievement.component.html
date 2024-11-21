@@ -1,0 +1,19 @@
+<div *ngIf="isLoading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+<table *ngIf="!isLoading && !error" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Group Name</th>
+      <th>Percentage</th>
+      <!-- Tambahkan kolom lain sesuai kebutuhan -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let achievement of groupAchievements">
+      <td>{{ achievement.id }}</td>
+      <td>{{ achievement.group_achievement_name }}</td>
+      <td>{{ achievement.percentage }}</td>
+    </tr>
+  </tbody>
+</table>
