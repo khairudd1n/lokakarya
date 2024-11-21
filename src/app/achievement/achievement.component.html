@@ -3,26 +3,96 @@
 
 <h2>Achievements</h2>
 
-<p-table
-  *ngIf="!isLoading && !error"
-  [value]="achievements"
-  [paginator]="true"
-  [rows]="10"
-  [responsiveLayout]="'scroll'"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th>ID</th>
-      <th>Achievement Name</th>
-      <th>Group Achievement ID</th>
-      <th>Action</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-achievement>
-    <tr *ngFor="let achievement of achievements">
-      <td>{{ achievement.id }}</td>
-      <td>{{ achievement.achievement_name }}</td>
-      <td>{{ achievement.group_achievement_id }}</td>
-    </tr>
-  </ng-template>
-</p-table>
+<div class="card">
+  <p-table
+    #dt2
+    [value]="achievements"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="isLoading"
+    [paginator]="true"
+    [globalFilterFields]="['achievement_name', 'group_achievement_id']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-iconField iconPosition="left" class="ml-auto">
+          <p-inputIcon>
+            <i class="pi pi-search"></i>
+          </p-inputIcon>
+          <!-- <input
+            pInputText
+            type="text"
+            (input)="dt2.filterGlobal($event.target.value, 'contains')"
+            placeholder="Search achievements"
+          /> -->
+        </p-iconField>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 25%">ID</th>
+        <th style="width: 35%">Achievement Name</th>
+        <th style="width: 25%">Group Achievement ID</th>
+        <th style="width: 15%">Action</th>
+      </tr>
+      <tr>
+        <th>
+          <p-columnFilter
+            type="text"
+            field="id"
+            placeholder="Search by ID"
+            ariaLabel="Filter ID"
+          />
+        </th>
+        <th>
+          <p-columnFilter
+            type="text"
+            field="achievement_name"
+            placeholder="Search by name"
+            ariaLabel="Filter Achievement Name"
+          />
+        </th>
+        <th>
+          <p-columnFilter
+            type="text"
+            field="group_achievement_id"
+            placeholder="Search by Group ID"
+            ariaLabel="Filter Group Achievement ID"
+          />
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-achievement>
+      <tr>
+        <td>{{ achievement.id }}</td>
+        <td>{{ achievement.achievement_name }}</td>
+        <td>{{ achievement.group_achievement_id }}</td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            label="Edit"
+            class="p-button-sm p-button-info"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            label="Delete"
+            class="p-button-sm p-button-danger"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No achievements found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

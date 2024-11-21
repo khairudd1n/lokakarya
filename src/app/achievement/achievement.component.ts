@@ -1,28 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { AchieveDto, AchievementService } from '../achievement.service';
-import { FormsModule } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
+import { InputTextModule } from 'primeng/inputtext';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog'; // Add import for DialogModule
-import { InputTextModule } from 'primeng/inputtext';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-achievement',
+  templateUrl: './achievement.component.html',
+  styleUrls: ['./achievement.component.css'],
   standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
-    NgIf,
     HttpClientModule,
-    ButtonModule,
     TableModule,
-    DialogModule,
+    TagModule,
+    IconFieldModule,
     InputTextModule,
+    InputIconModule,
+    MultiSelectModule,
+    DropdownModule,
+    ButtonModule,
   ],
-  templateUrl: './achievement.component.html',
-  styleUrl: './achievement.component.css',
 })
 export class AchievementComponent implements OnInit {
   achievements: AchieveDto[] = [];
@@ -47,5 +53,9 @@ export class AchievementComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  clear(table: Table) {
+    table.clear();
   }
 }
