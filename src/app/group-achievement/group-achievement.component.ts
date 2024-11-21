@@ -5,11 +5,25 @@ import {
 } from '../group-achievements.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog'; // Add import for DialogModule
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-group-achievement',
   standalone: true,
-  imports: [FormsModule, CommonModule, NgIf],
+  imports: [
+    FormsModule,
+    CommonModule,
+    NgIf,
+    HttpClientModule,
+    ButtonModule,
+    TableModule,
+    DialogModule,
+    InputTextModule,
+  ],
   templateUrl: './group-achievement.component.html',
   styleUrl: './group-achievement.component.css',
 })

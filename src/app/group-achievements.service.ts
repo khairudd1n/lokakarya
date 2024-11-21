@@ -6,8 +6,8 @@ import { UUID } from 'crypto';
 export interface GroupAchieveDto {
   id: UUID;
   group_achievement_name: string;
-  percentage: Number;
-  enabled: Number;
+  percentage: number;
+  enabled: number;
   created_at: Date;
   created_by: UUID;
   updated_at: Date;
@@ -23,6 +23,7 @@ export class GroupAchievementsService {
 
   constructor(private http: HttpClient) {}
 
+  // Fetch all group achievements
   getAllGroupAchievements(): Observable<GroupAchieveDto[]> {
     return this.http.get<GroupAchieveDto[]>(this.apiUrl);
   }
