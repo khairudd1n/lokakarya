@@ -1,6 +1,8 @@
 <div *ngIf="isLoading">Loading...</div>
 <div *ngIf="error">{{ error }}</div>
 
+<h2>Achievements</h2>
+
 <p-table
   *ngIf="!isLoading && !error"
   [value]="achievements"
