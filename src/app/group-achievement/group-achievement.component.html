@@ -1,19 +1,83 @@
 <div *ngIf="isLoading">Loading...</div>
 <div *ngIf="error">{{ error }}</div>
-<table *ngIf="!isLoading && !error" border="1">
-  <thead>
+
+<h2>Group Achievements</h2>
+
+<p-table
+  *ngIf="!isLoading && !error"
+  [value]="groupAchievements"
+  [paginator]="true"
+  [rows]="10"
+  [responsiveLayout]="'scroll'"
+>
+  <ng-template pTemplate="header">
     <tr>
       <th>ID</th>
       <th>Group Name</th>
       <th>Percentage</th>
-      <!-- Tambahkan kolom lain sesuai kebutuhan -->
+      <th>Action</th>
     </tr>
-  </thead>
-  <tbody>
+  </ng-template>
+  <ng-template pTemplate="body" let-achievement>
     <tr *ngFor="let achievement of groupAchievements">
       <td>{{ achievement.id }}</td>
       <td>{{ achievement.group_achievement_name }}</td>
       <td>{{ achievement.percentage }}</td>
     </tr>
-  </tbody>
-</table>
+  </ng-template>
+</p-table>
+
+<!-- Button to open the create modal -->
+<div class="card flex justify-content-center">
+  <p-button
+    label="+ Create new group achievement"
+    icon="pi pi-check"
+    (click)="showCreateDialog()"
+  ></p-button>
+</div>
+
+<!-- PrimeNG Dialog for creating a new group achievement -->
+<p-dialog
+  header="Create Group Achievement"
+  [(visible)]="displayCreateDialog"
+  modal="true"
+  [closable]="true"
+  [style]="{ width: '400px' }"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="groupName">Group Achievement Name</label>
+      <input
+        id="groupName"
+        type="text"
+        pInputText
+        [(ngModel)]="newGroupAchievement.group_achievement_name"
+      />
+    </div>
+    <div class="p-field">
+      <label for="percentage">Percentage</label>
+      <input
+        id="percentage"
+        type="number"
+        pInputText
+        [(ngModel)]="newGroupAchievement.percentage"
+      />
+    </div>
+  </div>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Create"
+      icon="pi pi-check"
+      (click)="createGroupAchievement()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      (click)="displayCreateDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>
