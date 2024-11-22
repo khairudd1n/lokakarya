@@ -3,6 +3,38 @@
 
 <h2>Achievements</h2>
 
+<!-- Form to Create a New Achievement -->
+<div class="card">
+  <h3>Create New Achievement</h3>
+  <div class="p-field">
+    <label for="achievementName">Achievement Name</label>
+    <input
+      pInputText
+      id="achievementName"
+      [(ngModel)]="newAchievement.achievement_name"
+      placeholder="Enter Achievement Name"
+    />
+  </div>
+
+  <div class="p-field">
+    <label for="groupAchievement">Group Achievement</label>
+    <p-dropdown
+      [options]="groupAchievementOptions"
+      [(ngModel)]="newAchievement.group_achievement_name"
+      placeholder="Select Group Achievement"
+    >
+    </p-dropdown>
+  </div>
+
+  <button
+    pButton
+    label="Create Achievement"
+    class="p-button-success"
+    (click)="createAchievement()"
+  ></button>
+</div>
+
+<!-- Existing Table for Achievements -->
 <div class="card">
   <p-table
     #dt2
@@ -12,7 +44,7 @@
     [rowsPerPageOptions]="[10, 25, 50]"
     [loading]="isLoading"
     [paginator]="true"
-    [globalFilterFields]="['achievement_name', 'group_achievement_id']"
+    [globalFilterFields]="['achievement_name', 'group_achievement_name']"
     [tableStyle]="{ 'min-width': '75rem' }"
   >
     <ng-template pTemplate="caption">
@@ -21,12 +53,6 @@
           <p-inputIcon>
             <i class="pi pi-search"></i>
           </p-inputIcon>
-          <!-- <input
-            pInputText
-            type="text"
-            (input)="dt2.filterGlobal($event.target.value, 'contains')"
-            placeholder="Search achievements"
-          /> -->
         </p-iconField>
       </div>
     </ng-template>
@@ -35,7 +61,7 @@
       <tr>
         <th style="width: 25%">ID</th>
         <th style="width: 35%">Achievement Name</th>
-        <th style="width: 25%">Group Achievement ID</th>
+        <th style="width: 25%">Group Achievement Name</th>
         <th style="width: 15%">Action</th>
       </tr>
       <tr>
@@ -58,9 +84,9 @@
         <th>
           <p-columnFilter
             type="text"
-            field="group_achievement_id"
-            placeholder="Search by Group ID"
-            ariaLabel="Filter Group Achievement ID"
+            field="group_achievement_name"
+            placeholder="Search by Group Name"
+            ariaLabel="Filter Group Achievement Name"
           />
         </th>
         <th></th>
@@ -71,7 +97,7 @@
       <tr>
         <td>{{ achievement.id }}</td>
         <td>{{ achievement.achievement_name }}</td>
-        <td>{{ achievement.group_achievement_id }}</td>
+        <td>{{ achievement.group_achievement_name }}</td>
         <td>
           <button
             pButton
