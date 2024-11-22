@@ -1,0 +1,56 @@
+<div class="login-container">
+  <div class="card">
+    <h2>Login</h2>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <!-- Username Field -->
+      <div class="p-field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          pInputText
+          [(ngModel)]="username"
+          name="username"
+          required
+          #usernameInput="ngModel"
+        />
+        <!-- Validation Message for Username -->
+        <small class="text-error" *ngIf="usernameInput.invalid && usernameInput.touched">
+          Username is required.
+        </small>
+      </div>
+
+      <!-- Password Field -->
+      <div class="p-field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          pInputText
+          [(ngModel)]="password"
+          name="password"
+          required
+          minlength="8"
+          #passwordInput="ngModel"
+        />
+        <!-- Validation Messages for Password -->
+        <small class="text-error" *ngIf="passwordInput.invalid && passwordInput.touched">
+          <span *ngIf="passwordInput.errors?.['required']">Password is required.</span>
+          <span *ngIf="passwordInput.errors?.['minlength']">
+            Password must be at least 8 characters long.
+          </span>
+        </small>
+      </div>
+
+      <!-- Login Button -->
+      <button
+        pButton
+        label="Login"
+        icon="pi pi-sign-in"
+        class="p-button-primary"
+        [disabled]="!loginForm.valid"
+        type="submit"
+      ></button>
+    </form>
+  </div>
+</div>
