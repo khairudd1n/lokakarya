@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 export interface AchieveWithGroupNameDto {
   id: UUID;
   achievement_name: string;
+  group_achievement_id: UUID;
   group_achievement_name: string;
   enabled: number;
 }
@@ -30,8 +31,8 @@ export class AchievementService {
   // Create a new achievement
   createAchievement(achievement: {
     achievement_name: string;
-    group_achievement_name: string;
-    enabled: number; // Add enabled to the request body
+    group_achievement_id: UUID; // Use ID instead of name
+    enabled: number;
   }): Observable<AchieveWithGroupNameDto> {
     return this.http.post<AchieveWithGroupNameDto>(
       `${this.apiUrl}`,
@@ -49,7 +50,7 @@ export class AchievementService {
         map((data) =>
           data.map((item) => ({
             label: item.group_achievement_name, // Use the correct field here
-            value: item.group_achievement_name, // Use the correct field here, or an ID if applicable
+            value: item.group_achievement_id, // Use the correct field here, or an ID if applicable
           }))
         )
       );
