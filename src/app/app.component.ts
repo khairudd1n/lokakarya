@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
         label: 'Attitude',
         items: [
           { label: 'Group attitude', routerLink: '/group-attitude-skill' },
-          { label: 'Attitude skill' },
+          { label: 'Attitude skill', routerLink: '/attitude-skill' },
         ],
       },
       { label: 'Technical skill', routerLink: '/technical-skill' },

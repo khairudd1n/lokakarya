@@ -6,24 +6,34 @@ import { GroupAttitudeSkillComponent } from './group-attitude-skill/group-attitu
 import { GroupAchievementComponent } from './group-achievement/group-achievement.component';
 import { AchievementComponent } from './achievement/achievement.component';
 import { TechnicalSkillComponent } from './technical-skill/technical-skill.component';
+import { AttitudeSkillComponent } from './attitude-skill/attitude-skill.component';
 
 export const routes: Routes = [
-  { path: '', component: HomePageComponent },
+  { path: '', component: HomePageComponent, canActivate: [authGuard] },
   {
     path: 'group-attitude-skill',
     component: GroupAttitudeSkillComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'group-achievement',
     component: GroupAchievementComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'achievement',
     component: AchievementComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'technical-skill',
     component: TechnicalSkillComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'attitude-skill',
+    component: AttitudeSkillComponent,
+    canActivate: [authGuard],
   },
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
 ];
