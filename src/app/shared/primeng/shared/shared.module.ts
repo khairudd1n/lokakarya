@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
 
 
 
@@ -14,14 +15,17 @@ import { CardModule } from 'primeng/card';
     FormsModule,
     ButtonModule,
     InputTextModule,
-    CardModule
+    CardModule,
+    DialogModule
+
   ], 
   exports: [
     ButtonModule,
     InputTextModule,
     CardModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    DialogModule
   ],
 
 })

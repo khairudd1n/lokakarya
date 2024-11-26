@@ -1,7 +1,8 @@
 import { Division } from "./division.model";
+import { Role } from "./role.model";
 
 export interface User {
-    id: string;
+  id: string;
   username: string;
   full_name: string;
   position: string;
@@ -10,7 +11,7 @@ export interface User {
   join_date: string;
   enabled: number;
   password: string;
-  role: string | null;
+  role: Role[];
   division: Division;
   created_at: string;
   created_by: string | null;
