@@ -18,6 +18,7 @@ export interface AchieveWithGroupNameDto {
 })
 export class AchievementService {
   private apiUrl = 'http://localhost:8080/achievements';
+  token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
 
@@ -34,9 +35,34 @@ export class AchievementService {
     group_achievement_id: UUID; // Use ID instead of name
     enabled: number;
   }): Observable<AchieveWithGroupNameDto> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
+    };
+
     return this.http.post<AchieveWithGroupNameDto>(
       `${this.apiUrl}`,
-      achievement
+      achievement,
+      { headers }
+    );
+  }
+
+  // Update an existing achievement
+  updateAchievement(
+    id: UUID,
+    achievement: {
+      achievement_name: string;
+      group_achievement_id: UUID;
+      enabled: number;
+    }
+  ): Observable<AchieveWithGroupNameDto> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+
+    return this.http.put<AchieveWithGroupNameDto>(
+      `${this.apiUrl}/${id}`,
+      achievement,
+      { headers }
     );
   }
 
@@ -46,11 +72,12 @@ export class AchievementService {
         'http://localhost:8080/group-achievements'
       )
       .pipe(
+        tap((data) => console.log('Fetched group achievements:', data)),
         // Transform the fetched data to fit the dropdown's requirement
         map((data) =>
           data.map((item) => ({
             label: item.group_achievement_name, // Use the correct field here
-            value: item.group_achievement_id, // Use the correct field here, or an ID if applicable
+            value: item.id, // Use the correct field here, or an ID if applicable
           }))
         )
       );

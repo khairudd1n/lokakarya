@@ -18,6 +18,7 @@ import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-group-attitude-skill',
@@ -79,7 +80,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
     this.displayCreateDialog = true;
   }
 
-  // Create a new group attitude skill
   createGroupAttitudeSkill(): void {
     if (
       !this.newGroupAttitudeSkill.group_name ||
@@ -99,9 +99,25 @@ export class GroupAttitudeSkillComponent implements OnInit {
             percentage: 0,
             enabled: 1,
           };
+
+          // Success notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Group Attitude Skill created successfully.',
+            confirmButtonText: 'OK',
+          });
         },
         error: (err) => {
           console.error('Error creating group attitude skill:', err);
+
+          // Error notification
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while creating the group attitude skill.',
+            confirmButtonText: 'Try Again',
+          });
         },
       });
   }
@@ -112,7 +128,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
     this.displayEditDialog = true;
   }
 
-  // Update an existing group attitude skill
   updateGroupAttitudeSkill(): void {
     if (
       !this.selectedGroupAttitudeSkill.id ||
@@ -136,28 +151,67 @@ export class GroupAttitudeSkillComponent implements OnInit {
             this.groupAttitudeSkills[index] = updatedGroupAttitudeSkill;
           }
           this.displayEditDialog = false;
+
+          // Success notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Group Attitude Skill updated successfully.',
+            confirmButtonText: 'OK',
+          });
         },
         error: (err) => {
           console.error('Error updating group attitude skill:', err);
+
+          // Error notification
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while updating the group attitude skill.',
+            confirmButtonText: 'Try Again',
+          });
         },
       });
   }
 
-  // Delete a group attitude skill
   deleteGroupAttitudeSkill(id: UUID): void {
-    if (confirm('Are you sure you want to delete this group attitude skill?')) {
-      this.groupAttitudeSkillService.deleteGroupAttitudeSkill(id).subscribe({
-        next: () => {
-          this.groupAttitudeSkills = this.groupAttitudeSkills.filter(
-            (skill) => skill.id !== id
-          );
-          console.log(`Deleted Group Attitude Skill with ID: ${id}`);
-        },
-        error: (err) => {
-          console.error('Error deleting group attitude skill:', err);
-          this.error = 'Failed to delete group attitude skill';
-        },
-      });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this group attitude skill?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.groupAttitudeSkillService.deleteGroupAttitudeSkill(id).subscribe({
+          next: () => {
+            // Remove the deleted group attitude skill from the list
+            this.groupAttitudeSkills = this.groupAttitudeSkills.filter(
+              (skill) => skill.id !== id
+            );
+
+            // Success notification
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The group attitude skill has been deleted.',
+              confirmButtonText: 'OK',
+            });
+            console.log(`Deleted Group Attitude Skill with ID: ${id}`);
+          },
+          error: (err) => {
+            // Error notification
+            console.error('Error deleting group attitude skill:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong while deleting the group attitude skill.',
+              confirmButtonText: 'Try Again',
+            });
+          },
+        });
+      }
+    });
   }
 }

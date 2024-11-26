@@ -18,6 +18,7 @@ export interface AttitudeWithGroupNameDto {
 })
 export class AttitudeSkillService {
   private apiUrl = 'http://localhost:8080/attitude-skill';
+  token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
 
@@ -32,9 +33,34 @@ export class AttitudeSkillService {
     group_attitude_skill_id: UUID; // Use ID instead of name
     enabled: number;
   }): Observable<AttitudeWithGroupNameDto> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
+    };
+
     return this.http.post<AttitudeWithGroupNameDto>(
       `${this.apiUrl}`,
-      attitudeSkill
+      attitudeSkill,
+      { headers }
+    );
+  }
+
+  // Update an existing achievement
+  updateAttitudeSkill(
+    id: UUID,
+    attitudeSkill: {
+      attitude_skill_name: string;
+      group_attitude_skill_id: UUID;
+      enabled: number;
+    }
+  ): Observable<AttitudeWithGroupNameDto> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+
+    return this.http.put<AttitudeWithGroupNameDto>(
+      `${this.apiUrl}/${id}`,
+      attitudeSkill,
+      { headers }
     );
   }
 
@@ -48,9 +74,16 @@ export class AttitudeSkillService {
         map((data) =>
           data.map((item) => ({
             label: item.group_name, // Use the correct field here
-            value: item.group_attitude_skill_id, // Use the correct field here, or an ID if applicable
+            value: item.id, // Use the correct field here, or an ID if applicable
           }))
         )
       );
+  }
+
+  // Delete a group attitude skill by ID
+  deleteAttitudeSkill(id: UUID): Observable<void> {
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`)
+      .pipe(tap(() => console.log(`Deleted Attitude Skill with ID: ${id}`)));
   }
 }

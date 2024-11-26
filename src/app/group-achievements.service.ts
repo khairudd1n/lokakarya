@@ -21,6 +21,7 @@ export interface GroupAchieveDto {
 })
 export class GroupAchievementsService {
   private apiUrl = 'http://localhost:8080/group-achievements'; // Sesuaikan URL backend
+  token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
 
@@ -33,7 +34,10 @@ export class GroupAchievementsService {
   createGroupAchievement(
     data: Partial<GroupAchieveDto>
   ): Observable<GroupAchieveDto> {
-    return this.http.post<GroupAchieveDto>(`${this.apiUrl}`, data);
+    const headers = { Authorization: `Bearer ${this.token}` };
+    return this.http.post<GroupAchieveDto>(`${this.apiUrl}`, data, {
+      headers,
+    });
   }
 
   // Update an existing group attitude skill
@@ -41,8 +45,9 @@ export class GroupAchievementsService {
     id: UUID,
     data: Partial<GroupAchieveDto>
   ): Observable<GroupAchieveDto> {
+    const headers = { Authorization: `Bearer ${this.token}` };
     return this.http
-      .put<GroupAchieveDto>(`${this.apiUrl}/${id}`, data)
+      .put<GroupAchieveDto>(`${this.apiUrl}/${id}`, data, { headers })
       .pipe(
         tap((updatedData) =>
           console.log('Updated Group Attitude Skill:', updatedData)

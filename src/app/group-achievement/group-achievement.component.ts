@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { UUID } from 'crypto';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-group-achievement',
@@ -91,10 +92,26 @@ export class GroupAchievementComponent implements OnInit {
             percentage: 0,
             enabled: 1,
           };
+
+          // Success notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Group Achievement created successfully.',
+            confirmButtonText: 'OK',
+          });
         },
         error: (err) => {
           console.error('Error creating group achievement:', err);
           this.error = 'Failed to create group achievement';
+
+          // Error notification
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while creating the group achievement.',
+            confirmButtonText: 'Try Again',
+          });
         },
       });
   }
@@ -129,28 +146,66 @@ export class GroupAchievementComponent implements OnInit {
             this.groupAchievements[index] = updatedGroupAchievement;
           }
           this.displayEditDialog = false;
+          // Success notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Group Achievement updated successfully.',
+            confirmButtonText: 'OK',
+          });
         },
         error: (err) => {
           console.error('Error updating group attitude skill:', err);
+          // Error notification
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while updating the group achievement.',
+            confirmButtonText: 'Try Again',
+          });
         },
       });
   }
 
   // Delete a group attitude skill
   deleteGroupAchievement(id: UUID): void {
-    if (confirm('Are you sure you want to delete this group achievement?')) {
-      this.groupAchieveService.deleteGroupAchievement(id).subscribe({
-        next: () => {
-          this.groupAchievements = this.groupAchievements.filter(
-            (skill) => skill.id !== id
-          );
-          console.log(`Deleted Group Achievement with ID: ${id}`);
-        },
-        error: (err) => {
-          console.error('Error deleting group achievement:', err);
-          this.error = 'Failed to delete group achievement';
-        },
-      });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this group achievement?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.groupAchieveService.deleteGroupAchievement(id).subscribe({
+          next: () => {
+            // Remove the deleted group achievement from the list
+            this.groupAchievements = this.groupAchievements.filter(
+              (achievement) => achievement.id !== id
+            );
+
+            // Success notification
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The group achievement has been deleted.',
+              confirmButtonText: 'OK',
+            });
+            console.log(`Deleted Group Achievement with ID: ${id}`);
+          },
+          error: (err) => {
+            // Error notification
+            console.error('Error deleting group achievement:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong while deleting the group achievement.',
+              confirmButtonText: 'Try Again',
+            });
+          },
+        });
+      }
+    });
   }
 }

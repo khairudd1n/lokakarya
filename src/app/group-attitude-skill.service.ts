@@ -16,6 +16,7 @@ export interface GroupAttitudeSkillDto {
 })
 export class GroupAttitudeSkillService {
   private apiUrl = 'http://localhost:8080/group-attitude-skill';
+  token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +30,10 @@ export class GroupAttitudeSkillService {
   createGroupAttitudeSkill(
     data: Partial<GroupAttitudeSkillDto>
   ): Observable<GroupAttitudeSkillDto> {
-    return this.http.post<GroupAttitudeSkillDto>(`${this.apiUrl}`, data);
+    const headers = { Authorization: `Bearer ${this.token}` };
+    return this.http.post<GroupAttitudeSkillDto>(`${this.apiUrl}`, data, {
+      headers,
+    });
   }
 
   // Update an existing group attitude skill
@@ -37,8 +41,9 @@ export class GroupAttitudeSkillService {
     id: UUID,
     data: Partial<GroupAttitudeSkillDto>
   ): Observable<GroupAttitudeSkillDto> {
+    const headers = { Authorization: `Bearer ${this.token}` };
     return this.http
-      .put<GroupAttitudeSkillDto>(`${this.apiUrl}/${id}`, data)
+      .put<GroupAttitudeSkillDto>(`${this.apiUrl}/${id}`, data, { headers })
       .pipe(
         tap((updatedData) =>
           console.log('Updated Group Attitude Skill:', updatedData)
