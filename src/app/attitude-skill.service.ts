@@ -23,8 +23,13 @@ export class AttitudeSkillService {
   constructor(private http: HttpClient) {}
 
   getAllAttitudesWithGroupNames(): Observable<AttitudeWithGroupNameDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     return this.http
-      .get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/with-group-names`)
+      .get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/with-group-names`, {
+        headers,
+      })
       .pipe(tap((data) => console.log('Fetched Achievements:', data)));
   }
 
@@ -65,9 +70,13 @@ export class AttitudeSkillService {
   }
 
   getGroupAttitudeSkills(): Observable<{ label: string; value: string }[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
+    };
     return this.http
       .get<AttitudeWithGroupNameDto[]>(
-        'http://localhost:8080/group-attitude-skill'
+        'http://localhost:8080/group-attitude-skill',
+        { headers }
       )
       .pipe(
         // Transform the fetched data to fit the dropdown's requirement
@@ -82,8 +91,11 @@ export class AttitudeSkillService {
 
   // Delete a group attitude skill by ID
   deleteAttitudeSkill(id: UUID): Observable<void> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     return this.http
-      .delete<void>(`${this.apiUrl}/${id}`)
+      .delete<void>(`${this.apiUrl}/${id}`, { headers })
       .pipe(tap(() => console.log(`Deleted Attitude Skill with ID: ${id}`)));
   }
 }

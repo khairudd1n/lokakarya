@@ -27,7 +27,12 @@ export class GroupAchievementsService {
 
   // Fetch all group achievements
   getAllGroupAchievements(): Observable<GroupAchieveDto[]> {
-    return this.http.get<GroupAchieveDto[]>(`${this.apiUrl}`);
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http.get<GroupAchieveDto[]>(`${this.apiUrl}`, {
+      headers,
+    });
   }
 
   // Create a new group achievement
@@ -57,8 +62,11 @@ export class GroupAchievementsService {
 
   // Delete a group attitude skill by ID
   deleteGroupAchievement(id: UUID): Observable<void> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     return this.http
-      .delete<void>(`${this.apiUrl}/${id}`)
+      .delete<void>(`${this.apiUrl}/${id}`, { headers })
       .pipe(tap(() => console.log(`Deleted Group Achievement with ID: ${id}`)));
   }
 }

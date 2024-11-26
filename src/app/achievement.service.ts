@@ -27,9 +27,13 @@ export class AchievementService {
 
   // Fetch all group achievements
   getAllAchievementsWithGroupNames(): Observable<AchieveWithGroupNameDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     return this.http
       .get<AchieveWithGroupNameDto[]>(`${this.apiUrl}/with-group-names`, {
-        headers: this.headers_token})
+        headers,
+      })
       .pipe(tap((data) => console.log('Fetched Achievements:', data)));
   }
 
@@ -65,9 +69,12 @@ export class AchievementService {
   }
 
   getGroupAchievements(): Observable<{ label: string; value: string }[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
+    };
     return this.http
-      .get<AchieveWithGroupNameDto[]>(
-        'http://localhost:8080/group-achievements', { headers: this.headers_token }
+        'http://localhost:8080/group-achievements',
+        { headers }
       )
       .pipe(
         tap((data) => console.log('Fetched group achievements:', data)),
@@ -79,5 +86,14 @@ export class AchievementService {
           }))
         )
       );
+  }
+
+  deleteAchievement(id: UUID): Observable<void> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`, { headers })
+      .pipe(tap(() => console.log(`Deleted Achievement with ID: ${id}`)));
   }
 }
