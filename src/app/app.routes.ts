@@ -7,6 +7,7 @@ import { GroupAttitudeSkillComponent } from './group-attitude-skill/group-attitu
 import { GroupAchievementComponent } from './group-achievement/group-achievement.component';
 import { AchievementComponent } from './achievement/achievement.component';
 import { AttitudeSkillComponent } from './attitude-skill/attitude-skill.component';
+import { DivisionComponent } from './division/division.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -30,8 +31,12 @@ export const routes: Routes = [
     component: AttitudeSkillComponent,
     canActivate: [authGuard],
   },
-
+  {
+    path: 'division',
+    component: DivisionComponent,
+    canActivate: [authGuard],
+  },
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
-  {path: 'login', component: LoginComponent, canActivate: [authGuard] },
-  {path: 'user', component: UserListComponent},
+  { path: 'login', component: LoginComponent, canActivate: [authGuard] },
+  { path: 'user', component: UserListComponent },
 ];

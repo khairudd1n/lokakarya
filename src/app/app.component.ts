@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
   getHrMenu(): MenuItem[] {
     return [
       { label: 'User' },
-      { label: 'Division' },
+      { label: 'Division', routerLink: '/division' },
       { label: 'Role-menu' },
       {
         label: 'Attitude',
