@@ -3,30 +3,6 @@
 
 <h2>Group Achievements</h2>
 
-<p-table
-  *ngIf="!isLoading && !error"
-  [value]="groupAchievements"
-  [paginator]="true"
-  [rows]="10"
-  [responsiveLayout]="'scroll'"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th>ID</th>
-      <th>Group Name</th>
-      <th>Percentage</th>
-      <th>Action</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-achievement>
-    <tr *ngFor="let achievement of groupAchievements">
-      <td>{{ achievement.id }}</td>
-      <td>{{ achievement.group_achievement_name }}</td>
-      <td>{{ achievement.percentage }}</td>
-    </tr>
-  </ng-template>
-</p-table>
-
 <!-- Button to open the create modal -->
 <div class="card flex justify-content-center">
   <p-button
@@ -46,7 +22,7 @@
 >
   <div class="p-fluid">
     <div class="p-field">
-      <label for="groupName">Group Achievement Name</label>
+      <label for="groupName">Group Achievement</label>
       <input
         id="groupName"
         type="text"
@@ -54,6 +30,7 @@
         [(ngModel)]="newGroupAchievement.group_achievement_name"
       />
     </div>
+    <br />
     <div class="p-field">
       <label for="percentage">Percentage</label>
       <input
@@ -81,3 +58,141 @@
     ></button>
   </p-footer>
 </p-dialog>
+
+<!-- PrimeNG Dialog for editing a group attitude skill -->
+<p-dialog
+  header="Edit Group Achievement"
+  [(visible)]="displayEditDialog"
+  modal="true"
+  [closable]="true"
+  [style]="{ width: '400px' }"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="editGroupName">Group Achievement</label>
+      <input
+        id="editGroupName"
+        type="text"
+        pInputText
+        [(ngModel)]="selectedGroupAchievement.group_achievement_name"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <label for="editPercentage">Percentage</label>
+      <input
+        id="editPercentage"
+        type="number"
+        pInputText
+        [(ngModel)]="selectedGroupAchievement.percentage"
+      />
+    </div>
+  </div>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Save"
+      icon="pi pi-save"
+      (click)="updateGroupAchievement()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      (click)="displayEditDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>
+
+<!-- Existing Table for Achievements -->
+<div class="card">
+  <p-table
+    #dt2
+    [value]="groupAchievements"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="isLoading"
+    [paginator]="true"
+    [globalFilterFields]="['group_achievement_name', 'percentage']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-iconField iconPosition="left" class="ml-auto">
+          <p-inputIcon>
+            <i class="pi pi-search"></i>
+          </p-inputIcon>
+        </p-iconField>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 25%">ID</th>
+        <th style="width: 35%">Group Name</th>
+        <th style="width: 25%">Percentage</th>
+        <th style="width: 15%">Action</th>
+      </tr>
+      <tr>
+        <th>
+          <p-columnFilter
+            type="text"
+            field="id"
+            placeholder="Search by ID"
+            ariaLabel="Filter ID"
+          />
+        </th>
+        <th>
+          <p-columnFilter
+            type="text"
+            field="group_name"
+            placeholder="Search by group name"
+            ariaLabel="Filter Group Name"
+          />
+        </th>
+        <th>
+          <p-columnFilter
+            type="text"
+            field="percentage"
+            placeholder="Search by Percentage"
+            ariaLabel="Filter Percentage"
+          />
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-achievement>
+      <tr>
+        <td>{{ achievement.id }}</td>
+        <td>{{ achievement.group_achievement_name }}</td>
+        <td>{{ achievement.percentage }}</td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            label="Edit"
+            class="p-button-sm p-button-info"
+            (click)="editGroupAchievement(achievement)"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            label="Delete"
+            class="p-button-sm p-button-danger"
+            (click)="deleteGroupAchievement(achievement.id)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No achievements found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

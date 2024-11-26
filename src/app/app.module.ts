@@ -14,7 +14,7 @@ import { routes } from './app.routes';
     BrowserAnimationsModule,
     DialogModule,
     SharedModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
   ],
   providers: [],
 })
