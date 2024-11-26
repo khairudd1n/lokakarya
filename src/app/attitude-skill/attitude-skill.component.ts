@@ -96,7 +96,7 @@ export class AttitudeSkillComponent implements OnInit {
   createAttitudeSkill(): void {
     if (
       this.newAttitudeSkill.attitude_skill_name &&
-      this.newAttitudeSkill.group_attitude_skill_id // Use the correct property name here
+      this.newAttitudeSkill.group_attitude_skill_id // Ensure correct property name
     ) {
       const attitudeSkillData = {
         attitude_skill_name: this.newAttitudeSkill.attitude_skill_name,
@@ -105,7 +105,7 @@ export class AttitudeSkillComponent implements OnInit {
         enabled: this.newAttitudeSkill.enabled,
       };
 
-      // Log the payload to make sure it's correct
+      // Log the payload to ensure it's correct
       console.log(
         'Sending payload for achievement creation:',
         attitudeSkillData
@@ -118,22 +118,43 @@ export class AttitudeSkillComponent implements OnInit {
           next: (response) => {
             console.log('Attitude Skill created successfully:', response);
             this.fetchAttitudeSkills(); // Refresh the data table
+            this.displayCreateDialog = false;
             this.newAttitudeSkill = {
               attitude_skill_name: '',
               group_attitude_skill_id: '', // Reset correctly
               enabled: 1,
             };
+
+            // Show success alert using SweetAlert
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Attitude Skill created successfully!',
+            });
           },
           error: (err) => {
             console.error('Error creating achievement:', err);
-            // Log the backend's response if available
             if (err.error && err.error.message) {
               console.error('Backend error message:', err.error.message);
             }
+
+            // Show error alert using SweetAlert
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to create Attitude Skill. Please try again.',
+            });
           },
         });
     } else {
       console.warn('Please fill in all fields.');
+
+      // Show warning alert using SweetAlert
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete Data',
+        text: 'Please fill in all fields before submitting.',
+      });
     }
   }
 
@@ -153,9 +174,23 @@ export class AttitudeSkillComponent implements OnInit {
           console.log('Achievement updated successfully:', response);
           this.fetchAttitudeSkills(); // Refresh the data table
           this.displayEditDialog = false; // Close the dialog
+          // Success notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Attitude Skill updated successfully.',
+            confirmButtonText: 'OK',
+          });
         },
         error: (err) => {
           console.error('Error updating achievement:', err);
+          // Error notification
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while updating the attitude skill.',
+            confirmButtonText: 'Try Again',
+          });
         },
       });
   }
@@ -177,13 +212,41 @@ export class AttitudeSkillComponent implements OnInit {
   }
 
   deleteAttitudeSkill(id: UUID): void {
-    this.attitudeSkillService.deleteAttitudeSkill(id).subscribe({
-      next: () => {
-        this.fetchAttitudeSkills(); // Refresh the data table
-      },
-      error: (err) => {
-        console.error('Error deleting achievement:', err);
-      },
+    // Use SweetAlert to ask for confirmation before deleting
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Attitude Skill? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with deletion if user confirms
+        this.attitudeSkillService.deleteAttitudeSkill(id).subscribe({
+          next: () => {
+            this.fetchAttitudeSkills(); // Refresh the data table
+
+            // Show success alert using SweetAlert
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Attitude Skill has been deleted successfully.',
+            });
+          },
+          error: (err) => {
+            console.error('Error deleting achievement:', err);
+
+            // Show error alert using SweetAlert
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete the Attitude Skill. Please try again.',
+            });
+          },
+        });
+      }
     });
   }
 }
