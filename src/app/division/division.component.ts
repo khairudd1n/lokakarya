@@ -45,6 +45,8 @@ export class DivisionComponent implements OnInit {
   error: string | null = null;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
+  displayDetailDialog: boolean = false;
+  selectedDivisionDetail: any = {};
   newDivision: Partial<DivisionDto> = {
     division_name: '',
     enabled: 1,
@@ -55,6 +57,12 @@ export class DivisionComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchDivisions();
+  }
+
+  // Method to show detail dialog
+  showDetailDialog(division: any) {
+    this.selectedDivisionDetail = division;
+    this.displayDetailDialog = true;
   }
 
   fetchDivisions(): void {

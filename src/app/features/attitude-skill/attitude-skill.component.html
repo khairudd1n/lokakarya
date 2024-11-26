@@ -106,6 +106,57 @@
   </p-footer>
 </p-dialog>
 
+<!-- PrimeNG Dialog for showing Division Details -->
+<p-dialog
+  header="Division Details"
+  [(visible)]="displayDetailDialog"
+  modal="true"
+  [closable]="true"
+  [style]="{ width: '500px' }"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label style="color: maroon">Created At:</label>
+      <p style="color: red">
+        {{ selectedDivisionDetail?.created_at }}
+      </p>
+    </div>
+    <div class="p-field">
+      <label style="color: maroon">Created By:</label>
+      <p style="color: red">
+        {{ selectedDivisionDetail?.created_by?.full_name }}
+      </p>
+    </div>
+    <div class="p-field">
+      <label style="color: maroon">Updated At:</label>
+      <p style="color: red">
+        {{
+          selectedDivisionDetail?.updated_at ??
+            "-- data have not been updated yet --"
+        }}
+      </p>
+    </div>
+    <div class="p-field">
+      <label style="color: maroon">Updated By:</label>
+      <p style="color: red">
+        {{
+          selectedDivisionDetail?.updated_by?.full_name ??
+            "-- data have not been updated yet --"
+        }}
+      </p>
+    </div>
+  </div>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Close"
+      icon="pi pi-times"
+      (click)="displayDetailDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>
+
 <!-- Existing Table for Achievements -->
 <div class="card">
   <p-table
@@ -135,20 +186,20 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 25%">ID</th>
+        <!-- <th style="width: 25%">ID</th> -->
         <th style="width: 35%">Attitude Skill</th>
         <th style="width: 25%">Group Attitude Skill</th>
         <th style="width: 15%">Action</th>
       </tr>
       <tr>
-        <th>
+        <!-- <th>
           <p-columnFilter
             type="text"
             field="id"
             placeholder="Search by ID"
             ariaLabel="Filter ID"
           />
-        </th>
+        </th> -->
         <th>
           <p-columnFilter
             type="text"
@@ -171,10 +222,17 @@
 
     <ng-template pTemplate="body" let-achievement>
       <tr>
-        <td>{{ achievement.id }}</td>
+        <!-- <td>{{ achievement.id }}</td> -->
         <td>{{ achievement.attitude_skill_name }}</td>
         <td>{{ achievement.group_name }}</td>
         <td>
+          <button
+            pButton
+            icon="pi pi-info-circle"
+            label="Detail"
+            class="p-button-sm p-button-secondary"
+            (click)="showDetailDialog(achievement)"
+          ></button>
           <button
             pButton
             icon="pi pi-pencil"

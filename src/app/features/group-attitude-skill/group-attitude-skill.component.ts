@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   GroupAttitudeSkillDto,
   GroupAttitudeSkillService,
-} from '../group-attitude-skill.service';
+} from '../../core/services/group-attitude-skill.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { InputTextModule } from 'primeng/inputtext';
@@ -48,6 +48,8 @@ export class GroupAttitudeSkillComponent implements OnInit {
   error: string | null = null;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
+  displayDetailDialog: boolean = false;
+  selectedDivisionDetail: any = {};
   newGroupAttitudeSkill: Partial<GroupAttitudeSkillDto> = {
     group_name: '',
     percentage: 0,
@@ -59,6 +61,12 @@ export class GroupAttitudeSkillComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchGroupAttitudeSkills();
+  }
+
+  // Method to show detail dialog
+  showDetailDialog(division: any) {
+    this.selectedDivisionDetail = division;
+    this.displayDetailDialog = true;
   }
 
   fetchGroupAttitudeSkills(): void {

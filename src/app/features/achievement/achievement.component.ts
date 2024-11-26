@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   AchieveWithGroupNameDto,
   AchievementService,
-} from '../achievement.service';
+} from '../../core/services/achievement.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
