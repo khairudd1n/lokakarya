@@ -44,10 +44,17 @@ export class AchievementComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   displayCreateDialog: boolean = false;
-  // Use a single object to hold new achievement form data
   newAchievement = {
     achievement_name: '',
     group_achievement_id: '',
+    enabled: 1,
+  };
+  displayEditDialog: boolean = false;
+  editAchievement: AchieveWithGroupNameDto = {
+    id: '' as UUID,
+    achievement_name: '',
+    group_achievement_id: '' as UUID,
+    group_achievement_name: '',
     enabled: 1,
   };
 
@@ -77,6 +84,12 @@ export class AchievementComponent implements OnInit {
   // Show the create dialog
   showCreateDialog(): void {
     this.displayCreateDialog = true;
+  }
+
+  showEditDialog(achievement: AchieveWithGroupNameDto): void {
+    // Populate the editAchievement object with selected achievement data
+    this.editAchievement = { ...achievement };
+    this.displayEditDialog = true;
   }
 
   // Function to handle creating a new achievement
@@ -118,6 +131,49 @@ export class AchievementComponent implements OnInit {
     }
   }
 
+  // updateAchievement(): void {
+  //   if (
+  //     this.editAchievement.achievement_name &&
+  //     this.editAchievement.group_achievement_id
+  //   ) {
+  //     this.achieveService
+  //       .updateAchievement(this.editAchievement.id, this.editAchievement)
+  //       .subscribe({
+  //         next: (response) => {
+  //           console.log('Achievement updated successfully:', response);
+  //           this.fetchAchievements(); // Refresh the data table
+  //           this.displayEditDialog = false; // Close the edit dialog
+  //         },
+  //         error: (err) => {
+  //           console.error('Error updating achievement:', err);
+  //         },
+  //       });
+  //   } else {
+  //     console.warn('Please fill in all fields.');
+  //   }
+  // }
+
+  updateAchievement(): void {
+    const updatedData = {
+      achievement_name: this.editAchievement.achievement_name,
+      group_achievement_id: this.editAchievement.group_achievement_id as UUID,
+      enabled: this.editAchievement.enabled,
+    };
+
+    this.achieveService
+      .updateAchievement(this.editAchievement.id, updatedData)
+      .subscribe({
+        next: (response) => {
+          console.log('Achievement updated successfully:', response);
+          this.fetchAchievements(); // Refresh the data table
+          this.displayEditDialog = false; // Close the dialog
+        },
+        error: (err) => {
+          console.error('Error updating achievement:', err);
+        },
+      });
+  }
+
   clear(table: Table) {
     table.clear();
   }
@@ -132,5 +188,16 @@ export class AchievementComponent implements OnInit {
         console.error('Error fetching group achievement options:', err);
       },
     });
+  }
+
+  onGroupAchievementChange(event: any): void {
+    console.log(
+      'Selected group_achievement_id:',
+      this.newAchievement.group_achievement_id
+    );
+    console.log(
+      'Selected group_achievement_id:',
+      this.editAchievement.group_achievement_id
+    );
   }
 }

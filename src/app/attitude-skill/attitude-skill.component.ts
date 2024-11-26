@@ -17,6 +17,7 @@ import { Table } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-attitude-skill',
@@ -49,6 +50,14 @@ export class AttitudeSkillComponent implements OnInit {
     group_attitude_skill_id: '',
     enabled: 1,
   };
+  displayEditDialog: boolean = false;
+  editAttitudeSkill: AttitudeWithGroupNameDto = {
+    id: '' as UUID,
+    attitude_skill_name: '',
+    group_attitude_skill_id: '' as UUID,
+    group_name: '',
+    enabled: 1,
+  };
 
   groupAttitudeSkillOptions: { label: string; value: string }[] = [];
 
@@ -76,6 +85,12 @@ export class AttitudeSkillComponent implements OnInit {
   // Show the create dialog
   showCreateDialog(): void {
     this.displayCreateDialog = true;
+  }
+
+  // Show the edit dialog and populate it with the selected achievement data
+  showEditDialog(attitudeSkill: AttitudeWithGroupNameDto): void {
+    this.editAttitudeSkill = { ...attitudeSkill }; // Create a copy of the achievement to edit
+    this.displayEditDialog = true;
   }
 
   createAttitudeSkill(): void {
@@ -122,6 +137,29 @@ export class AttitudeSkillComponent implements OnInit {
     }
   }
 
+  // Function to update the achievement
+  updateAttitudeSkill(): void {
+    const updatedData = {
+      attitude_skill_name: this.editAttitudeSkill.attitude_skill_name,
+      group_attitude_skill_id: this.editAttitudeSkill
+        .group_attitude_skill_id as UUID,
+      enabled: this.editAttitudeSkill.enabled,
+    };
+
+    this.attitudeSkillService
+      .updateAttitudeSkill(this.editAttitudeSkill.id, updatedData)
+      .subscribe({
+        next: (response) => {
+          console.log('Achievement updated successfully:', response);
+          this.fetchAttitudeSkills(); // Refresh the data table
+          this.displayEditDialog = false; // Close the dialog
+        },
+        error: (err) => {
+          console.error('Error updating achievement:', err);
+        },
+      });
+  }
+
   clear(table: Table) {
     table.clear();
   }
@@ -134,6 +172,17 @@ export class AttitudeSkillComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching group attitude options:', err);
+      },
+    });
+  }
+
+  deleteAttitudeSkill(id: UUID): void {
+    this.attitudeSkillService.deleteAttitudeSkill(id).subscribe({
+      next: () => {
+        this.fetchAttitudeSkills(); // Refresh the data table
+      },
+      error: (err) => {
+        console.error('Error deleting achievement:', err);
       },
     });
   }

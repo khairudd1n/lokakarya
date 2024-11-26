@@ -36,6 +36,7 @@
       <p-dropdown
         [options]="groupAchievementOptions"
         [(ngModel)]="newAchievement.group_achievement_id"
+        (onChange)="onGroupAchievementChange($event)"
         placeholder="Select Group Achievement"
       >
       </p-dropdown>
@@ -55,6 +56,101 @@
       label="Cancel"
       icon="pi pi-times"
       (click)="displayCreateDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>
+
+<!-- PrimeNG Dialog for editing an existing achievement -->
+<!-- <p-dialog
+  header="Edit Achievement"
+  [(visible)]="displayEditDialog"
+  modal="true"
+  [closable]="true"
+  [style]="{ width: '400px', height: '450px' }"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="editAchievementName">Achievement Name</label>
+      <input
+        pInputText
+        id="editAchievementName"
+        [(ngModel)]="editAchievement.achievement_name"
+        placeholder="Enter Achievement Name"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <label for="editGroupAchievement">Group Achievement</label>
+      <p-dropdown
+        [options]="groupAchievementOptions"
+        [(ngModel)]="editAchievement.group_achievement_id"
+        (onChange)="onGroupAchievementChange($event)"
+        placeholder="Select Group Achievement"
+      >
+      </p-dropdown>
+    </div>
+  </div>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Update"
+      icon="pi pi-check"
+      (click)="updateAchievement()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      (click)="displayEditDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog> -->
+
+<!-- PrimeNG Dialog for editing an achievement -->
+<p-dialog
+  header="Edit Achievement"
+  [(visible)]="displayEditDialog"
+  modal="true"
+  [closable]="true"
+  [style]="{ width: '400px', height: '450px' }"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="editAchievementName">Achievement Name</label>
+      <input
+        pInputText
+        id="editAchievementName"
+        [(ngModel)]="editAchievement.achievement_name"
+        placeholder="Enter Achievement Name"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <label for="editGroupAchievement">Group Achievement</label>
+      <p-dropdown
+        [options]="groupAchievementOptions"
+        [(ngModel)]="editAchievement.group_achievement_id"
+        placeholder="Select Group Achievement"
+      >
+      </p-dropdown>
+    </div>
+  </div>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Save"
+      icon="pi pi-check"
+      (click)="updateAchievement()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      (click)="displayEditDialog = false"
     ></button>
   </p-footer>
 </p-dialog>
@@ -133,6 +229,7 @@
             icon="pi pi-pencil"
             label="Edit"
             class="p-button-sm p-button-info"
+            (click)="showEditDialog(achievement)"
           ></button>
           <button
             pButton
