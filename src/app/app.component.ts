@@ -37,7 +37,11 @@ export class AppComponent implements OnInit {
   // Define admin menu items
   getHrMenu(): MenuItem[] {
     return [
-      { label: 'User' },
+      { label: 'User',
+        items: [
+          { label: 'User', routerLink: '/user' },
+        ]
+      },
       { label: 'Division' },
       { label: 'Role-menu' },
       {
