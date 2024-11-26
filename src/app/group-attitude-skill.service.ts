@@ -22,8 +22,11 @@ export class GroupAttitudeSkillService {
 
   // Fetch all group achievements
   getAllGroupAttitudeSkills(): Observable<GroupAttitudeSkillDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     return this.http
-      .get<GroupAttitudeSkillDto[]>(`${this.apiUrl}`)
+      .get<GroupAttitudeSkillDto[]>(`${this.apiUrl}`, { headers })
       .pipe(tap((data) => console.log('Fetched Group Attitude Skills:', data)));
   }
 
@@ -53,8 +56,11 @@ export class GroupAttitudeSkillService {
 
   // Delete a group attitude skill by ID
   deleteGroupAttitudeSkill(id: UUID): Observable<void> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     return this.http
-      .delete<void>(`${this.apiUrl}/${id}`)
+      .delete<void>(`${this.apiUrl}/${id}`, { headers })
       .pipe(
         tap(() => console.log(`Deleted Group Attitude Skill with ID: ${id}`))
       );

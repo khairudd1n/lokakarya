@@ -17,6 +17,7 @@ import { Table } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-achievement',
@@ -112,11 +113,18 @@ export class AchievementComponent implements OnInit {
         next: (response) => {
           console.log('Achievement created successfully:', response);
           this.fetchAchievements(); // Refresh the data table
+          this.displayCreateDialog = false;
           this.newAchievement = {
             achievement_name: '',
             group_achievement_id: '', // Reset correctly
             enabled: 1,
           };
+          // Show success alert using SweetAlert
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Achievement created successfully!',
+          });
         },
         error: (err) => {
           console.error('Error creating achievement:', err);
@@ -124,34 +132,18 @@ export class AchievementComponent implements OnInit {
           if (err.error && err.error.message) {
             console.error('Backend error message:', err.error.message);
           }
+          // Show error alert using SweetAlert
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to create Achievement. Please try again.',
+          });
         },
       });
     } else {
       console.warn('Please fill in all fields.');
     }
   }
-
-  // updateAchievement(): void {
-  //   if (
-  //     this.editAchievement.achievement_name &&
-  //     this.editAchievement.group_achievement_id
-  //   ) {
-  //     this.achieveService
-  //       .updateAchievement(this.editAchievement.id, this.editAchievement)
-  //       .subscribe({
-  //         next: (response) => {
-  //           console.log('Achievement updated successfully:', response);
-  //           this.fetchAchievements(); // Refresh the data table
-  //           this.displayEditDialog = false; // Close the edit dialog
-  //         },
-  //         error: (err) => {
-  //           console.error('Error updating achievement:', err);
-  //         },
-  //       });
-  //   } else {
-  //     console.warn('Please fill in all fields.');
-  //   }
-  // }
 
   updateAchievement(): void {
     const updatedData = {
@@ -167,9 +159,23 @@ export class AchievementComponent implements OnInit {
           console.log('Achievement updated successfully:', response);
           this.fetchAchievements(); // Refresh the data table
           this.displayEditDialog = false; // Close the dialog
+          // Success notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Achievement updated successfully.',
+            confirmButtonText: 'OK',
+          });
         },
         error: (err) => {
           console.error('Error updating achievement:', err);
+          // Error notification
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while updating the achievement.',
+            confirmButtonText: 'Try Again',
+          });
         },
       });
   }
@@ -199,5 +205,44 @@ export class AchievementComponent implements OnInit {
       'Selected group_achievement_id:',
       this.editAchievement.group_achievement_id
     );
+  }
+
+  deleteAchievement(id: UUID): void {
+    // Use SweetAlert to ask for confirmation before deleting
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Achievement? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with deletion if user confirms
+        this.achieveService.deleteAchievement(id).subscribe({
+          next: () => {
+            this.fetchAchievements(); // Refresh the data table
+
+            // Show success alert using SweetAlert
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Achievement has been deleted successfully.',
+            });
+          },
+          error: (err) => {
+            console.error('Error deleting achievement:', err);
+
+            // Show error alert using SweetAlert
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete the Achievement. Please try again.',
+            });
+          },
+        });
+      }
+    });
   }
 }
