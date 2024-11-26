@@ -1,0 +1,8 @@
+.p-field {
+  margin-bottom: 1rem; /* Adds spacing between rows */
+}
+
+.p-field label {
+  font-weight: bold; /* Makes labels stand out */
+}
+  

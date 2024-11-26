@@ -1,1 +1,52 @@
-<p>user-list works!</p>
+<button
+  pButton
+  type="button"
+  label="Create User"
+  icon="pi pi-plus"
+  (click)="openCreateDialog()"
+></button>
+<!-- user-table.component.html -->
+<p-table [value]="users">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Full Name</th>
+      <th>Position</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>Join Date</th>
+      <th>Action</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-user>
+    <tr>
+      <td>{{ user.full_name }}</td>
+      <td>{{ user.position }}</td>
+      <td>{{ user.email_address }}</td>
+      <td>{{ user.employee_status ? "Permanent" : "Contract" }}</td>
+      <td>{{ user.join_date | date }}</td>
+      <td>
+        <button
+          pButton
+          icon="pi pi-pencil"
+          class="p-button-sm"
+          style="margin-right: 8px;"
+          (click)="openEditDialog(user)"
+        ></button>
+        <button
+          pButton
+          icon="pi pi-trash"
+          class="p-button-sm p-button-danger"
+          (click)="deleteUser(user)"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- Reusable dialog component -->
+<app-create-user-dialog
+  [(visible)]="displayDialog"
+  [userData]="selectedUser"
+  (userSaved)="onUserSaved($event)"
+>
+</app-create-user-dialog>
