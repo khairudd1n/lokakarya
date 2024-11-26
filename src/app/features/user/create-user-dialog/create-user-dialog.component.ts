@@ -49,11 +49,17 @@ export class CreateUserDialogComponent implements OnChanges {
     position: '', employee_status: '', join_date: '', enabled: '', selectedRoles: [], division: '' };
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['userData'] && this.userData) {
-      this.user = { ...this.userData };
-      this.user.selectedRoles = this.userData.role?.map((role: any) => role.id) || []; // Populate form fields with user data for editing
-      this.user.division = this.userData.division?.id || '';
-      this.user.password = null;
+    if (changes['userData']) {
+      if (this.userData) {
+        // Editing an existing user
+        this.user = { ...this.userData };
+        this.user.selectedRoles = this.userData.role?.map((role: any) => role.id) || [];
+        this.user.division = this.userData.division?.id || '';
+        this.user.password = null; // Do not prepopulate the password
+      } else {
+        // Creating a new user
+        this.resetForm();
+      }
     }
   }
 
@@ -69,7 +75,9 @@ export class CreateUserDialogComponent implements OnChanges {
   }
 
   resetForm() {
-    this.user = { username: '', email: '', password: '', full_name: '', position: '', employee_status: '', join_date: '' };
+    if (!this.userData) {
+      this.user = { username: '', email: '', password: '', full_name: '', position: '', employee_status: '', join_date: '' };
+    }
   }  
 
   // Check if a role is selected

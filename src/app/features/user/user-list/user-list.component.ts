@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserDialogComponent } from '../create-user-dialog/create-user-dialog.component';
 import { ButtonModule } from 'primeng/button';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-list',
@@ -81,26 +82,79 @@ export class UserListComponent implements OnInit {
         user.selectedRoles = null;
       }
       console.log('Updated user data:', user);
-      this.userService.updateUser(user).subscribe((data) => {
-        console.log('Updated : ', data);
-        this.loadUsers();
-      })
+      this.userService.updateUser(user).subscribe({
+        next: (data) => {
+          console.log('Updated : ', data);
+          Swal.fire({
+            title: 'Success!',
+            text: 'User updated successfully.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+          });
+          this.loadUsers();
+        },
+        error: (err) => {
+          console.error('Update failed: ', err);
+          Swal.fire({
+            title: 'Failed!',
+            text: 'Failed to update user. Please try again.',
+            icon: 'error',
+            confirmButtonColor: '#d33',
+          });
+        },
+      });
       // Call update API or handle the updated user data
     } else {
       console.log('User created : ', user);
-      this.userService.saveUser(user).subscribe((data) => {
-        console.log('Saved : ', data);
-        this.loadUsers();
-      })      
+      this.userService.saveUser(user).subscribe({
+        next: (data) => {
+          console.log('Saved : ', data);
+          Swal.fire({
+            title: 'Success!',
+            text: 'User created successfully.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+          });
+          this.loadUsers();
+        },
+        error: (err) => {
+          console.error('Creation failed: ', err);
+          Swal.fire({
+            title: 'Failed!',
+            text: 'Failed to create user. Please try again.',
+            icon: 'error',
+            confirmButtonColor: '#d33',
+          });
+        },
+      });      
     }
     this.displayDialog = false;
   }
 
   deleteUser(user: any) {
-    this.userService.deleteUser(user.id).subscribe((data) => {
-      console.log('Deleted : ', data);
-      this.loadUsers();
-    })
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete ${user.full_name}. This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Call your service to delete the user
+        this.userService.deleteUser(user.id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', `${user.full_name} has been deleted.`, 'success');
+            this.loadUsers();
+          },
+          error: () => {
+            Swal.fire('Failed!', `Failed to delete ${user.full_name}.`, 'error');
+          },
+        });
+      }
+    });
   }
 }
 
