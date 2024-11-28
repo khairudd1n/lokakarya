@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GroupAchievementComponent } from './group-achievement/group-achievement.component';
-import { AchievementComponent } from './achievement/achievement.component';
+import { GroupAchievementComponent } from './features/group-achievement/group-achievement.component';
+import { AchievementComponent } from './features/achievement/achievement.component';
 import { SharedModule } from './shared/primeng/shared/shared.module';
-import { GroupAttitudeSkillComponent } from './group-attitude-skill/group-attitude-skill.component';
+import { GroupAttitudeSkillComponent } from './features/group-attitude-skill/group-attitude-skill.component';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 
@@ -37,12 +37,9 @@ export class AppComponent implements OnInit {
   // Define admin menu items
   getHrMenu(): MenuItem[] {
     return [
-      { label: 'User',
-        items: [
-          { label: 'User', routerLink: '/user' },
-        ]
-      },
-      { label: 'Division' },
+      { label: 'User' },
+      { label: 'Division', routerLink: '/division' },
+
       { label: 'Role-menu' },
       {
         label: 'Attitude',
@@ -52,7 +49,7 @@ export class AppComponent implements OnInit {
         ],
       },
       { label: 'Technical skill' },
-      { label: 'Dev plan' },
+      { label: 'Dev plan', routerLink: '/dev-plan' },
       {
         label: 'Achievement',
         items: [

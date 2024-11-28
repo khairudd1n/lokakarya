@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   AttitudeWithGroupNameDto,
   AttitudeSkillService,
-} from '../attitude-skill.service';
+} from '../../core/services/attitude-skill.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -45,6 +45,8 @@ export class AttitudeSkillComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   displayCreateDialog: boolean = false;
+  displayDetailDialog: boolean = false;
+  selectedDivisionDetail: any = {};
   newAttitudeSkill = {
     attitude_skill_name: '',
     group_attitude_skill_id: '',
@@ -66,6 +68,12 @@ export class AttitudeSkillComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAttitudeSkills();
     this.fetchGroupAttitudeSkillOptions();
+  }
+
+  // Method to show detail dialog
+  showDetailDialog(division: any) {
+    this.selectedDivisionDetail = division;
+    this.displayDetailDialog = true;
   }
 
   fetchAttitudeSkills(): void {

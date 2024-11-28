@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   GroupAchieveDto,
   GroupAchievementsService,
-} from '../group-achievements.service';
+} from '../../core/services/group-achievements.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
