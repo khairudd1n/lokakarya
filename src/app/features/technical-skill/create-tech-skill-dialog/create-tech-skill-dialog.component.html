@@ -1,0 +1,58 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '50vw' }"
+  (onHide)="closeDialog()"
+>
+  <ng-template pTemplate="header">
+    <h3>{{ techSkillData ? "Edit Technical Skill" : "Create Technical Skill" }}</h3>
+  </ng-template>
+
+  <div class="grid formgrid p-fluid">
+    <div class="field col-12 md:col-9">
+      <label for="technicalSkill">Technical Skill</label>
+      <input
+        id="technicalSkill"
+        type="text"
+        pInputText
+        [(ngModel)]="techSkill.technical_skill"
+        name="technicalSkill"
+        required
+        #technicalSkill="ngModel"
+      />
+      <div *ngIf="technicalSkill.invalid && technicalSkill.touched" class="p-error">Technical Skill is required.</div>
+    </div>
+
+    <div class="field col-12 md:col-3">
+        <label for="enabled">Enabled</label>
+        <p-toggleButton
+          [(ngModel)]="techSkill.enabled"
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+        ></p-toggleButton>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="closeDialog()"
+      ></button>
+      <button
+        pButton
+        type="submit"
+        label="{{ techSkillData ? 'Update' : 'Save' }}"
+        icon="pi pi-check"
+        [disabled]="!techSkill.technical_skill || !techSkill.enabled"
+        (click)="saveUser()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

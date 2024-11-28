@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserDialogComponent } from '../create-user-dialog/create-user-dialog.component';
 import { ButtonModule } from 'primeng/button';
@@ -17,9 +17,12 @@ import Swal from 'sweetalert2';
 })
 export class UserListComponent implements OnInit {
 
-  users: User[] = [];
+  users: any[] = [];
+
+  filteredUsers: any[] = [];
 
   displayDialog: boolean = false;
+  displayDetailDialog: boolean = false;
   selectedUser: any = null; // Holds data for the user being edited
 
   constructor(private userService: UserService) {}
@@ -30,11 +33,17 @@ export class UserListComponent implements OnInit {
 
   loadUsers() {
     this.userService.getAllUser().subscribe((data) => {
-      this.users = data;
+      this.users = data.map(user => ({
+        ...user,
+        employee_status: user.employee_status === 1 // Convert 1 to true and 0 to false
+      }));
+      this.filteredUsers = [...this.users];
+      console.log(this.users);
     });
   }
 
   openCreateDialog() {
+    console.log('Opening create dialog');
     this.selectedUser = null; // Clear selected user for creating a new one
     this.displayDialog = true;
   }
@@ -155,6 +164,54 @@ export class UserListComponent implements OnInit {
         });
       }
     });
+  }
+
+  onRowSelect(event: any) {
+    this.displayDetailDialog = true;
+    this.selectedUser = event.data;
+    console.log('Selected user:', this.selectedUser);
+  }
+
+  clearSelectedUser() {
+    this.selectedUser = null; // Clear selected user when dialog is closed
+  }
+
+  clearFilters(table: any): void {
+    table.clear();
+  }
+
+  @ViewChild('dt1') dt1: Table | undefined;
+
+  onGlobalSearch(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+    if (this.dt1) {
+      this.dt1.filterGlobal(input, 'contains');  // Pass the input value and match mode
+    }
+  }
+
+  statusOptions: any[] = [
+    { label: 'All', value: null },
+    { label: 'Permanent', value: true },
+    { label: 'Contract', value: false }
+  ];
+  selectedStatus: any = null;
+
+  applyStatusFilter() {
+    if (this.selectedStatus !== null) {
+      // Apply the filter based on selected status
+      this.filteredUsers = this.users.filter(user => user.employee_status === this.selectedStatus);
+    } else {
+      // If "All" is selected, show all users
+      this.loadUsers(); // Re-fetch all users
+    }
+  }
+
+  onDialogClose(visible: boolean) {
+    console.log('Dialog closed', visible);
+    if (!visible){
+      console.log('Dialog closed');
+      this.clearSelectedUser(); // Clear the selected user when dialog is closed
+    }
   }
 }
 
