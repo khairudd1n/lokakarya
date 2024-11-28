@@ -27,7 +27,7 @@ export class CreateUserDialogComponent implements OnChanges {
   @Input() visible: boolean = false; // To control dialog visibility
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() userSaved: EventEmitter<any> = new EventEmitter(); // Emit when user is saved (create or edit)
-
+  
   @Input() userData: any = null; // Input for editing a user
 
   roles: Role[] = [];

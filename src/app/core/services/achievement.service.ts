@@ -72,7 +72,8 @@ export class AchievementService {
     const headers = {
       Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
     };
-    return this.http
+    return this.http.get<AchieveWithGroupNameDto[]>(
+      
         'http://localhost:8080/group-achievements',
         { headers }
       )

@@ -6,6 +6,7 @@ import { SharedModule } from './shared/primeng/shared/shared.module';
 import { GroupAttitudeSkillComponent } from './features/group-attitude-skill/group-attitude-skill.component';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
+import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +18,15 @@ import { MenubarModule } from 'primeng/menubar';
     SharedModule,
     GroupAttitudeSkillComponent,
     MenubarModule,
+    TechnicalSkillComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
+logout () {
+  localStorage.removeItem('token');
+}
   items: MenuItem[] = [];
   role: string = 'HR';
 
@@ -37,9 +42,8 @@ export class AppComponent implements OnInit {
   // Define admin menu items
   getHrMenu(): MenuItem[] {
     return [
-      { label: 'User' },
-      { label: 'Division', routerLink: '/division' },
-
+      { label: 'User', routerLink: '/user' },
+      { label: 'Division' },
       { label: 'Role-menu' },
       {
         label: 'Attitude',
@@ -48,7 +52,7 @@ export class AppComponent implements OnInit {
           { label: 'Attitude skill', routerLink: '/attitude-skill' },
         ],
       },
-      { label: 'Technical skill' },
+      { label: 'Technical skill', routerLink: '/technical-skill' },
       { label: 'Dev plan', routerLink: '/dev-plan' },
       {
         label: 'Achievement',

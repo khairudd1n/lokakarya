@@ -9,6 +9,7 @@ import { AchievementComponent } from './features/achievement/achievement.compone
 import { AttitudeSkillComponent } from './features/attitude-skill/attitude-skill.component';
 import { DivisionComponent } from './division/division.component';
 import { DevPlanComponent } from './features/dev-plan/dev-plan.component';
+import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -42,8 +43,17 @@ export const routes: Routes = [
     component: DevPlanComponent,
     canActivate: [authGuard],
   },
-
-  { path: 'login', component: LoginComponent, canActivate: [authGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [authGuard] },
-  { path: 'user', component: UserListComponent },
+  {
+    path: 'login', 
+    component: LoginComponent, 
+    canActivate: [authGuard] 
+  },
+  {
+    path: 'user', 
+    component: UserListComponent
+  },
+  {
+    path: 'technical-skill', 
+    component: TechnicalSkillComponent
+  }
 ];

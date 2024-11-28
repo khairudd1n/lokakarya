@@ -5,6 +5,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { ColumnFilter, TableModule } from 'primeng/table';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 
@@ -16,8 +19,9 @@ import { DialogModule } from 'primeng/dialog';
     ButtonModule,
     InputTextModule,
     CardModule,
-    DialogModule
-
+    DialogModule,
+    ToggleButtonModule,
+    DropdownModule
   ], 
   exports: [
     ButtonModule,
@@ -25,7 +29,10 @@ import { DialogModule } from 'primeng/dialog';
     CardModule,
     FormsModule,
     CommonModule,
-    DialogModule
+    DialogModule,
+    TableModule,
+    ToggleButtonModule,
+    DropdownModule
   ],
 
 })
