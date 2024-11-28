@@ -8,6 +8,7 @@ import { GroupAchievementComponent } from './features/group-achievement/group-ac
 import { AchievementComponent } from './features/achievement/achievement.component';
 import { AttitudeSkillComponent } from './features/attitude-skill/attitude-skill.component';
 import { DivisionComponent } from './division/division.component';
+import { DevPlanComponent } from './features/dev-plan/dev-plan.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -36,6 +37,12 @@ export const routes: Routes = [
     component: DivisionComponent,
     canActivate: [authGuard],
   },
+  {
+    path: 'dev-plan',
+    component: DevPlanComponent,
+    canActivate: [authGuard],
+  },
+
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent, canActivate: [authGuard] },
   { path: 'user', component: UserListComponent },

@@ -1,20 +1,20 @@
 <div *ngIf="isLoading">Loading...</div>
 <div *ngIf="error">{{ error }}</div>
 
-<h2>Group Achievements</h2>
+<h2>Dev Plan</h2>
 
 <!-- Button to open the create modal -->
 <div class="card flex justify-content-center">
   <p-button
-    label="+ Create new group achievement"
+    label="+ Create new dev plan"
     icon="pi pi-check"
     (click)="showCreateDialog()"
   ></p-button>
 </div>
 
-<!-- PrimeNG Dialog for creating a new group achievement -->
+<!-- PrimeNG Dialog for creating a new dev plan -->
 <p-dialog
-  header="Create Group Achievement"
+  header="Create Dev Plan"
   [(visible)]="displayCreateDialog"
   modal="true"
   [closable]="true"
@@ -22,22 +22,12 @@
 >
   <div class="p-fluid">
     <div class="p-field">
-      <label for="groupName">Group Achievement</label>
+      <label for="groupName">Dev Plan</label>
       <input
         id="groupName"
         type="text"
         pInputText
-        [(ngModel)]="newGroupAchievement.group_achievement_name"
-      />
-    </div>
-    <br />
-    <div class="p-field">
-      <label for="percentage">Percentage</label>
-      <input
-        id="percentage"
-        type="number"
-        pInputText
-        [(ngModel)]="newGroupAchievement.percentage"
+        [(ngModel)]="newDevPlan.plan"
       />
     </div>
   </div>
@@ -47,7 +37,7 @@
       pButton
       label="Create"
       icon="pi pi-check"
-      (click)="createGroupAchievement()"
+      (click)="createDevPlan()"
     ></button>
     <button
       type="button"
@@ -59,9 +49,8 @@
   </p-footer>
 </p-dialog>
 
-<!-- PrimeNG Dialog for editing a group attitude skill -->
 <p-dialog
-  header="Edit Group Achievement"
+  header="Edit Dev Plan"
   [(visible)]="displayEditDialog"
   modal="true"
   [closable]="true"
@@ -69,22 +58,12 @@
 >
   <div class="p-fluid">
     <div class="p-field">
-      <label for="editGroupName">Group Achievement</label>
+      <label for="editGroupName">Dev Plan</label>
       <input
         id="editGroupName"
         type="text"
         pInputText
-        [(ngModel)]="selectedGroupAchievement.group_achievement_name"
-      />
-    </div>
-    <br />
-    <div class="p-field">
-      <label for="editPercentage">Percentage</label>
-      <input
-        id="editPercentage"
-        type="number"
-        pInputText
-        [(ngModel)]="selectedGroupAchievement.percentage"
+        [(ngModel)]="selectedDevPlan.plan"
       />
     </div>
   </div>
@@ -94,7 +73,7 @@
       pButton
       label="Save"
       icon="pi pi-save"
-      (click)="updateGroupAchievement()"
+      (click)="updateDevPlan()"
     ></button>
     <button
       type="button"
@@ -106,49 +85,39 @@
   </p-footer>
 </p-dialog>
 
-<!-- Existing Table for Achievements -->
 <div class="card">
   <p-table
     #dt2
-    [value]="groupAchievements"
+    [value]="devPlans"
     dataKey="id"
     [rows]="10"
     [rowsPerPageOptions]="[10, 25, 50]"
     [loading]="isLoading"
     [paginator]="true"
-    [globalFilterFields]="['group_achievement_name', 'percentage']"
+    [globalFilterFields]="['plan']"
     [tableStyle]="{ 'min-width': '75rem' }"
   >
     <ng-template pTemplate="header">
       <tr>
         <!-- <th style="width: 25%">ID</th> -->
-        <th style="width: 35%">Group Name</th>
-        <th style="width: 25%">Percentage</th>
+        <th style="width: 35%">Plan</th>
         <th style="width: 15%">Action</th>
       </tr>
       <tr>
         <!-- <th>
-          <p-columnFilter
-            type="text"
-            field="id"
-            placeholder="Search by ID"
-            ariaLabel="Filter ID"
-          />
-        </th> -->
+            <p-columnFilter
+              type="text"
+              field="id"
+              placeholder="Search by ID"
+              ariaLabel="Filter ID"
+            />
+          </th> -->
         <th>
           <p-columnFilter
             type="text"
-            field="group_name"
-            placeholder="Search by group name"
-            ariaLabel="Filter Group Name"
-          />
-        </th>
-        <th>
-          <p-columnFilter
-            type="text"
-            field="percentage"
-            placeholder="Search by Percentage"
-            ariaLabel="Filter Percentage"
+            field="plan"
+            placeholder="Search by plan"
+            ariaLabel="Filter Plan"
           />
         </th>
         <th></th>
@@ -158,22 +127,21 @@
     <ng-template pTemplate="body" let-achievement>
       <tr>
         <!-- <td>{{ achievement.id }}</td> -->
-        <td>{{ achievement.group_achievement_name }}</td>
-        <td>{{ achievement.percentage }}</td>
+        <td>{{ achievement.plan }}</td>
         <td>
           <button
             pButton
             icon="pi pi-pencil"
             label="Edit"
             class="p-button-sm p-button-info"
-            (click)="editGroupAchievement(achievement)"
+            (click)="editDevPlan(achievement)"
           ></button>
           <button
             pButton
             icon="pi pi-trash"
             label="Delete"
             class="p-button-sm p-button-danger"
-            (click)="deleteGroupAchievement(achievement.id)"
+            (click)="deleteDevPlan(achievement.id)"
           ></button>
         </td>
       </tr>
@@ -181,7 +149,7 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">No achievements found.</td>
+        <td colspan="4">No dev plans found.</td>
       </tr>
     </ng-template>
   </p-table>

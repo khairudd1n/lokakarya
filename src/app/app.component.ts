@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
         ],
       },
       { label: 'Technical skill' },
-      { label: 'Dev plan' },
+      { label: 'Dev plan', routerLink: '/dev-plan' },
       {
         label: 'Achievement',
         items: [
