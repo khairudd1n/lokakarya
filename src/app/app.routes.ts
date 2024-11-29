@@ -9,6 +9,7 @@ import { AchievementComponent } from './features/achievement/achievement.compone
 import { AttitudeSkillComponent } from './features/attitude-skill/attitude-skill.component';
 import { DivisionComponent } from './division/division.component';
 import { DevPlanComponent } from './features/dev-plan/dev-plan.component';
+import { EmpAchieveComponent } from './emp-achieve/emp-achieve.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -40,6 +41,11 @@ export const routes: Routes = [
   {
     path: 'dev-plan',
     component: DevPlanComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'emp-achievement',
+    component: EmpAchieveComponent,
     canActivate: [authGuard],
   },
 

@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         items: [
           { label: 'Achievement', routerLink: '/achievement' },
           { label: 'Group achieve', routerLink: '/group-achievement' },
-          { label: 'Emp achieve' },
+          { label: 'Emp achieve', routerLink: '/emp-achievement' },
         ],
       },
       { label: 'Ass. Summary' },
