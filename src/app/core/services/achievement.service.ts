@@ -19,6 +19,9 @@ export interface AchieveWithGroupNameDto {
 export class AchievementService {
   private apiUrl = 'http://localhost:8080/achievements';
   token: string = localStorage.getItem('token') || '';
+  headers_token = {
+    Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -40,14 +43,11 @@ export class AchievementService {
     group_achievement_id: UUID; // Use ID instead of name
     enabled: number;
   }): Observable<AchieveWithGroupNameDto> {
-    const headers = {
-      Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
-    };
 
     return this.http.post<AchieveWithGroupNameDto>(
       `${this.apiUrl}`,
       achievement,
-      { headers }
+      { headers: this.headers_token }
     );
   }
 
@@ -60,14 +60,11 @@ export class AchievementService {
       enabled: number;
     }
   ): Observable<AchieveWithGroupNameDto> {
-    const headers = {
-      Authorization: `Bearer ${this.token}`,
-    };
 
     return this.http.put<AchieveWithGroupNameDto>(
       `${this.apiUrl}/${id}`,
       achievement,
-      { headers }
+      { headers: this.headers_token }
     );
   }
 
@@ -76,7 +73,6 @@ export class AchievementService {
       Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
     };
     return this.http
-      .get<AchieveWithGroupNameDto[]>(
         'http://localhost:8080/group-achievements',
         { headers }
       )

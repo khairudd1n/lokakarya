@@ -42,6 +42,9 @@ export class CreateUserDialogComponent implements OnChanges {
     this.divisionService.getAllDivision().subscribe((response) => {
       this.divisions = response;
     })
+    if (!this.user.selectedRoles) {
+      this.user.selectedRoles = [];  // Ensure selectedRoles is initialized
+    }
     console.log(this.divisions);
   }
 

@@ -101,6 +101,9 @@
           (click)="setEmployeeStatus(0)"
         ></button>
       </div>
+      @if(user.employee_status.invalid){
+        <div class="p-error">Status is required.</div>
+      }
     </div>
 
     <!-- Row 4: Join Date and Enabled -->
@@ -138,9 +141,13 @@
             [value]="role.id"
             name="roles"
             [label]="role.rolename"
+            #rolesCheckbox="ngModel"
           ></p-checkbox>
         </div>
       </div>
+      @if(user.selectedRoles.length === 0 ){
+        <div class="p-error">Roles are required.</div>
+      }
     </div>
 
     <div class="field col-12 md:col-6">
@@ -152,6 +159,9 @@
         optionValue="id"
         placeholder="Select a Division"
       ></p-dropdown>
+      @if (user.division === null) {
+        <div class="p-error">Division is required.</div>
+      }
     </div>
   </div>
 
@@ -170,7 +180,7 @@
         type="submit"
         label="{{ userData ? 'Update' : 'Save' }}"
         icon="pi pi-check"
-        [disabled]="!user.username || !user.email_address || !user.password || !user.full_name || !user.position"
+        [disabled]="!user.username || !user.email_address || !user.password || !user.full_name || !user.position|| !user.join_date || user.selectedRoles.length === 0 || !user.division || !user.employee_status || !user.enabled"
         (click)="saveUser()"
       ></button>
     </div>
