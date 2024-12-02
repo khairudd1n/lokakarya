@@ -207,7 +207,7 @@ export class UserListComponent implements OnInit {
   }
 
   onDialogClose(visible: boolean) {
-    console.log('Dialog closed', visible);
+    console.log('On Dialog closed is called', visible);
     if (!visible){
       console.log('Dialog closed');
       this.clearSelectedUser(); // Clear the selected user when dialog is closed

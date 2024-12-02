@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DivisionService } from './division.service';
+import { RoleMenuService } from './role-menu.service';
 
-describe('DivisionService', () => {
-  let service: DivisionService;
+describe('RoleMenuService', () => {
+  let service: RoleMenuService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DivisionService);
+    service = TestBed.inject(RoleMenuService);
   });
 
   it('should be created', () => {
