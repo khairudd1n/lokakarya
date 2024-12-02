@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 export interface AttitudeWithGroupNameDto {
   id: UUID;
@@ -30,7 +31,7 @@ export class AttitudeSkillService {
       .get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/with-group-names`, {
         headers,
       })
-      .pipe(tap((data) => console.log('Fetched Achievements:', data)));
+      .pipe(tap((data) => console.log('Fetched Attitude Skills:', data)));
   }
 
   createAttitudeSkill(attitudeSkill: {
@@ -97,5 +98,23 @@ export class AttitudeSkillService {
     return this.http
       .delete<void>(`${this.apiUrl}/${id}`, { headers })
       .pipe(tap(() => console.log(`Deleted Attitude Skill with ID: ${id}`)));
+  }
+
+  // Fetch all attitude skills associated with a specific group by its name
+  getAttitudesByGroupName(
+    groupName: string
+  ): Observable<AttitudeWithGroupNameDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/all`, {
+        headers,
+      })
+      .pipe(
+        tap((data) =>
+          console.log(`Fetched attitude skills for group: ${groupName}`, data)
+        )
+      );
   }
 }

@@ -43,7 +43,6 @@ export class AchievementService {
     group_achievement_id: UUID; // Use ID instead of name
     enabled: number;
   }): Observable<AchieveWithGroupNameDto> {
-
     return this.http.post<AchieveWithGroupNameDto>(
       `${this.apiUrl}`,
       achievement,
@@ -60,7 +59,6 @@ export class AchievementService {
       enabled: number;
     }
   ): Observable<AchieveWithGroupNameDto> {
-
     return this.http.put<AchieveWithGroupNameDto>(
       `${this.apiUrl}/${id}`,
       achievement,
@@ -70,9 +68,11 @@ export class AchievementService {
 
   getGroupAchievements(): Observable<{ label: string; value: string }[]> {
     const headers = {
-      Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
+      Authorization: `Bearer ${this.token}`, // Ensure `this.token` is defined and holds the token
     };
+
     return this.http
+      .get<{ group_achievement_name: string; id: string }[]>(
         'http://localhost:8080/group-achievements',
         { headers }
       )
@@ -81,8 +81,8 @@ export class AchievementService {
         // Transform the fetched data to fit the dropdown's requirement
         map((data) =>
           data.map((item) => ({
-            label: item.group_achievement_name, // Use the correct field here
-            value: item.id, // Use the correct field here, or an ID if applicable
+            label: item.group_achievement_name, // Ensure this field matches the API response
+            value: item.id, // Ensure this field matches the API response
           }))
         )
       );

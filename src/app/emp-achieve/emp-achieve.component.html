@@ -90,7 +90,7 @@
   </p-footer>
 </p-dialog>
 
-<!-- <p-dialog
+<p-dialog
   header="Edit Emp Achieve"
   [(visible)]="displayEditDialog"
   modal="true"
@@ -166,69 +166,6 @@
       (click)="displayEditDialog = false"
     ></button>
   </p-footer>
-</p-dialog> -->
-
-<p-dialog
-  [(visible)]="displayEditDialog"
-  header="Edit Emp Achieve"
-  [modal]="true"
-  [closable]="false"
->
-  <form (ngSubmit)="updateEmpAchieve()">
-    <div class="field">
-      <label for="user">User</label>
-      <p-dropdown
-        [options]="userOptions"
-        [(ngModel)]="editEmpAchieve.user_id"
-        name="user"
-      ></p-dropdown>
-    </div>
-    <div class="field">
-      <label for="achievement">Achievement</label>
-      <p-dropdown
-        [options]="achievementOptions"
-        [(ngModel)]="editEmpAchieve.achievement_id"
-        name="achievement"
-      ></p-dropdown>
-    </div>
-    <div class="field">
-      <label for="notes">Notes</label>
-      <input
-        type="text"
-        pInputText
-        [(ngModel)]="editEmpAchieve.notes"
-        name="notes"
-      />
-    </div>
-    <div class="field">
-      <label for="score">Score</label>
-      <input
-        type="number"
-        pInputText
-        [(ngModel)]="editEmpAchieve.score"
-        name="score"
-      />
-    </div>
-    <div class="field">
-      <label for="year">Assessment Year</label>
-      <input
-        type="number"
-        pInputText
-        [(ngModel)]="editEmpAchieve.assessment_year"
-        name="year"
-      />
-    </div>
-    <p-footer>
-      <button type="submit" pButton label="Save" icon="pi pi-check"></button>
-      <button
-        type="button"
-        pButton
-        label="Cancel"
-        icon="pi pi-times"
-        (click)="displayEditDialog = false"
-      ></button>
-    </p-footer>
-  </form>
 </p-dialog>
 
 <div class="card">
@@ -271,7 +208,7 @@
         <th>
           <p-columnFilter
             type="text"
-            field="user_id"
+            field="username"
             placeholder="Search by User Name"
             ariaLabel="Filter User Name"
           />
@@ -287,7 +224,7 @@
         <th>
           <p-columnFilter
             type="text"
-            field="achievement_id"
+            field="achievement_name"
             placeholder="Search by Achievement Name"
             ariaLabel="Filter Achievement Name"
           />

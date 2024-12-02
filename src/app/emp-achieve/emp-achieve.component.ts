@@ -154,43 +154,6 @@ export class EmpAchieveComponent implements OnInit {
     }
   }
 
-  // updateEmpAchieve(): void {
-  //   const updatedData = {
-  //     user_id: this.newEmpAchieve.user_id as UUID,
-  //     notes: this.newEmpAchieve.notes,
-  //     achievement_id: this.newEmpAchieve.achievement_id as UUID,
-  //     score: this.newEmpAchieve.score,
-  //     assessment_year: this.newEmpAchieve.assessment_year,
-  //   };
-
-  //   this.empAchieveService
-  //     .updateEmpAchieve(this.editEmpAchieve.id, updatedData)
-  //     .subscribe({
-  //       next: (response) => {
-  //         console.log('Emp Achieve updated successfully:', response);
-  //         this.fetchEmpAchieve(); // Refresh the data table
-  //         this.displayEditDialog = false; // Close the dialog
-  //         // Success notification
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Updated!',
-  //           text: 'Emp Achieve updated successfully.',
-  //           confirmButtonText: 'OK',
-  //         });
-  //       },
-  //       error: (err) => {
-  //         console.error('Error updating emp achieve:', err);
-  //         // Error notification
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Oops...',
-  //           text: 'Something went wrong while updating the emp achieve.',
-  //           confirmButtonText: 'Try Again',
-  //         });
-  //       },
-  //     });
-  // }
-
   updateEmpAchieve(): void {
     const updatedData = {
       user_id: this.editEmpAchieve.user_id,

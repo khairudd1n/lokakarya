@@ -51,27 +51,6 @@ export class EmpAchieveService {
     });
   }
 
-  // updateEmpAchieve(
-  //   id: UUID,
-  //   empAchieve: {
-  //     user_id: UUID;
-  //     notes: string;
-  //     achievement_id: UUID;
-  //     score: number;
-  //     assessment_year: number;
-  //   }
-  // ): Observable<EmpAchieveSkillDto> {
-  //   const headers = {
-  //     Authorization: `Bearer ${this.token}`,
-  //   };
-
-  //   return this.http.put<EmpAchieveSkillDto>(
-  //     `${this.apiUrl}/${id}`,
-  //     empAchieve,
-  //     { headers }
-  //   );
-  // }
-
   updateEmpAchieve(
     id: UUID,
     empAchieve: {
