@@ -40,8 +40,8 @@ logout () {
     return [
 
       { label: 'User', routerLink: '/user' },
-      { label: 'Division', routerLink: '/division' },
-      { label: 'Role-menu' },
+      { label: 'Division', routerLink : '/division' },
+      { label: 'Role-menu', routerLink: '/role-menu' },
       {
         label: 'Attitude',
         items: [

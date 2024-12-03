@@ -1,0 +1,45 @@
+<p-table
+  [value]="menus"
+  [responsiveLayout]="'scroll'"
+  [loading]="isLoading"
+  class="p-datatable-sm p-mt-3 p-datatable-striped"
+>
+  <!-- Table Header -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="p-text-center">Permission</th>
+      <th *ngFor="let roleMenu of currentRoleMenus" class="p-text-center">
+        {{ roleMenu.role.rolename }}
+      </th>
+    </tr>
+  </ng-template>
+
+  <!-- Table Body -->
+  <ng-template pTemplate="body" let-menu>
+    <tr>
+      <td class="p-text-center">{{ menu.menu_name }}</td>
+      <td *ngFor="let roleMenu of currentRoleMenus" class="p-text-center">
+        <div class="p-d-flex p-ai-center p-jc-center">
+          <p-checkbox
+            [binary]="true"
+            [(ngModel)]="checkboxStates[roleMenu.role.id][menu.id]"
+            (onChange)="
+              onCheckboxChange(roleMenu.role.id, menu.id, $event.checked)
+            "
+            class="p-mr-2"
+          ></p-checkbox>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- Save Button -->
+<div class="save-button-container">
+  <button
+    pButton
+    label="Save Changes"
+    (click)="saveChanges()"
+    class="p-button-success p-mt-3"
+  ></button>
+</div>
