@@ -19,6 +19,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-group-attitude-skill',
@@ -43,6 +44,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./group-attitude-skill.component.css'],
 })
 export class GroupAttitudeSkillComponent implements OnInit {
+  @Output() groupCreated = new EventEmitter<string>();
+
   groupAttitudeSkills: GroupAttitudeSkillDto[] = [];
   isLoading: boolean = true;
   error: string | null = null;
@@ -107,6 +110,9 @@ export class GroupAttitudeSkillComponent implements OnInit {
             percentage: 0,
             enabled: 1,
           };
+
+          // Emit event dengan nama grup yang baru dibuat
+          this.groupCreated.emit(newGroupAttitudeSkill.group_name);
 
           // Success notification
           Swal.fire({

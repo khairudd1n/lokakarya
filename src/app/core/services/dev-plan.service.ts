@@ -28,6 +28,15 @@ export class DevPlanService {
       .pipe(tap((data) => console.log('Fetched Dev Plan:', data)));
   }
 
+  getAllEmpDevPlan(): Observable<DevPlanDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .get<DevPlanDto[]>(`${this.apiUrl}`, { headers })
+      .pipe(tap((data) => console.log('Fetched Emp Dev Plan:', data)));
+  }
+
   createDevPlan(data: Partial<DevPlanDto>): Observable<DevPlanDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
     return this.http.post<DevPlanDto>(`${this.apiUrl}`, data, {

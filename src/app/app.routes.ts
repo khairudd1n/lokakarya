@@ -9,7 +9,12 @@ import { AchievementComponent } from './features/achievement/achievement.compone
 import { AttitudeSkillComponent } from './features/attitude-skill/attitude-skill.component';
 import { DivisionComponent } from './division/division.component';
 import { DevPlanComponent } from './features/dev-plan/dev-plan.component';
+import { EmpAchieveComponent } from './emp-achieve/emp-achieve.component';
+import { AssSummaryComponent } from './ass-summary/ass-summary.component';
+import { EmpAttitudeSkillNewComponent } from './emp-attitude-skill-new/emp-attitude-skill-new.component';
+import { EmpDevPlanComponent } from './emp-dev-plan/emp-dev-plan.component';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
+
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -41,6 +46,26 @@ export const routes: Routes = [
   {
     path: 'dev-plan',
     component: DevPlanComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'emp-achievement',
+    component: EmpAchieveComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'ass-summary',
+    component: AssSummaryComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'emp-attitude-skill-new',
+    component: EmpAttitudeSkillNewComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'emp-dev-plan',
+    component: EmpDevPlanComponent,
     canActivate: [authGuard],
   },
   {

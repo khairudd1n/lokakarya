@@ -1,0 +1,49 @@
+<h1>Insert Emp Attitude Skill</h1>
+<label for="assessmentYear">Assessment Year:</label>
+<input type="number" id="assessmentYear" [(ngModel)]="assessmentYear" />
+
+<div *ngFor="let group of groupData">
+  <h3>{{ group.group_name }}</h3>
+  <p-table [value]="group.attitude_skills" [paginator]="false">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>No.</th>
+        <th>Kriteria</th>
+        <th>Nilai</th>
+        <th>Status</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-skill let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>{{ skill.attitude_skill_name }}</td>
+        <td>
+          <p-inputNumber
+            [(ngModel)]="skill.score"
+            [showButtons]="true"
+            (onInput)="logSkillId(skill.id, skill.score)"
+            [disabled]="isSkillDisabled(skill.id)"
+          ></p-inputNumber>
+        </td>
+        <td>
+          <!-- Dynamically display status with color -->
+          <span [ngStyle]="{ color: getStatusColor(skill.id) }">
+            {{ getStatusText(skill.id) }}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Validation Message -->
+  <div *ngIf="getTotalScore(group) > 100" style="color: red; font-weight: bold">
+    Total nilai tidak boleh lebih dari 100!
+  </div>
+</div>
+
+<p-button
+  label="Simpan"
+  icon="pi pi-save"
+  (click)="saveSkills()"
+  [disabled]="getTotalScore(groupData[0]) > 100"
+></p-button>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
 import { tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 export interface GroupAttitudeSkillDto {
   id: UUID;
@@ -11,11 +12,23 @@ export interface GroupAttitudeSkillDto {
   enabled: number;
 }
 
+export interface AttitudeSkill {
+  id: UUID;
+  attitude_skill_name: string;
+}
+
+export interface GroupAttWithAttDto {
+  id: UUID;
+  group_name: string;
+  attitudeSkills: AttitudeSkill[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class GroupAttitudeSkillService {
   private apiUrl = 'http://localhost:8080/group-attitude-skill';
+  private apiUrl2 = 'http://localhost:8080/group-attitude-skill/all';
   token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -28,6 +41,19 @@ export class GroupAttitudeSkillService {
     return this.http
       .get<GroupAttitudeSkillDto[]>(`${this.apiUrl}`, { headers })
       .pipe(tap((data) => console.log('Fetched Group Attitude Skills:', data)));
+  }
+
+  getAllGroupWithAttitudeSkills(): Observable<GroupAttWithAttDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .get<GroupAttWithAttDto[]>(`${this.apiUrl2}`, { headers })
+      .pipe(
+        tap((data) =>
+          console.log('Fetched Group Attitude with Attitude skills:', data)
+        )
+      );
   }
 
   createGroupAttitudeSkill(
