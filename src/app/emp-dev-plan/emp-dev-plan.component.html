@@ -1,0 +1,47 @@
+<h1>Insert emp dev plan</h1>
+<label for="assessmentYear">Assessment Year:</label>
+<input type="number" id="assessmentYear" [(ngModel)]="assessmentYear" />
+<div *ngFor="let group of groupData">
+  <h3>{{ group.plan }}</h3>
+
+  <!-- PrimeNG Table -->
+  <p-table [value]="group.rows" [paginator]="false">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">No.</th>
+        <th style="width: 70%">Keterangan</th>
+        <!-- <th style="width: 20%">Action</th> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="row.plan_detail"
+            (input)="logPlanId(row.dev_plan_id, row.plan_detail, row)"
+            [style.width]="'100%'"
+            rows="3"
+          >
+          </textarea>
+        </td>
+        <!-- <td>
+          <p-button
+            label="Hapus"
+            icon="pi pi-trash"
+            class="p-button-sm p-button-danger"
+            (click)="deleteRow(group, i)"
+          >
+          </p-button>
+        </td> -->
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Button to Add Row -->
+  <!-- <p-button label="Tambah Baris" icon="pi pi-plus" (click)="addRow(group)">
+  </p-button> -->
+</div>
+<br />
+<p-button label="Simpan" icon="pi pi-save" (click)="savePlans()"></p-button>

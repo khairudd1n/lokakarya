@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GroupAchievementComponent } from './features/group-achievement/group-achievement.component';
-import { AchievementComponent } from './features/achievement/achievement.component';
 import { SharedModule } from './shared/primeng/shared/shared.module';
-import { GroupAttitudeSkillComponent } from './features/group-attitude-skill/group-attitude-skill.component';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
@@ -28,7 +25,7 @@ logout () {
   localStorage.removeItem('token');
 }
   items: MenuItem[] = [];
-  role: string = 'HR';
+  role: string = 'EMP';
 
   ngOnInit() {
     // Check the user's role and load the corresponding menu
@@ -38,10 +35,10 @@ logout () {
       this.items = this.getEmpMenu();
     }
   }
-
   // Define admin menu items
   getHrMenu(): MenuItem[] {
     return [
+
       { label: 'User', routerLink: '/user' },
       { label: 'Division', routerLink : '/division' },
       { label: 'Role-menu', routerLink: '/role-menu' },
@@ -59,21 +56,32 @@ logout () {
         items: [
           { label: 'Achievement', routerLink: '/achievement' },
           { label: 'Group achieve', routerLink: '/group-achievement' },
-          { label: 'Emp achieve' },
+          { label: 'Emp achieve', routerLink: '/emp-achievement' },
         ],
       },
-      { label: 'Ass. Summary' },
+      {
+        label: 'Assessment',
+        items: [
+          { label: 'Summary', routerLink: '/ass-summary' },
+          { label: 'Achievement' },
+          { label: 'Attitude Skill' },
+        ],
+      },
     ];
   }
-
   // Define employee menu items
   getEmpMenu(): MenuItem[] {
     return [
-      { label: 'Attitude' },
-      { label: 'Technical' },
-      { label: 'Dev plan' },
-      { label: 'Suggestion' },
-      { label: 'Assessment summary' },
+      {
+        label: 'Assessment',
+        items: [
+          { label: 'Achievement', routerLink: '/emp-achievement' },
+          { label: 'Attitude Skill', routerLink: '/emp-attitude-skill-new' },
+          { label: 'Dev Plan', routerLink: '/emp-dev-plan' },
+          { label: 'Technical Skill' },
+          { label: 'Summary' },
+        ],
+      },
     ];
   }
 }
