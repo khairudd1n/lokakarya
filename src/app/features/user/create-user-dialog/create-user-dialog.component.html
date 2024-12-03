@@ -145,7 +145,7 @@
           ></p-checkbox>
         </div>
       </div>
-      @if(user.selectedRoles.length === 0 ){
+      @if(user.selectedRoles?.length === 0 ){
         <div class="p-error">Roles are required.</div>
       }
     </div>
@@ -180,7 +180,7 @@
         type="submit"
         label="{{ userData ? 'Update' : 'Save' }}"
         icon="pi pi-check"
-        [disabled]="!user.username || !user.email_address || !user.password || !user.full_name || !user.position|| !user.join_date || user.selectedRoles.length === 0 || !user.division || !user.employee_status || !user.enabled"
+        [disabled]="!user.username || !user.email_address || (!userData && !user.password) || !user.full_name || !user.position|| !user.join_date || user.selectedRoles.length === 0 || !user.division || user.employee_status === null || user.enabled === null"
         (click)="saveUser()"
       ></button>
     </div>
