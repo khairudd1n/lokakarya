@@ -22,7 +22,9 @@
         required
         #username="ngModel"
       />
-      <div *ngIf="username.invalid && username.touched" class="p-error">Username is required.</div>
+      <div *ngIf="username.invalid && username.touched" class="p-error">
+        Username is required.
+      </div>
     </div>
 
     <div class="field col-12 md:col-6">
@@ -36,7 +38,9 @@
         required
         #email="ngModel"
       />
-      <div *ngIf="email.invalid && email.touched" class="p-error">Email is required.</div>
+      <div *ngIf="email.invalid && email.touched" class="p-error">
+        Email is required.
+      </div>
     </div>
 
     <!-- Row 2: Password and Full Name -->
@@ -51,7 +55,9 @@
         required
         #password="ngModel"
       />
-      <div *ngIf="password.invalid && password.touched" class="p-error">Password is required.</div>
+      <div *ngIf="password.invalid && password.touched" class="p-error">
+        Password is required.
+      </div>
     </div>
 
     <div class="field col-12 md:col-6">
@@ -65,7 +71,9 @@
         required
         #fullname="ngModel"
       />
-      <div *ngIf="fullname.invalid && fullname.touched" class="p-error">Full Name is required.</div>
+      <div *ngIf="fullname.invalid && fullname.touched" class="p-error">
+        Full Name is required.
+      </div>
     </div>
 
     <!-- Row 3: Position and Status -->
@@ -80,7 +88,9 @@
         required
         #position="ngModel"
       />
-      <div *ngIf="position.invalid && position.touched" class="p-error">Position is required.</div>
+      <div *ngIf="position.invalid && position.touched" class="p-error">
+        Position is required.
+      </div>
     </div>
 
     <div class="field col-12 md:col-6">
@@ -90,19 +100,25 @@
           pButton
           label="Permanent"
           class="w-6"
-          [class]="{'p-button-info': user.employee_status === 1, 'p-button-outlined': user.employee_status !== 1}"
+          [class]="{
+            'p-button-info': user.employee_status === 1,
+            'p-button-outlined': user.employee_status !== 1
+          }"
           (click)="setEmployeeStatus(1)"
         ></button>
         <button
           pButton
           label="Contract"
           class="w-6"
-          [class]="{'p-button-info': user.employee_status === 0, 'p-button-outlined': user.employee_status !== 0}"
+          [class]="{
+            'p-button-info': user.employee_status === 0,
+            'p-button-outlined': user.employee_status !== 0
+          }"
           (click)="setEmployeeStatus(0)"
         ></button>
       </div>
       @if(user.employee_status.invalid){
-        <div class="p-error">Status is required.</div>
+      <div class="p-error">Status is required.</div>
       }
     </div>
 
@@ -118,7 +134,9 @@
         required
         #joinDate="ngModel"
       />
-      <div *ngIf="joinDate.invalid && joinDate.touched" class="p-error">Join Date is required.</div>
+      <div *ngIf="joinDate.invalid && joinDate.touched" class="p-error">
+        Join Date is required.
+      </div>
     </div>
 
     <div class="field col-12 md:col-6">
@@ -146,7 +164,7 @@
         </div>
       </div>
       @if(user.selectedRoles?.length === 0 ){
-        <div class="p-error">Roles are required.</div>
+      <div class="p-error">Roles are required.</div>
       }
     </div>
 
@@ -160,7 +178,7 @@
         placeholder="Select a Division"
       ></p-dropdown>
       @if (user.division === null) {
-        <div class="p-error">Division is required.</div>
+      <div class="p-error">Division is required.</div>
       }
     </div>
   </div>
@@ -180,7 +198,18 @@
         type="submit"
         label="{{ userData ? 'Update' : 'Save' }}"
         icon="pi pi-check"
-        [disabled]="!user.username || !user.email_address || (!userData && !user.password) || !user.full_name || !user.position|| !user.join_date || user.selectedRoles.length === 0 || !user.division || user.employee_status === null || user.enabled === null"
+        [disabled]="
+          !user.username ||
+          !user.email_address ||
+          (!userData && !user.password) ||
+          !user.full_name ||
+          !user.position ||
+          !user.join_date ||
+          user.selectedRoles.length === 0 ||
+          !user.division ||
+          user.employee_status === null ||
+          user.enabled === null
+        "
         (click)="saveUser()"
       ></button>
     </div>

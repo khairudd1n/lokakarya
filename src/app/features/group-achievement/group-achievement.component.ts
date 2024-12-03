@@ -14,6 +14,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-group-achievement',
@@ -29,7 +30,8 @@ import Swal from 'sweetalert2';
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-  ],
+    NavBarComponent
+],
   templateUrl: './group-achievement.component.html',
   styleUrl: './group-achievement.component.css',
 })

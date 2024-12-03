@@ -17,6 +17,8 @@ import {
 import { FormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
+import { DropdownModule } from 'primeng/dropdown';
+import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
 
 interface AttitudeSkill {
   attitude_skill_name: string;
@@ -33,7 +35,9 @@ interface AttitudeSkill {
     InputNumberModule,
     ButtonModule,
     FormsModule,
-  ],
+    DropdownModule,
+    NavBarComponent
+],
   templateUrl: './emp-attitude-skill-new.component.html',
   styleUrl: './emp-attitude-skill-new.component.css',
 })
@@ -48,6 +52,14 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     private http: HttpClient,
     private empAttitudeSkillService: EmpAttitudeSkillNewService
   ) {}
+
+  scoreOptions = [
+    { label: 'Sangat Baik', value: 100 },
+    { label: 'Baik', value: 80 },
+    { label: 'Cukup', value: 60 },
+    { label: 'Kurang', value: 40 },
+    { label: 'Sangat Kurang', value: 20 },
+  ];
 
   // ngOnInit(): void {
   //   this.getUserId(); // Fetch and log userId

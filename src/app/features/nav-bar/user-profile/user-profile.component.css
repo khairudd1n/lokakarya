@@ -1,0 +1,95 @@
+:host ::ng-deep .profile-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  :host ::ng-deep .profile-sidebar {
+    width: 240px;
+    background-color: #ffffff; /* White background */
+    color: #333; /* Adjusted text color for contrast */
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow for separation */
+    border-radius: 12px 0 0 12px; /* Rounded corners */
+  }
+  
+  :host ::ng-deep .profile-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  :host ::ng-deep .profile-sidebar li {
+    border-radius: 4px;
+    padding: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.3s ease;
+  }
+  
+  :host ::ng-deep .profile-sidebar li:hover {
+    border-radius: 4px;
+    background-color: #f0f0f0; /* Lighter background on hover */
+  }
+  
+  :host ::ng-deep .profile-sidebar li.active {
+    border-radius: 4px;
+    background-color: #007bff; /* Highlight active tab */
+    color: white; /* Active text color */
+    font-weight: bold;
+  }
+  
+  :host ::ng-deep .profile-sidebar i {
+    margin-right: 10px;
+  }
+  
+  :host ::ng-deep .profile-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-left: 20px;
+  }
+  
+  :host ::ng-deep .profile-content h2 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  :host ::ng-deep .profile-content p {
+    color: #666;
+  }
+  
+  :host ::ng-deep .form-group {
+    margin-bottom: 20px;
+  }
+  
+  :host ::ng-deep label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  :host ::ng-deep input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  :host ::ng-deep button.btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  :host ::ng-deep button.btn:hover {
+    background-color: #0056b3;
+  }
+  
