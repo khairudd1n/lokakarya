@@ -75,7 +75,8 @@ export class AchievementService {
     //   .get<{ group_achievement_name: string; id: string }[]>(
 
     return this.http
-      .get<AchieveWithGroupNameDto[]>(
+      .get<{ group_achievement_name: string; id: string }[]>(
+>>>>>>>>> Temporary merge branch 2
         'http://localhost:8080/group-achievements',
         { headers }
       )
