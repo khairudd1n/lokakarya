@@ -76,7 +76,6 @@ export class AchievementService {
 
     return this.http
       .get<{ group_achievement_name: string; id: string }[]>(
->>>>>>>>> Temporary merge branch 2
         'http://localhost:8080/group-achievements',
         { headers }
       )
