@@ -4,24 +4,24 @@ import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
 
-export interface EmpDevPlanCreateDto {
+export interface EmpTechSkillCreateDto {
   user_id: UUID;
-  plan: string;
-  dev_plan_id: UUID;
-  plan_detail: string;
+  tech_skill_id: UUID;
+  tech_detail: string;
+  score: number;
   assessment_year: number;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class EmpDevPlanService {
-  private apiUrl = 'http://localhost:8080/emp-dev-plan'; // Backend API endpoint
+export class EmpTechnicalSkillService {
+  private apiUrl = 'http://localhost:8080/emp-tech-skill/save'; // Backend API endpoint
   private token = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
 
-  saveEmpDevPlan(payload: EmpDevPlanCreateDto[]): Observable<any> {
+  saveEmpTechSkill(payload: EmpTechSkillCreateDto[]): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

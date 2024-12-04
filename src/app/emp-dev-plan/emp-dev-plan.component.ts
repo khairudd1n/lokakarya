@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 
 interface Row {
-  keterangan: string;
+  plan: string;
   plan_detail: string;
   dev_plan_id?: string; // Mark as optional if it might not be present initially
   [key: string]: any; // Allows additional properties if needed
@@ -45,22 +45,12 @@ export class EmpDevPlanComponent implements OnInit {
   userId: string = ''; // For storing the logged-in userId
   selectedPlans: EmpDevPlanCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
+  savedPlans: EmpDevPlanCreateDto[] = []; // Menampung data yang sudah disimpan
 
   constructor(
     private http: HttpClient,
     private empDevPlanService: EmpDevPlanService
   ) {}
-
-  // ngOnInit(): void {
-  //   this.getUserId();
-  //   this.getAllEmpDevPlan().subscribe((data) => {
-  //     this.groupData = data.map((group) => ({
-  //       ...group,
-  //       rows: group.rows || [{ keterangan: '' }], // Initialize rows if not present
-  //     }));
-  //     console.log('Fetched Dev Plan:', this.groupData);
-  //   });
-  // }
 
   ngOnInit(): void {
     this.getUserId();
@@ -72,7 +62,7 @@ export class EmpDevPlanComponent implements OnInit {
           // Explicitly type the row parameter
           ...row,
           dev_plan_id: group.id, // Add dev_plan_id to each row
-        })) || [{ keterangan: '', plan_detail: '', dev_plan_id: group.id }], // Ensure dev_plan_id is included if rows are empty
+        })) || [{ plan_detail: '', dev_plan_id: group.id }], // Ensure dev_plan_id is included if rows are empty
       }));
       console.log('Fetched Dev Plan:', this.groupData);
     });
@@ -89,7 +79,9 @@ export class EmpDevPlanComponent implements OnInit {
 
   // Function to add a new row
   addRow(group: any): void {
-    group.rows.push({ keterangan: '' });
+    const newRow = { plan: group.plan, plan_detail: '', dev_plan_id: group.id };
+    console.log('Adding new row:', newRow);
+    group.rows.push(newRow);
   }
 
   // Function to delete a row
@@ -116,49 +108,34 @@ export class EmpDevPlanComponent implements OnInit {
     }
   }
 
-  // logPlanId(dev_plan_id: string, plan_detail: string): void {
-  //   console.log('Received devPlanId:', dev_plan_id);
-
-  //   const existingPlanIndex = this.selectedPlans.findIndex(
-  //     (plan) => plan.dev_plan_id === dev_plan_id
-  //   );
-
-  //   if (existingPlanIndex !== -1) {
-  //     // Update the existing skill if it already exists
-  //     this.selectedPlans[existingPlanIndex].plan_detail = plan_detail;
-  //   } else {
-  //     // Create a new skill object if it doesn't exist
-  //     const plan: EmpDevPlanCreateDto = {
-  //       user_id: this.userId as UUID,
-  //       dev_plan_id: dev_plan_id as UUID,
-  //       plan_detail,
-  //       assessment_year: this.assessmentYear,
-  //     };
-  //     console.log('Group Data:', this.groupData);
-  //     console.log('Adding Plan to Selection:', plan);
-  //     this.selectedPlans.push(plan);
-  //   }
-  // }
-
   logPlanId(devPlanId: string, plan_detail: string, row: any): void {
-    // Use the dev_plan_id from the row itself
-    const existingPlanIndex = this.selectedPlans.findIndex(
-      (plan) => plan.dev_plan_id === row.dev_plan_id // Match using row.dev_plan_id
-    );
-
-    if (existingPlanIndex !== -1) {
-      // Update the existing plan if it already exists
-      this.selectedPlans[existingPlanIndex].plan_detail = plan_detail;
-    } else {
-      // Create a new plan object if it doesn't exist
+    // Hanya tambahkan ke selectedPlans jika plan_detail tidak kosong
+    if (plan_detail.trim() !== '') {
+      // Buat objek plan baru
       const plan: EmpDevPlanCreateDto = {
         user_id: this.userId as UUID,
-        dev_plan_id: row.dev_plan_id as UUID, // Use dev_plan_id from the row
+        plan: row.plan,
+        dev_plan_id: row.dev_plan_id as UUID,
         plan_detail,
         assessment_year: this.assessmentYear,
       };
-      console.log('Adding Plan to Selection:', plan);
-      this.selectedPlans.push(plan);
+
+      // Cek apakah plan sudah ada di selectedPlans
+      const existingPlanIndex = this.selectedPlans.findIndex(
+        (plan) =>
+          plan.dev_plan_id === row.dev_plan_id &&
+          plan.plan_detail === plan_detail &&
+          plan.plan === row.plan
+      );
+
+      if (existingPlanIndex === -1) {
+        // Jika tidak ada, tambahkan ke selectedPlans
+        console.log('Adding Plan to Selection:', plan);
+        this.selectedPlans.push(plan);
+      } else {
+        // Jika ada, update plan_detail
+        this.selectedPlans[existingPlanIndex].plan_detail = plan_detail;
+      }
     }
   }
 
@@ -168,11 +145,18 @@ export class EmpDevPlanComponent implements OnInit {
       this.empDevPlanService.saveEmpDevPlan(this.selectedPlans).subscribe(
         (response) => {
           console.log('Save successful:', response);
+
+          // Tambahkan data ke tabel savedPlans
+          this.savedPlans = [...this.savedPlans, ...this.selectedPlans];
+
+          // Reset selectedPlans setelah berhasil menyimpan
+          this.selectedPlans = [];
+
           Swal.fire({
             icon: 'success',
             title: 'Success!',
             text: 'Plans saved successfully!',
-          }).then(() => {});
+          });
         },
         (error) => {
           console.error('Save failed:', error);
@@ -194,4 +178,5 @@ export class EmpDevPlanComponent implements OnInit {
 
   token: string = localStorage.getItem('token') || '';
   private apiUrl2 = 'http://localhost:8080/dev-plan';
+  // private apiUrl2 = 'http://localhost:8080/emp-dev-plan';
 }
