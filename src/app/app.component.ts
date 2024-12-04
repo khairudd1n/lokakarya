@@ -3,15 +3,28 @@ import { RouterOutlet } from '@angular/router';
 import { SharedModule } from './shared/primeng/shared/shared.module';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
+import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, SharedModule, MenubarModule],
+  // imports: [
+  //   RouterOutlet,
+  //   GroupAchievementComponent,
+  //   AchievementComponent,
+  //   SharedModule,
+  //   GroupAttitudeSkillComponent,
+  //   MenubarModule,
+  //   TechnicalSkillComponent
+  // ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
+  logout() {
+    localStorage.removeItem('token');
+  }
   items: MenuItem[] = [];
   role: string = 'EMP';
 
@@ -26,7 +39,9 @@ export class AppComponent implements OnInit {
   // Define admin menu items
   getHrMenu(): MenuItem[] {
     return [
-      { label: 'User' },
+      // { label: 'User' },
+      // { label: 'Division', routerLink: '/division' },
+      { label: 'User', routerLink: '/user' },
       { label: 'Division', routerLink: '/division' },
       { label: 'Role-menu' },
       {
@@ -36,7 +51,7 @@ export class AppComponent implements OnInit {
           { label: 'Attitude skill', routerLink: '/attitude-skill' },
         ],
       },
-      { label: 'Technical skill' },
+      { label: 'Technical skill', routerLink: '/technical-skill' },
       { label: 'Dev plan', routerLink: '/dev-plan' },
       {
         label: 'Achievement',
@@ -62,7 +77,6 @@ export class AppComponent implements OnInit {
       {
         label: 'Assessment',
         items: [
-          { label: 'Achievement', routerLink: '/emp-achievement' },
           { label: 'Attitude Skill', routerLink: '/emp-attitude-skill-new' },
           { label: 'Dev Plan', routerLink: '/emp-dev-plan' },
           { label: 'Technical Skill' },
