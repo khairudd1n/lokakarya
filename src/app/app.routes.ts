@@ -16,12 +16,13 @@ import { EmpAttitudeSkillNewComponent } from './emp-attitude-skill-new/emp-attit
 import { EmpDevPlanComponent } from './emp-dev-plan/emp-dev-plan.component';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
 import { RoleMenuComponent } from './features/role-menu/role-menu.component';
+import { UserProfileComponent } from './features/nav-bar/user-profile/user-profile.component';
 
 
 export const routes: Routes = [
   { path: '', 
     component: HomePageComponent, 
-    canActivate: [authGuard, roleMenuGuard] },
+    canActivate: [authGuard] },
   {
     path: 'group-attitude-skill',
     component: GroupAttitudeSkillComponent,
@@ -80,7 +81,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'emp-attitude-skill-new',
+    path: 'emp-attitude-skill',
     component: EmpAttitudeSkillNewComponent,
     canActivate: [authGuard],
   },
@@ -100,5 +101,10 @@ export const routes: Routes = [
     component: RoleMenuComponent,
     canActivate: [authGuard, roleMenuGuard],
     data: { permission: 'ALL_APP_ROLE_MENU' },
+  },
+  {
+    path: 'user-profile',
+    component: UserProfileComponent,
+    canActivate: [authGuard],
   }
 ];

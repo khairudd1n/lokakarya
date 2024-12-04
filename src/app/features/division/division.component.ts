@@ -19,6 +19,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-division',
@@ -38,7 +39,8 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     DialogModule,
     MenubarModule,
-  ],
+    NavBarComponent
+],
   templateUrl: './division.component.html',
   styleUrl: './division.component.css',
 })

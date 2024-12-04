@@ -18,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-achievement',
@@ -38,7 +39,8 @@ import Swal from 'sweetalert2';
     FormsModule,
     ReactiveFormsModule,
     DialogModule,
-  ],
+    NavBarComponent
+],
 })
 export class AchievementComponent implements OnInit {
   achievements: AchieveWithGroupNameDto[] = [];

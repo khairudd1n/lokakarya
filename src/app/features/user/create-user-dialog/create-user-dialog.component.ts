@@ -91,6 +91,8 @@ export class CreateUserDialogComponent implements OnChanges {
       } else {
         // Creating a new user
         this.resetForm();
+        this.user.enabled = true;
+        this.setEmployeeStatus(0);
       }
     }
   }

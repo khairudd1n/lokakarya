@@ -1,9 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SharedModule } from './shared/primeng/shared/shared.module';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
+import { GroupAchievementComponent } from './features/group-achievement/group-achievement.component';
+import { AchievementComponent } from './features/achievement/achievement.component';
+import { GroupAttitudeSkillComponent } from './features/group-attitude-skill/group-attitude-skill.component';
+import { MenuService } from './core/services/menu.service';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from './core/services/auth.service';
+import { Menu } from './core/models/menu.model';
+import { MENU_MAP } from './shared/utils/menu-map';
 
 @Component({
   selector: 'app-root',
@@ -20,68 +28,6 @@ import { TechnicalSkillComponent } from './features/technical-skill/technical-sk
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit {
-logout () {
-  localStorage.removeItem('token');
-}
-  items: MenuItem[] = [];
-  role: string = 'EMP';
+export class AppComponent {
 
-  ngOnInit() {
-    // Check the user's role and load the corresponding menu
-    if (this.role === 'HR') {
-      this.items = this.getHrMenu();
-    } else if (this.role === 'EMP') {
-      this.items = this.getEmpMenu();
-    }
-  }
-  // Define admin menu items
-  getHrMenu(): MenuItem[] {
-    return [
-
-      { label: 'User', routerLink: '/user' },
-      { label: 'Division', routerLink : '/division' },
-      { label: 'Role-menu', routerLink: '/role-menu' },
-      {
-        label: 'Attitude',
-        items: [
-          { label: 'Group attitude', routerLink: '/group-attitude-skill' },
-          { label: 'Attitude skill', routerLink: '/attitude-skill' },
-        ],
-      },
-      { label: 'Technical skill', routerLink: '/technical-skill' },
-      { label: 'Dev plan', routerLink: '/dev-plan' },
-      {
-        label: 'Achievement',
-        items: [
-          { label: 'Achievement', routerLink: '/achievement' },
-          { label: 'Group achieve', routerLink: '/group-achievement' },
-          { label: 'Emp achieve', routerLink: '/emp-achievement' },
-        ],
-      },
-      {
-        label: 'Assessment',
-        items: [
-          { label: 'Summary', routerLink: '/ass-summary' },
-          { label: 'Achievement' },
-          { label: 'Attitude Skill' },
-        ],
-      },
-    ];
-  }
-  // Define employee menu items
-  getEmpMenu(): MenuItem[] {
-    return [
-      {
-        label: 'Assessment',
-        items: [
-          { label: 'Achievement', routerLink: '/emp-achievement' },
-          { label: 'Attitude Skill', routerLink: '/emp-attitude-skill-new' },
-          { label: 'Dev Plan', routerLink: '/emp-dev-plan' },
-          { label: 'Technical Skill' },
-          { label: 'Summary' },
-        ],
-      },
-    ];
-  }
 }
