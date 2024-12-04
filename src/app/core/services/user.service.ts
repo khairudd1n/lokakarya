@@ -62,4 +62,10 @@ export class UserService {
       map((response) => response.content)
     )
   }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get<ApiResponse<User>>(`${this.url}/detail/${id}`, { headers: { Authorization: `Bearer ${this.token}` } }).pipe(
+      map((response) => response.content) // Extract content array
+    );
+  }
 }

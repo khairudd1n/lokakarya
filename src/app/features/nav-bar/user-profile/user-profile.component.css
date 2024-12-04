@@ -1,95 +1,181 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  box-sizing: border-box; /* Include padding and border in height */
+}
+
 :host ::ng-deep .profile-container {
-    display: flex;
-    height: 100vh;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-  }
-  
-  :host ::ng-deep .profile-sidebar {
-    width: 240px;
-    background-color: #ffffff; /* White background */
-    color: #333; /* Adjusted text color for contrast */
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow for separation */
-    border-radius: 12px 0 0 12px; /* Rounded corners */
-  }
-  
-  :host ::ng-deep .profile-sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  :host ::ng-deep .profile-sidebar li {
-    border-radius: 4px;
-    padding: 15px;
-    cursor: pointer;
-    text-align: left;
-    transition: background-color 0.3s ease;
-  }
-  
-  :host ::ng-deep .profile-sidebar li:hover {
-    border-radius: 4px;
-    background-color: #f0f0f0; /* Lighter background on hover */
-  }
-  
-  :host ::ng-deep .profile-sidebar li.active {
-    border-radius: 4px;
-    background-color: #007bff; /* Highlight active tab */
-    color: white; /* Active text color */
-    font-weight: bold;
-  }
-  
-  :host ::ng-deep .profile-sidebar i {
-    margin-right: 10px;
-  }
-  
-  :host ::ng-deep .profile-content {
-    flex-grow: 1;
-    padding: 30px;
-    background-color: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-left: 20px;
-  }
-  
-  :host ::ng-deep .profile-content h2 {
-    font-size: 24px;
-    color: #333;
-  }
-  
-  :host ::ng-deep .profile-content p {
-    color: #666;
-  }
-  
-  :host ::ng-deep .form-group {
-    margin-bottom: 20px;
-  }
-  
-  :host ::ng-deep label {
-    font-size: 14px;
-    color: #333;
-  }
-  
-  :host ::ng-deep input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  :host ::ng-deep button.btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  :host ::ng-deep button.btn:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  flex: 1 1 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  position: relative;
+}
+
+:host ::ng-deep .profile-sidebar {
+  width: 240px;
+  background-color: #ffffff; /* White background */
+  color: #333; /* Adjusted text color for contrast */
+  padding-top: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow for separation */
+  border-radius: 12px 0 0 12px; /* Rounded corners */
+}
+
+:host ::ng-deep .profile-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+:host ::ng-deep .profile-sidebar li {
+  border-radius: 4px;
+  padding: 15px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+:host ::ng-deep .profile-sidebar li:hover {
+  border-radius: 4px;
+  background-color: #f0f0f0; /* Lighter background on hover */
+}
+
+:host ::ng-deep .profile-sidebar li.active {
+  border-radius: 4px;
+  background-color: #007bff; /* Highlight active tab */
+  color: white; /* Active text color */
+  font-weight: bold;
+}
+
+:host ::ng-deep .profile-sidebar i {
+  margin-right: 10px;
+}
+
+:host ::ng-deep .profile-content {
+  flex-grow: 1;
+  padding: 30px;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-left: 10px;
+}
+
+:host ::ng-deep .profile-content h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+:host ::ng-deep .profile-content p {
+  color: #666;
+}
+
+:host ::ng-deep .form-group {
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+:host ::ng-deep label {
+  font-size: 14px;
+  color: #333;
+}
+
+:host ::ng-deep input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep input:focus {
+  border-color: #007ad9;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 122, 217, 0.5);
+}
+
+:host ::ng-deep button.btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+:host ::ng-deep button.btn:hover {
+  background-color: #0056b3;
+}
+
+:host ::ng-deep .logout-container {
+  margin-top: auto; /* Push the logout button to the bottom */
+  display: flex;
+  justify-content: flex-end; /* Align to the right */
+}
+
+:host ::ng-deep .logout-button {
+  padding: 10px 20px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+:host ::ng-deep .logout-button:hover {
+  background-color: #d9363e;
+}
+
+:host ::ng-deep .profile-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Divide into two columns of equal width */
+  gap: 10px; /* Space between columns */
+  text-align: left; /* Ensure text is aligned to the left */
+  font-size: 16px;
+}
+
+:host ::ng-deep .profile-info p {
+  margin: 8px 0;
+}
+
+:host ::ng-deep .roles-section {
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .roles-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping if the roles don't fit */
+  margin-left: 10px; /* Space between label and roles */
+}
+
+:host ::ng-deep .role-badge {
+  background-color: #f1f3f5;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 14px;
+  color: #495057;
+  margin-right: 8px; /* Space between each role */
+  margin-bottom: 8px; /* Add space at the bottom if wrapping occurs */
+  display: inline-block; /* Ensure roles appear next to each other */
+}
+
+:host ::ng-deep .profile-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  text-align: center; /* Ensure text is centered */
+  width: 100%; /* Ensure it takes full width of the parent container */
+  max-width: 600px; /* Optional: set a max width to prevent it from stretching too much */
+  margin: 0 auto; /* Centers the profile-tab div itself horizontally */
+}
+
+.text-danger {
+  color: #ff4d4f; /* Bright red for errors */
+  font-size: 0.9rem; /* Slightly smaller than normal text for subtlety */
+  margin-top: 5px;
+  display: block;
+}

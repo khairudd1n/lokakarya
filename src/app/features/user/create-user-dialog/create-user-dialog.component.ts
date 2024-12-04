@@ -83,11 +83,13 @@ export class CreateUserDialogComponent implements OnChanges {
     if (changes['userData']) {
       if (this.userData) {
         // Editing an existing user
+        console.log("user data : ",this.userData);
         this.user = { ...this.userData };
         this.user.selectedRoles =
           this.userData.role?.map((role: any) => role.id) || [];
         this.user.division = this.userData.division?.id || '';
         this.user.password = null; // Do not prepopulate the password
+        this.user.employee_status? this.setEmployeeStatus(1) : this.setEmployeeStatus(0);
       } else {
         // Creating a new user
         this.resetForm();
