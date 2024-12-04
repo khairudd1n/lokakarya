@@ -1,0 +1,11 @@
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    text-align: center !important;
+}
+
+:host ::ng-deep .p-d-flex {
+    text-align: center !important;
+}
+  
+
+
+  

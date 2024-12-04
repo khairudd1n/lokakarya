@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DivisionDto, DivisionService } from '../division.service';
+import {
+  DivisionDto,
+  DivisionService,
+} from '../../core/services/division.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { InputTextModule } from 'primeng/inputtext';
