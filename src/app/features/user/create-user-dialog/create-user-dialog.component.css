@@ -5,4 +5,14 @@
 .p-field label {
   font-weight: bold; /* Makes labels stand out */
 }
+
+:host ::ng-deep .p-button-info {
+  background-color: #4caf50; /* Green color */
+  border-color: #4caf50;
+}
+
+:host ::ng-deep .p-button-outlined {
+  background-color: transparent;
+  border-color: #4caf50; /* Match the border color */
+}
   

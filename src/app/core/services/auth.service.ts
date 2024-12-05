@@ -9,12 +9,25 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
+
   url: string = 'http://localhost:8080/auth';
 
   constructor(readonly http: HttpClient) { }
 
   login(username: string, password: string): Observable<ApiResponse<{ user: User; token: string }>> {
     return this.http.post<ApiResponse<{ user: User; token: string }>>(`${this.url}/login`, { username, password }); 
+  }
+
+  changePassword(userId: string, currentPassword: any, newPassword: any): Observable<ApiResponse<User>> {
+    const reqData = {
+      old_password: currentPassword,
+      new_password: newPassword
+    };
+
+    const token = this.getToken();
+
+    return this.http.patch<ApiResponse<User>>(`${this.url}/change-password/${userId}`, reqData, { headers: { Authorization: `Bearer ${token}` } });
+    
   }
 
   getToken(): string | null {
@@ -46,7 +59,7 @@ export class AuthService {
 
   // Log the user out by removing the token and redirecting to login
   logout(): void {
-      localStorage.removeItem('token');
+      localStorage.clear();
       // Redirect to login page
       window.location.href = '/login';  // Replace with your actual login URL
   }

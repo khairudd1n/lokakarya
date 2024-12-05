@@ -44,21 +44,26 @@
     </div>
 
     <!-- Row 2: Password and Full Name -->
-    <div class="field col-12 md:col-6">
-      <label for="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        pInputText
-        [(ngModel)]="user.password"
-        name="password"
-        required
-        #password="ngModel"
-      />
-      <div *ngIf="password.invalid && password.touched" class="p-error">
-        Password is required.
+    @if(!userData){
+      <div class="field col-12 md:col-6">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          pInputText
+          [(ngModel)]="user.password"
+          name="password"
+          required
+          #password="ngModel"
+        />
+        <div *ngIf="password.invalid && password.touched" class="p-error">
+          <span *ngIf="password.errors?.['required']">Password is required.</span>
+            <span *ngIf="password.errors?.['minlength']">
+              Password must be at least 8 characters long.
+            </span>
+        </div>
       </div>
-    </div>
+    }   
 
     <div class="field col-12 md:col-6">
       <label for="fullname">Full Name</label>
@@ -146,10 +151,25 @@
         [onLabel]="'Enabled'"
         [offLabel]="'Disabled'"
         name="enabled"
+        [styleClass]="user.enabled ? 'p-button-info' : 'p-button-outlined'"
       ></p-toggleButton>
     </div>
 
     <!-- Row 5: Roles and Division -->
+    <div class="field col-12 md:col-6">
+      <label for="division">Division</label>
+      <p-dropdown
+        [(ngModel)]="user.division"
+        [options]="divisions"
+        optionLabel="division_name"
+        optionValue="id"
+        placeholder="Select a Division"
+      ></p-dropdown>
+      @if (user.division === null) {
+      <div class="p-error">Division is required.</div>
+      }
+    </div>
+
     <div class="field col-12 md:col-6">
       <label for="roles">Roles</label>
       <div class="flex flex-column gap-2">
@@ -165,20 +185,6 @@
       </div>
       @if(user.selectedRoles?.length === 0 ){
       <div class="p-error">Roles are required.</div>
-      }
-    </div>
-
-    <div class="field col-12 md:col-6">
-      <label for="division">Division</label>
-      <p-dropdown
-        [(ngModel)]="user.division"
-        [options]="divisions"
-        optionLabel="division_name"
-        optionValue="id"
-        placeholder="Select a Division"
-      ></p-dropdown>
-      @if (user.division === null) {
-      <div class="p-error">Division is required.</div>
       }
     </div>
   </div>
