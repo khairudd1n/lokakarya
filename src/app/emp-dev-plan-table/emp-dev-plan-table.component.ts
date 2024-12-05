@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-emp-dev-plan-table',
@@ -21,7 +22,8 @@ import Swal from 'sweetalert2';
     ButtonModule,
     FormsModule,
     DialogModule,
-  ],
+    NavBarComponent
+],
   templateUrl: './emp-dev-plan-table.component.html',
   styleUrl: './emp-dev-plan-table.component.css',
 })

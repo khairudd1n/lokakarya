@@ -19,6 +19,7 @@ import { TechnicalSkillComponent } from './features/technical-skill/technical-sk
 import { RoleMenuComponent } from './features/role-menu/role-menu.component';
 import { UserProfileComponent } from './features/nav-bar/user-profile/user-profile.component';
 import { EmpTechnicalSkillComponent } from './emp-technical-skill/emp-technical-skill.component';
+import { EmpDevPlanTableComponent } from './emp-dev-plan-table/emp-dev-plan-table.component';
 
 
 export const routes: Routes = [
@@ -76,7 +77,7 @@ export const routes: Routes = [
     path: 'emp-achievement',
     component: EmpAchieveComponent,
     canActivate: [authGuard, roleMenuGuard],
-    data: { permission: 'ALL_EMP ACHIEVEMENT' },
+    data: { permission: 'ALL_EMP_ACHIEVEMENT' },
   },
   {
     path: 'ass-summary',
@@ -96,14 +97,10 @@ export const routes: Routes = [
     data: { permission: 'ALL_EMP_DEV_PLAN' },
   },
   {
-    path: 'emp-dev-plan-table',
+    path: 'my-emp-dev-plan',
     component: EmpDevPlanTableComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'emp-dev-plan-table',
-    component: EmpDevPlanTableComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'ALL_EMP_DEV_PLAN' },
   },
   {
     path: 'emp-technical-skill',

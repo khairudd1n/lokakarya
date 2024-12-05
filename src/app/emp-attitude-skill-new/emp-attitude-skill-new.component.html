@@ -27,8 +27,10 @@
         <td>
           <p-dropdown
             [options]="scoreOptions"
+            [(ngModel)]="skill.score"
             placeholder="Pilih nilai"
             [appendTo]="'body'"
+            (onChange)="logSkillId(skill.id, skill.score)"
           >
             > ></p-dropdown
           >

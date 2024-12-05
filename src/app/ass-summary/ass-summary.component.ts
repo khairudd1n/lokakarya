@@ -20,6 +20,8 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { EmpAchieveService } from '../emp-achieve.service';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-ass-summary',
@@ -43,19 +45,62 @@ import Swal from 'sweetalert2';
   templateUrl: './ass-summary.component.html',
   styleUrl: './ass-summary.component.css',
 })
+
 export class AssSummaryComponent implements OnInit {
   token: string = localStorage.getItem('token') || '';
   groupAttitudeSkills: GroupAttitudeSkillDto[] = [];
   groupAchievements: GroupAchieveDto[] = [];
+  empAchieve:any[] = [];
   isLoading: boolean = true;
   error: string | null = null;
 
-  constructor(private assSummaryService: AssSummaryService) {}
+  constructor(private assSummaryService: AssSummaryService, 
+    private empAchieveService: EmpAchieveService,
+    private authService: AuthService 
+  ) {}
 
   ngOnInit(): void {
     this.fetchGroupAttitudeSkills();
     this.fetchGroupAchievements();
+    const userId = this.authService.parseJwt(this.token).sub;
+    this.fetchEmpAchieveByUserId(userId);
   }
+
+  fetchEmpAchieveByUserId(userId: string): void {
+    this.empAchieveService.getAllEmpAchieveByUserId(userId).subscribe({
+      next: (data) => {
+        const groupedData = data.reduce<Record<string, GroupedData>>((acc, item) => {
+          const groupName = item.achievement.group_achievement.group_achievement_name;
+          const percentage = item.achievement.group_achievement.percentage;
+  
+          if (!acc[groupName]) {
+            acc[groupName] = { totalScore: 0, percentage: percentage, achievements: [] };
+          }
+  
+          acc[groupName].totalScore += item.score;
+          acc[groupName].achievements.push(item);
+          return acc;
+        }, {});
+  
+        const result: GroupedResult[] = Object.entries(groupedData).map(([groupName, details]) => ({
+          groupName,
+          totalScore: details.totalScore,
+          percentage: details.percentage, // Now included in the result
+          achievements: details.achievements,
+        }));
+  
+        this.empAchieve = result;
+        console.log('Grouped Employee Achievements:', this.empAchieve);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching employee achievements:', err);
+        this.isLoading = false;
+      },
+    });
+  }
+  
+  
 
   fetchGroupAttitudeSkills(): void {
     this.assSummaryService.getAllGroupAttitudeSkills().subscribe({
@@ -83,5 +128,18 @@ export class AssSummaryComponent implements OnInit {
         this.isLoading = false;
       },
     });
-  }
+  }  
+}
+
+export interface GroupedData {
+  totalScore: number;
+  percentage: number;
+  achievements: any[]; // Replace `any` with the specific achievement type
+}
+
+export interface GroupedResult {
+  groupName: string;
+  totalScore: number;
+  percentage: number;
+  achievements: any[]; // Replace `any` with the specific achievement type
 }

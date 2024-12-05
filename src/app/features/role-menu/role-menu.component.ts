@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { Menu } from '../../core/models/menu.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-role-menu',
@@ -117,10 +118,25 @@ export class RoleMenuComponent implements OnInit {
       forkJoin(updateObservables).subscribe(
         (responses) => {
           console.log('Role menus updated successfully:', responses);
-          this.ngOnInit(); // Call ngOnInit after all updates are done
+          Swal.fire({
+            title: 'Success!',
+            text: 'Role menus updated successfully.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
+          });
         },
         (error) => {
           console.error('Error updating role menus:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred while updating role menus.',
+            icon: 'error',
+            confirmButtonColor: '#3085d6',
+          })
         }
       );
     } else {
