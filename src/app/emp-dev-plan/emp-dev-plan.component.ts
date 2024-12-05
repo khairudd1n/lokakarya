@@ -118,6 +118,7 @@ export class EmpDevPlanComponent implements OnInit {
         dev_plan_id: row.dev_plan_id as UUID,
         plan_detail,
         assessment_year: this.assessmentYear,
+        created_at: new Date(),
       };
 
       // Cek apakah plan sudah ada di selectedPlans

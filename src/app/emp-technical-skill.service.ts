@@ -7,6 +7,7 @@ import { UUID } from 'crypto';
 export interface EmpTechSkillCreateDto {
   user_id: UUID;
   tech_skill_id: UUID;
+  technical_skill: string;
   tech_detail: string;
   score: number;
   assessment_year: number;

@@ -83,6 +83,7 @@ export class AppComponent implements OnInit {
           { label: 'Summary' },
         ],
       },
+      { label: 'my dev plan', routerLink: '/emp-dev-plan-table' },
     ];
   }
 }

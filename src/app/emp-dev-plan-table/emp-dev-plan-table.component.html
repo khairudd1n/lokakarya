@@ -1,0 +1,43 @@
+<h1>My dev plan</h1>
+<label for="assessmentYear">Assessment Year:</label>
+<input
+  type="number"
+  id="assessmentYear"
+  [(ngModel)]="assessmentYear"
+  disabled="true"
+/>
+
+<div *ngFor="let group of groupData">
+  <h3>{{ group.plan }}</h3>
+
+  <!-- PrimeNG Table -->
+  <p-table [value]="group.rows" [paginator]="false">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">No.</th>
+        <th style="width: 70%">Plan Detail</th>
+        <th style="width: 20%">Tanggal Dibuat</th>
+        <th style="width: 20%">Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>
+          {{ row.plan_detail }}
+        </td>
+        <td>
+          {{ row.created_at }}
+        </td>
+        <td>
+          <button
+            pButton
+            label="Delete"
+            class="p-button-danger"
+            (click)="deleteEmpDevPlan(row.id)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

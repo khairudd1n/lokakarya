@@ -1,3 +1,63 @@
 <h1>Insert emp tech skill</h1>
 <label for="assessmentYear">Assessment Year:</label>
 <input type="number" id="assessmentYear" [(ngModel)]="assessmentYear" />
+
+<div *ngFor="let group of groupData">
+  <h3>{{ group.technical_skill }}</h3>
+
+  <!-- PrimeNG Table -->
+  <p-table [value]="group.rows" [paginator]="false">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">No.</th>
+        <th style="width: 70%">Keterangan</th>
+        <th style="width: 20%">Tingkat kemahiran (level)</th>
+        <th style="width: 20%">Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="row.tech_detail"
+            (blur)="
+              logTechId(row.tech_skill_id, row.tech_detail, row.score, row)
+            "
+            [style.width]="'100%'"
+            rows="3"
+          >
+          </textarea>
+        </td>
+        <td>
+          <p-dropdown
+            [options]="scoreOptions"
+            [(ngModel)]="row.score"
+            placeholder="Pilih level"
+            [appendTo]="'body'"
+            (onChange)="
+              logTechId(row.tech_skill_id, row.tech_detail, row.score, row)
+            "
+          >
+          </p-dropdown>
+        </td>
+
+        <td>
+          <p-button
+            label="Hapus"
+            icon="pi pi-trash"
+            class="p-button-sm p-button-danger"
+            (click)="deleteRow(group, i)"
+          >
+          </p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-button label="Tambah Baris" icon="pi pi-plus" (click)="addRow(group)">
+  </p-button>
+</div>
+<br />
+<p-button label="Simpan" icon="pi pi-save" (click)="saveTechs()"></p-button>
