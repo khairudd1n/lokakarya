@@ -2,7 +2,12 @@
 
 <h1>Insert Emp Attitude Skill</h1>
 <label for="assessmentYear">Assessment Year:</label>
-<input type="number" id="assessmentYear" [(ngModel)]="assessmentYear" />
+<input
+  type="number"
+  id="assessmentYear"
+  [(ngModel)]="assessmentYear"
+  disabled="true"
+/>
 
 <div *ngFor="let group of groupData">
   <h3>{{ group.group_name }}</h3>
@@ -20,20 +25,8 @@
         <td>{{ i + 1 }}</td>
         <td>{{ skill.attitude_skill_name }}</td>
         <td>
-          <!-- <p-inputNumber
-            [(ngModel)]="skill.score"
-            [showButtons]="true"
-            (onInput)="logSkillId(skill.id, skill.score)"
-            [disabled]="isSkillDisabled(skill.id)"
-            min="0"
-            max="100"
-          ></p-inputNumber> -->
-
           <p-dropdown
             [options]="scoreOptions"
-            [(ngModel)]="skill.score"
-            (onChange)="logSkillId(skill.id, skill.score)"
-            [disabled]="isSkillDisabled(skill.id)"
             placeholder="Pilih nilai"
             [appendTo]="'body'"
           >
@@ -49,15 +42,7 @@
       </tr>
     </ng-template>
   </p-table>
-
-  <!-- Validation Message -->
-  <!-- <div *ngIf="getTotalScore(group) > 100" style="color: red; font-weight: bold">
-    Total nilai tidak boleh lebih dari 100!
-  </div> -->
 </div>
 
-<p-button
-  label="Simpan"
-  icon="pi pi-save"
-  (click)="saveSkills()"
-></p-button>
+<p-button label="Simpan" icon="pi pi-save" (click)="saveSkills()"></p-button>
+

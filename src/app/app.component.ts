@@ -16,18 +16,21 @@ import { MENU_MAP } from './shared/utils/menu-map';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    GroupAchievementComponent,
-    AchievementComponent,
-    SharedModule,
-    GroupAttitudeSkillComponent,
-    MenubarModule,
-    TechnicalSkillComponent
-  ],
+  imports: [RouterOutlet, SharedModule, MenubarModule],
+  // imports: [
+  //   RouterOutlet,
+  //   GroupAchievementComponent,
+  //   AchievementComponent,
+  //   SharedModule,
+  //   GroupAttitudeSkillComponent,
+  //   MenubarModule,
+  //   TechnicalSkillComponent
+  // ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
+
 export class AppComponent {
+
 
 }

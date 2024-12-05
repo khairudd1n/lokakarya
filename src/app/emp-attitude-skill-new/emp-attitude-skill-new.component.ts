@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
 
+
 interface AttitudeSkill {
   attitude_skill_name: string;
   score: number;
@@ -60,17 +61,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     { label: 'Kurang', value: 40 },
     { label: 'Sangat Kurang', value: 20 },
   ];
-
-  // ngOnInit(): void {
-  //   this.getUserId(); // Fetch and log userId
-  //   this.getAllGroupWithAttitudeSkills().subscribe((data) => {
-  //     this.groupData = data;
-  //     console.log(
-  //       'Fetched Group Attitude with Attitude Skills:',
-  //       this.groupData
-  //     );
-  //   });
-  // }
 
   ngOnInit(): void {
     this.getUserId();
@@ -149,6 +139,22 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   // saveSkills(): void {
+  //   const hasIncompleteScores = this.groupData.some((group) =>
+  //     group.attitude_skills.some(
+  //       (skill: AttitudeSkill) =>
+  //         skill.score === null || skill.score === undefined
+  //     )
+  //   );
+
+  //   if (hasIncompleteScores) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Error!',
+  //       text: 'Semua nilai harus diisi sebelum menyimpan.',
+  //     });
+  //     return; // Stop execution
+  //   }
+
   //   if (this.selectedSkills.length > 0) {
   //     this.empAttitudeSkillService
   //       .saveEmpAttitudeSkills(this.selectedSkills)
@@ -159,7 +165,27 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   //             icon: 'success',
   //             title: 'Success!',
   //             text: 'Skills saved successfully!',
-  //           }).then(() => {});
+  //           }).then(() => {
+  //             // Store submitted skills in local storage
+  //             const submittedSkills = this.selectedSkills.map(
+  //               (skill) => skill.attitude_skill_id
+  //             );
+  //             const existingData = JSON.parse(
+  //               localStorage.getItem(`submittedSkills_${this.userId}`) || '[]'
+  //             );
+  //             localStorage.setItem(
+  //               `submittedSkills_${this.userId}`,
+  //               JSON.stringify([...existingData, ...submittedSkills])
+  //             );
+
+  //             // Update disabledSkills
+  //             submittedSkills.forEach((skillId) =>
+  //               this.disabledSkills.add(skillId)
+  //             );
+
+  //             // Refresh the page
+  //             window.location.reload();
+  //           });
   //         },
   //         (error) => {
   //           console.error('Save failed:', error);
@@ -180,6 +206,22 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   // }
 
   saveSkills(): void {
+    const hasIncompleteScores = this.groupData.some((group) =>
+      group.attitude_skills.some(
+        (skill: AttitudeSkill) =>
+          skill.score === null || skill.score === undefined
+      )
+    );
+
+    if (hasIncompleteScores) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Semua nilai harus diisi sebelum menyimpan.',
+      });
+      return;
+    }
+
     if (this.selectedSkills.length > 0) {
       this.empAttitudeSkillService
         .saveEmpAttitudeSkills(this.selectedSkills)
@@ -191,7 +233,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
               title: 'Success!',
               text: 'Skills saved successfully!',
             }).then(() => {
-              // Store submitted skills in local storage
+              // Simpan skill yang sudah diisi ke localStorage
               const submittedSkills = this.selectedSkills.map(
                 (skill) => skill.attitude_skill_id
               );
@@ -207,6 +249,11 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
               submittedSkills.forEach((skillId) =>
                 this.disabledSkills.add(skillId)
               );
+
+              // Refresh data tanpa reload halaman
+              this.getAllGroupWithAttitudeSkills().subscribe((data) => {
+                this.groupData = data;
+              });
             });
           },
           (error) => {
@@ -236,6 +283,16 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
   isSkillDisabled(skillId: string): boolean {
     return this.disabledSkills.has(skillId);
+  }
+
+  isSaveDisabled(): boolean {
+    // Periksa apakah semua skill dalam group memiliki nilai 'score' yang valid
+    return this.groupData.some((group) =>
+      group.attitude_skills.some(
+        (skill: AttitudeSkill) =>
+          skill.score === null || skill.score === undefined
+      )
+    );
   }
 
   // Function to calculate the total score for a group

@@ -70,6 +70,10 @@ export class AchievementService {
     const headers = {
       Authorization: `Bearer ${this.token}`, // Ensure `this.token` is defined and holds the token
     };
+
+    // return this.http
+    //   .get<{ group_achievement_name: string; id: string }[]>(
+
     return this.http
       .get<{ group_achievement_name: string; id: string }[]>(
         'http://localhost:8080/group-achievements',

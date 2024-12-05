@@ -15,8 +15,10 @@ import { AssSummaryComponent } from './ass-summary/ass-summary.component';
 import { EmpAttitudeSkillNewComponent } from './emp-attitude-skill-new/emp-attitude-skill-new.component';
 import { EmpDevPlanComponent } from './emp-dev-plan/emp-dev-plan.component';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
+
 import { RoleMenuComponent } from './features/role-menu/role-menu.component';
 import { UserProfileComponent } from './features/nav-bar/user-profile/user-profile.component';
+import { EmpTechnicalSkillComponent } from './emp-technical-skill/emp-technical-skill.component';
 
 
 export const routes: Routes = [
@@ -73,7 +75,8 @@ export const routes: Routes = [
   {
     path: 'emp-achievement',
     component: EmpAchieveComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'ALL_EMP ACHIEVEMENT' },
   },
   {
     path: 'ass-summary',
@@ -83,12 +86,30 @@ export const routes: Routes = [
   {
     path: 'emp-attitude-skill',
     component: EmpAttitudeSkillNewComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'ALL_EMP_ATTITUDE_SKILL' },
   },
   {
     path: 'emp-dev-plan',
     component: EmpDevPlanComponent,
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'ALL_EMP_DEV_PLAN' },
+  },
+  {
+    path: 'emp-dev-plan-table',
+    component: EmpDevPlanTableComponent,
     canActivate: [authGuard],
+  },
+  {
+    path: 'emp-dev-plan-table',
+    component: EmpDevPlanTableComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'emp-technical-skill',
+    component: EmpTechnicalSkillComponent,
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'ALL_EMP_TECHNICAL_SKILL' },
   },
   {
     path: 'technical-skill',
