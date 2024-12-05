@@ -10,9 +10,14 @@ import { map, Observable } from 'rxjs';
 export class MenuService {
 
   url: string = 'http://localhost:8080/menu'
-  token: string = localStorage.getItem('token') || ''
+  token: string = ''
 
-  constructor(readonly http: HttpClient) { }
+  constructor(readonly http: HttpClient) {
+
+    if (typeof window !== 'undefined') {
+      this.token = localStorage.getItem('token') || '';
+    }
+   }
 
   getAllMenu(): Observable<Menu[]> {
     return this.http.get<Menu[]>(`${this.url}`, { headers: { Authorization: `Bearer ${this.token}` } });

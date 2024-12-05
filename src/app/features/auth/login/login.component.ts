@@ -30,6 +30,7 @@ export class LoginComponent {
       this.authService.login(this.username, this.password).subscribe(
         (response) => {
           localStorage.setItem('token', response.content.token);
+          localStorage.setItem('user', JSON.stringify(response.content.user));
           console.log('Login successful:', response);
           this.router.navigate(['/']);
           // Handle successful login, e.g., navigate to another page

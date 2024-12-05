@@ -15,14 +15,16 @@ import { AssSummaryComponent } from './ass-summary/ass-summary.component';
 import { EmpAttitudeSkillNewComponent } from './emp-attitude-skill-new/emp-attitude-skill-new.component';
 import { EmpDevPlanComponent } from './emp-dev-plan/emp-dev-plan.component';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
+
+import { RoleMenuComponent } from './features/role-menu/role-menu.component';
+import { UserProfileComponent } from './features/nav-bar/user-profile/user-profile.component';
 import { EmpTechnicalSkillComponent } from './emp-technical-skill/emp-technical-skill.component';
 
+
 export const routes: Routes = [
-  {
-    path: '',
-    component: HomePageComponent,
-    canActivate: [authGuard, roleMenuGuard],
-  },
+  { path: '', 
+    component: HomePageComponent, 
+    canActivate: [authGuard] },
   {
     path: 'group-attitude-skill',
     component: GroupAttitudeSkillComponent,
@@ -121,4 +123,9 @@ export const routes: Routes = [
     canActivate: [authGuard, roleMenuGuard],
     data: { permission: 'ALL_APP_ROLE_MENU' },
   },
+  {
+    path: 'user-profile',
+    component: UserProfileComponent,
+    canActivate: [authGuard],
+  }
 ];

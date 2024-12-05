@@ -8,6 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ColumnFilter, TableModule } from 'primeng/table';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DropdownModule } from 'primeng/dropdown';
+import { NavBarComponent } from '../../../features/nav-bar/nav-bar/nav-bar.component';
 
 
 
@@ -21,7 +22,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CardModule,
     DialogModule,
     ToggleButtonModule,
-    DropdownModule
+    DropdownModule,
+    NavBarComponent
   ], 
   exports: [
     ButtonModule,
@@ -32,7 +34,8 @@ import { DropdownModule } from 'primeng/dropdown';
     DialogModule,
     TableModule,
     ToggleButtonModule,
-    DropdownModule
+    DropdownModule,
+    NavBarComponent
   ],
 
 })

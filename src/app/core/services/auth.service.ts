@@ -24,6 +24,8 @@ export class AuthService {
   // Check if the token is expired and return null if expired
   checkTokenExpiration(): string | null {
     const token = this.getToken();
+
+    console.log('Token:', token);
     
     if (token) {
         const decodedToken = this.parseJwt(token);
@@ -33,6 +35,7 @@ export class AuthService {
         // Check if the token is expired
         if (currentTime > expirationTime) {
             // Token is expired, remove it and return null
+            console.log('Token is expired');
             this.logout();
             return null;
         }

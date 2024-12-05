@@ -18,11 +18,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
+import { SharedModule } from '../../shared/primeng/shared/shared.module';
 
 @Component({
   selector: 'app-attitude-skill',
   standalone: true,
   imports: [
+    SharedModule,
     CommonModule,
     HttpClientModule,
     TableModule,

@@ -13,6 +13,7 @@ import {
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
 
 interface Row {
   plan: string;
@@ -36,7 +37,8 @@ interface Group {
     InputNumberModule,
     ButtonModule,
     FormsModule,
-  ],
+    NavBarComponent
+],
   templateUrl: './emp-dev-plan.component.html',
   styleUrls: ['./emp-dev-plan.component.css'], // Corrected to 'styleUrls'
 })

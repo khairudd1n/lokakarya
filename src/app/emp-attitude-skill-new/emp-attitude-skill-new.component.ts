@@ -18,6 +18,8 @@ import { FormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
+import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
+
 
 interface AttitudeSkill {
   attitude_skill_name: string;
@@ -35,7 +37,8 @@ interface AttitudeSkill {
     ButtonModule,
     FormsModule,
     DropdownModule,
-  ],
+    NavBarComponent
+],
   templateUrl: './emp-attitude-skill-new.component.html',
   styleUrl: './emp-attitude-skill-new.component.css',
 })

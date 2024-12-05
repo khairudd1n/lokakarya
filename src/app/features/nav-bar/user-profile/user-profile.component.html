@@ -1,0 +1,38 @@
+<app-nav-bar></app-nav-bar>
+<div class="profile-container">
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+      <ul>
+        <li (click)="selectTab('profile')" [class.active]="selectedTab === 'profile'">
+          <i class="fa fa-user"></i> Profile
+        </li>
+        <li (click)="selectTab('password')" [class.active]="selectedTab === 'password'">
+          <i class="fa fa-key"></i> Change Password
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Content Area -->
+    <div class="profile-content">
+      <div *ngIf="selectedTab === 'profile'">
+        <h2>Profile Information</h2>
+        <p>Details about the user go here.</p>
+      </div>
+  
+      <div *ngIf="selectedTab === 'password'">
+        <h2>Change Password</h2>
+        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input id="currentPassword" type="password" formControlName="currentPassword" />
+          </div>
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input id="newPassword" type="password" formControlName="newPassword" />
+          </div>
+          <button type="submit" class="btn">Change Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

@@ -1,3 +1,5 @@
+<app-nav-bar></app-nav-bar>
+
 <h1>Insert Emp Attitude Skill</h1>
 <label for="assessmentYear">Assessment Year:</label>
 <input
@@ -25,9 +27,6 @@
         <td>
           <p-dropdown
             [options]="scoreOptions"
-            [(ngModel)]="skill.score"
-            (onChange)="logSkillId(skill.id, skill.score)"
-            [disabled]="isSkillDisabled(skill.id)"
             placeholder="Pilih nilai"
             [appendTo]="'body'"
           >
@@ -46,3 +45,4 @@
 </div>
 
 <p-button label="Simpan" icon="pi pi-save" (click)="saveSkills()"></p-button>
+
