@@ -42,8 +42,8 @@ export class AppComponent implements OnInit {
       // { label: 'User' },
       // { label: 'Division', routerLink: '/division' },
       { label: 'User', routerLink: '/user' },
-      { label: 'Division', routerLink: '/division' },
-      { label: 'Role-menu' },
+      { label: 'Division', routerLink : '/division' },
+      { label: 'Role-menu', routerLink: '/role-menu' },
       {
         label: 'Attitude',
         items: [
