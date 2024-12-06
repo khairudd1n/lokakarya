@@ -11,7 +11,6 @@ import { AttitudeSkillComponent } from './features/attitude-skill/attitude-skill
 import { DivisionComponent } from './features/division/division.component';
 import { DevPlanComponent } from './features/dev-plan/dev-plan.component';
 import { EmpAchieveComponent } from './emp-achieve/emp-achieve.component';
-import { AssSummaryComponent } from './ass-summary/ass-summary.component';
 import { EmpAttitudeSkillNewComponent } from './emp-attitude-skill-new/emp-attitude-skill-new.component';
 import { EmpDevPlanComponent } from './emp-dev-plan/emp-dev-plan.component';
 import { TechnicalSkillComponent } from './features/technical-skill/technical-skill/technical-skill.component';
@@ -19,7 +18,8 @@ import { EmpDevPlanTableComponent } from './emp-dev-plan-table/emp-dev-plan-tabl
 import { RoleMenuComponent } from './features/role-menu/role-menu.component';
 import { UserProfileComponent } from './features/nav-bar/user-profile/user-profile.component';
 import { EmpTechnicalSkillComponent } from './emp-technical-skill/emp-technical-skill.component';
-import { EmpDevPlanTableComponent } from './emp-dev-plan-table/emp-dev-plan-table.component';
+import { ViewUserListComponent } from './features/user/view-user-list/view-user-list.component';
+import { UserSummaryComponent } from './features/user-summary/user-summary.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -77,9 +77,10 @@ export const routes: Routes = [
     data: { permission: 'ALL_EMP_ACHIEVEMENT' },
   },
   {
-    path: 'ass-summary',
-    component: AssSummaryComponent,
-    canActivate: [authGuard],
+    path: 'self-summary',
+    component: UserSummaryComponent,
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'READ_SELF_SUMMARY' },
   },
   {
     path: 'emp-attitude-skill',
@@ -116,6 +117,12 @@ export const routes: Routes = [
     component: RoleMenuComponent,
     canActivate: [authGuard, roleMenuGuard],
     data: { permission: 'ALL_APP_ROLE_MENU' },
+  },
+  {
+    path: 'view-user',
+    component: ViewUserListComponent,
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'READ_USER' },
   },
   {
     path: 'user-profile',
