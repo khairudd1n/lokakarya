@@ -15,6 +15,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { ApiResponse } from '../core/models/api-response.model';
 import { DropdownModule } from 'primeng/dropdown';
+import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 
 interface Row {
   technical_skill: string;
@@ -40,6 +41,7 @@ interface Group {
     InputNumberModule,
     ButtonModule,
     DropdownModule,
+    NavBarComponent,
   ],
   templateUrl: './emp-technical-skill.component.html',
   styleUrl: './emp-technical-skill.component.css',

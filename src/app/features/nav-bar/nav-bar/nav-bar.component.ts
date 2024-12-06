@@ -55,7 +55,6 @@ export class NavBarComponent implements OnInit {
         .map((menu) => MENU_MAP[menu.menu_name]) // Use MENU_MAP to find matching menu item
         .filter((menu) => menu !== undefined); // Remove undefined items (if API has extra menus not in MENU_MAP)
 
-      
       this.menuItems = this.groupMenus(this.userMenuItems);
       console.log(this.menuItems);
     });
@@ -132,9 +131,12 @@ export class NavBarComponent implements OnInit {
     );
     
     if (assessmentItems.length > 0) {
-      if (assessmentItems.some(item => item.routerLink === '/emp-dev-plan')) {
-        assessmentItems.push({ label: 'My Development Plan', routerLink: '/my-emp-dev-plan' });
-      }    
+      if (assessmentItems.some((item) => item.routerLink === '/emp-dev-plan')) {
+        assessmentItems.push({
+          label: 'My Development Plan',
+          routerLink: '/my-emp-dev-plan',
+        });
+      }
       groupedMenus.push({ label: 'Assessment', items: assessmentItems });
     }
     
