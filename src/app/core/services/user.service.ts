@@ -49,11 +49,11 @@ export class UserService {
       join_date: user.join_date,
       enabled: user.enabled,
       password: user.password,
-      role: user.selectedRoles,  // Keep the role as is, assuming it's already in the right format
-      division_id: user.division // Map 'division' to 'division_id' for the backend
+      role: user.selectedRoles,  
+      division_id: user.division 
     };
     return this.http.patch<ApiResponse<User>>(`${this.url}/update/${user.id}`, userToUpdate, { headers: { Authorization: `Bearer ${this.token}` } }).pipe(
-      map((response) => response.content) // Extract content array
+      map((response) => response.content)
     );
   }
 
@@ -65,7 +65,19 @@ export class UserService {
 
   getUserById(id: string): Observable<User> {
     return this.http.get<ApiResponse<User>>(`${this.url}/detail/${id}`, { headers: { Authorization: `Bearer ${this.token}` } }).pipe(
-      map((response) => response.content) // Extract content array
+      map((response) => response.content) 
     );
   }
+
+  resetPassword(id: String): Observable<String> {
+    return this.http.post<ApiResponse<String>>(`${this.url}/reset-password/${id}`, null, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    }).pipe(
+      map((response) => response.content)
+    );
+  }
+  
 }

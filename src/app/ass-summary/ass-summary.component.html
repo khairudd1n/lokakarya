@@ -10,7 +10,7 @@
 <div class="card">
   <p-table
     #dt2
-    [value]="groupAchievements"
+    [value]="empAchieve"
     dataKey="id"
     [rows]="10"
     [rowsPerPageOptions]="[10, 25, 50]"
@@ -30,9 +30,10 @@
 
     <ng-template pTemplate="body" let-achievement>
       <tr>
-        <!-- <td>{{ achievement.id }}</td> -->
-        <td>{{ achievement.group_achievement_name }}</td>
+        <td>{{ achievement.groupName }}</td>
         <td>{{ achievement.percentage }}%</td>
+        <td>{{ achievement.totalScore }}</td>
+        <td>{{ achievement.totalScore * (achievement.percentage / 100) }}</td>
       </tr>
     </ng-template>
 

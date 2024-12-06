@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
+import { ApiResponse } from './core/models/api-response.model';
 
 export interface EmpAchieveSkillDto {
   id: UUID;
@@ -23,6 +24,17 @@ export class EmpAchieveService {
   token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
+
+  getAllEmpAchieveByUserId(userId: string): Observable<any[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .get<ApiResponse<any[]>>(`${this.apiUrl}/user/${userId}`, {
+        headers,
+      })
+      .pipe(map((response) => response.content));
+  }
 
   getAllEmpAchieve(): Observable<EmpAchieveSkillDto[]> {
     const headers = {
