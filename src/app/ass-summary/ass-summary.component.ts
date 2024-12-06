@@ -20,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-ass-summary',
@@ -39,6 +40,7 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     DialogModule,
     MenubarModule,
+    NavBarComponent,
   ],
   templateUrl: './ass-summary.component.html',
   styleUrl: './ass-summary.component.css',
