@@ -13,12 +13,14 @@ import {
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
-import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
+import { forkJoin } from 'rxjs';
 
 interface Row {
   plan: string;
   plan_detail: string;
   dev_plan_id?: string; // Mark as optional if it might not be present initially
+  status: string;
   [key: string]: any; // Allows additional properties if needed
 }
 
@@ -37,12 +39,13 @@ interface Group {
     InputNumberModule,
     ButtonModule,
     FormsModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './emp-dev-plan.component.html',
   styleUrls: ['./emp-dev-plan.component.css'], // Corrected to 'styleUrls'
 })
 export class EmpDevPlanComponent implements OnInit {
+  empDevPlans: EmpDevPlanCreateDto[] = [];
   groupData: any[] = [];
   userId: string = ''; // For storing the logged-in userId
   selectedPlans: EmpDevPlanCreateDto[] = [];
@@ -56,32 +59,66 @@ export class EmpDevPlanComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserId();
-    this.getAllEmpDevPlan().subscribe((data: Group[]) => {
-      // Type the data as an array of Group
-      this.groupData = data.map((group) => ({
-        ...group,
-        rows: group.rows?.map((row: Row) => ({
-          // Explicitly type the row parameter
-          ...row,
-          dev_plan_id: group.id, // Add dev_plan_id to each row
-        })) || [{ plan_detail: '', dev_plan_id: group.id }], // Ensure dev_plan_id is included if rows are empty
-      }));
-      console.log('Fetched Dev Plan:', this.groupData);
+    this.fetchData(); // Call the new method to fetch data
+  }
+
+  fetchData(): void {
+    if (!this.userId) {
+      console.error('User  ID is missing. Cannot fetch data.');
+      return;
+    }
+
+    const empDevPlans$ = this.empDevPlanService.getEmpDevPlanByUserId(
+      this.userId
+    );
+    const allDevPlans$ = this.empDevPlanService.getAllDevPlan();
+
+    forkJoin([empDevPlans$, allDevPlans$]).subscribe({
+      next: ([empDevPlans, allDevPlans]) => {
+        this.empDevPlans = empDevPlans;
+
+        // Initialize groupData with allDevPlans
+        this.groupData = allDevPlans.map((group) => ({
+          ...group,
+          rows:
+            group.rows?.map((row: Row) => ({
+              ...row,
+              plan_detail:
+                row['user_id'] === this.userId ? row.plan_detail : '', // Check plan_detail based on user_id
+            })) || [], // Ensure rows is an empty array if no rows exist
+        }));
+
+        // Structure empDevPlans into groups
+        const empDevPlanGroups = this.organizeDataIntoGroups(empDevPlans);
+
+        // Merge empDevPlanGroups into groupData
+        empDevPlanGroups.forEach((empGroup) => {
+          const existingGroup = this.groupData.find(
+            (group) => group.plan === empGroup.plan
+          );
+          if (existingGroup) {
+            existingGroup.rows = empGroup.rows; // Update existing group with user-specific plans
+          } else {
+            this.groupData.push(empGroup); // Add new group if it doesn't exist
+          }
+        });
+
+        console.log('Fetched EmpDevPlans:', this.empDevPlans);
+        console.log('Fetched All Dev Plans:', this.groupData);
+      },
+      error: (err) => {
+        console.error('Error fetching data', err);
+      },
     });
   }
 
-  getAllEmpDevPlan(): Observable<any[]> {
-    const headers = {
-      Authorization: `Bearer ${this.token}`,
-    };
-    return this.http
-      .get<any[]>(`${this.apiUrl2}`, { headers })
-      .pipe(tap((data) => console.log('Fetched Dev Plan:', data)));
-  }
-
-  // Function to add a new row
   addRow(group: any): void {
-    const newRow = { plan: group.plan, plan_detail: '', dev_plan_id: group.id };
+    const newRow = {
+      plan: group.plan,
+      plan_detail: '',
+      dev_plan_id: group.id,
+      status: 'unsaved',
+    }; // Mark new rows as unsaved
     console.log('Adding new row:', newRow);
     group.rows.push(newRow);
   }
@@ -120,6 +157,7 @@ export class EmpDevPlanComponent implements OnInit {
         dev_plan_id: row.dev_plan_id as UUID,
         plan_detail,
         assessment_year: this.assessmentYear,
+        status: 'saved',
         created_at: new Date(),
       };
 
@@ -144,32 +182,57 @@ export class EmpDevPlanComponent implements OnInit {
 
   savePlans(): void {
     if (this.selectedPlans.length > 0) {
-      console.log('Final data to be saved:', this.selectedPlans);
-      this.empDevPlanService.saveEmpDevPlan(this.selectedPlans).subscribe(
-        (response) => {
-          console.log('Save successful:', response);
+      Swal.fire({
+        title: 'Apakah anda yakin ingin menyimpan data?',
+        text: 'Data yang sudah disimpan tidak dapat diubah lagi.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, simpan',
+        cancelButtonText: 'Batal',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log('Final data to be saved:', this.selectedPlans);
 
-          // Tambahkan data ke tabel savedPlans
-          this.savedPlans = [...this.savedPlans, ...this.selectedPlans];
+          // Kirim data ke backend melalui service
+          this.empDevPlanService.saveEmpDevPlan(this.selectedPlans).subscribe(
+            (response) => {
+              console.log('Save successful:', response);
 
-          // Reset selectedPlans setelah berhasil menyimpan
-          this.selectedPlans = [];
+              // Perbarui status di frontend
+              this.selectedPlans.forEach((plan) => {
+                const group = this.groupData.find(
+                  (grp) => grp.id === plan.dev_plan_id
+                );
+                if (group) {
+                  const row = group.rows.find(
+                    (r: Row) => r.plan_detail === plan.plan_detail
+                  );
+                  if (row) {
+                    row.status = 'saved'; // Tandai sebagai "saved"
+                  }
+                }
+              });
 
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Plans saved successfully!',
-          });
-        },
-        (error) => {
-          console.error('Save failed:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Failed to save plans.',
-          });
+              // Reset selectedPlans setelah menyimpan
+              this.selectedPlans = [];
+
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Rencana Pengembangan anda berhasil disimpan',
+              });
+            },
+            (error) => {
+              console.error('Save failed:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to save plans.',
+              });
+            }
+          );
         }
-      );
+      });
     } else {
       Swal.fire({
         icon: 'warning',
@@ -179,7 +242,38 @@ export class EmpDevPlanComponent implements OnInit {
     }
   }
 
-  token: string = localStorage.getItem('token') || '';
-  private apiUrl2 = 'http://localhost:8080/dev-plan';
-  // private apiUrl2 = 'http://localhost:8080/emp-dev-plan';
+  fetchEmpDevPlans(): void {
+    if (!this.userId) {
+      console.error('User ID is missing. Cannot fetch data.');
+      return;
+    }
+
+    this.empDevPlanService.getEmpDevPlanByUserId(this.userId).subscribe({
+      next: (data) => {
+        this.empDevPlans = data;
+        console.log('EmpDevPlans fetched successfully:', data); // Log if data is fetched successfully
+
+        // Structure data into groupData
+        this.groupData = this.organizeDataIntoGroups(data);
+      },
+      error: (err) => {
+        console.error('Error fetching EmpDevPlans', err);
+      },
+    });
+  }
+
+  organizeDataIntoGroups(data: EmpDevPlanCreateDto[]): any[] {
+    const groups: any[] = [];
+
+    // Group data by plan (you can change the criterion if necessary)
+    data.forEach((plan) => {
+      const group = groups.find((g) => g.plan === plan.plan);
+      if (group) {
+        group.rows.push(plan); // Add rows to existing group
+      } else {
+        groups.push({ plan: plan.plan, rows: [plan] }); // Create new group
+      }
+    });
+    return groups;
+  }
 }

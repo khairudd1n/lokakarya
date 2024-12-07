@@ -1,56 +1,71 @@
 <app-nav-bar></app-nav-bar>
 
-<h1>Insert emp dev plan</h1>
-<label for="assessmentYear">Assessment Year:</label>
-<input
-  type="number"
-  id="assessmentYear"
-  [(ngModel)]="assessmentYear"
-  disabled="true"
-/>
-<div *ngFor="let group of groupData">
-  <h3>{{ group.plan }}</h3>
+<div class="container">
+  <h1 class="title">FORM EVALUASI KINERJA - RENCANA PENGEMBANGAN</h1>
 
-  <!-- PrimeNG Table -->
-  <p-table [value]="group.rows" [paginator]="false">
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 10%">No.</th>
-        <th style="width: 70%">Keterangan</th>
-        <th style="width: 20%">Action</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-row let-i="rowIndex">
-      <tr>
-        <td>{{ i + 1 }}</td>
-        <td>
-          <textarea
-            pInputTextarea
-            [(ngModel)]="row.plan_detail"
-            (blur)="logPlanId(row.dev_plan_id, row.plan_detail, row)"
-            [style.width]="'100%'"
-            rows="3"
-          >
-          </textarea>
-        </td>
-        <td>
-          <p-button
-            label="Hapus"
-            icon="pi pi-trash"
-            class="p-button-sm p-button-danger"
-            (click)="deleteRow(group, i)"
-          >
-          </p-button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <div class="form-group">
+    <label for="assessmentYear">Assessment Year:</label>
+    <input
+      type="number"
+      id="assessmentYear"
+      [(ngModel)]="assessmentYear"
+      disabled="true"
+      class="input-field"
+    />
+  </div>
 
-  <!-- Button to Add Row -->
-  <p-button label="Tambah Baris" icon="pi pi-plus" (click)="addRow(group)">
-  </p-button>
+  <div *ngFor="let group of groupData" class="group-container">
+    <h3 class="group-title">{{ group.plan }}</h3>
+
+    <p-table [value]="group.rows" [paginator]="false" class="data-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10%">No.</th>
+          <th style="width: 70%">Keterangan</th>
+          <th style="width: 20%">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>
+            <textarea
+              pInputTextarea
+              [(ngModel)]="row.plan_detail"
+              (blur)="logPlanId(row.dev_plan_id, row.plan_detail, row)"
+              [disabled]="row.status === 'saved'"
+              class="textarea-field"
+              rows="3"
+            ></textarea>
+          </td>
+          <td>
+            <p-button
+              label="Hapus"
+              icon="pi pi-trash"
+              class="p-button-sm p-button-danger"
+              (click)="deleteRow(group, i)"
+              [disabled]="row.status === 'saved'"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p-button
+      label="Tambah Row"
+      icon="pi pi-plus"
+      (click)="addRow(group)"
+      class="add-row-button"
+    ></p-button>
+  </div>
+
+  <br />
+  <div class="button-container">
+    <p-button
+      label="Simpan"
+      icon="pi pi-save"
+      (click)="savePlans()"
+      class="save-button"
+    ></p-button>
+  </div>
 </div>
-<br />
-<p-button label="Simpan" icon="pi pi-save" (click)="savePlans()"></p-button>
-
-<!-- tabel tampilkan data yng diinput user -->

@@ -118,27 +118,37 @@ export class EmpTechnicalSkillComponent {
   //   score: number,
   //   row: any
   // ): void {
-  //   // Use the dev_plan_id from the row itself
+  //   console.log('Event triggered for:', row.tech_skill_id);
+  //   console.log('Current tech_detail:', tech_detail);
+  //   console.log('Current score:', score);
+  //   console.log('Row data:', row);
+  //   console.log('Technical skill:', row.technical_skill);
+
   //   const existingTechIndex = this.selectedTechs.findIndex(
-  //     (tech) => tech.tech_skill_id === row.tech_skill_id // Match using row.dev_plan_id
+  //     (tech) => tech.tech_skill_id === row.tech_skill_id
   //   );
 
   //   if (existingTechIndex !== -1) {
-  //     // Update the existing plan if it already exists
+  //     console.log(
+  //       'Updating existing tech:',
+  //       this.selectedTechs[existingTechIndex]
+  //     );
   //     this.selectedTechs[existingTechIndex].tech_detail = tech_detail;
+  //     this.selectedTechs[existingTechIndex].score = score;
   //   } else {
-  //     // Create a new plan object if it doesn't exist
   //     const tech: EmpTechSkillCreateDto = {
   //       user_id: this.userId as UUID,
-  //       tech_skill_id: row.tech_skill_id as UUID, // Use dev_plan_id from the row
+  //       tech_skill_id: row.tech_skill_id as UUID,
   //       technical_skill: row.technical_skill,
   //       tech_detail,
   //       score,
   //       assessment_year: this.assessmentYear,
   //     };
-  //     console.log('Adding Tech to Selection:', tech);
+  //     console.log('Adding new tech:', tech);
   //     this.selectedTechs.push(tech);
   //   }
+
+  //   console.log('Updated selectedTechs:', this.selectedTechs);
   // }
 
   logTechId(
@@ -147,16 +157,23 @@ export class EmpTechnicalSkillComponent {
     score: number,
     row: any
   ): void {
+    console.log('Event triggered for:', row.tech_skill_id);
+    console.log('Current tech_detail:', tech_detail);
+    console.log('Current score:', score);
+    console.log('Row data:', row);
+
     const existingTechIndex = this.selectedTechs.findIndex(
-      (tech) => tech.tech_skill_id === row.tech_skill_id
+      (tech) => tech.uniqueRowId === row.uniqueRowId // Compare by uniqueRowId
     );
 
     if (existingTechIndex !== -1) {
-      // Update jika item sudah ada
+      console.log(
+        'Updating existing tech:',
+        this.selectedTechs[existingTechIndex]
+      );
       this.selectedTechs[existingTechIndex].tech_detail = tech_detail;
-      this.selectedTechs[existingTechIndex].score = score; // Update score
+      this.selectedTechs[existingTechIndex].score = score;
     } else {
-      // Buat baru jika belum ada
       const tech: EmpTechSkillCreateDto = {
         user_id: this.userId as UUID,
         tech_skill_id: row.tech_skill_id as UUID,
@@ -164,9 +181,13 @@ export class EmpTechnicalSkillComponent {
         tech_detail,
         score,
         assessment_year: this.assessmentYear,
+        uniqueRowId: row.uniqueRowId, // Store the unique ID
       };
+      console.log('Adding new tech:', tech);
       this.selectedTechs.push(tech);
     }
+
+    console.log('Updated selectedTechs:', this.selectedTechs);
   }
 
   saveTechs(): void {
@@ -207,12 +228,24 @@ export class EmpTechnicalSkillComponent {
     }
   }
 
+  // addRow(group: any): void {
+  //   const newRow = {
+  //     technical_skill: group.technical_skill,
+  //     tech_detail: '',
+  //     score: '',
+  //     tech_skill_id: group.id,
+  //   };
+  //   console.log('Adding new row:', newRow);
+  //   group.rows.push(newRow);
+  // }
+
   addRow(group: any): void {
     const newRow = {
       technical_skill: group.technical_skill,
       tech_detail: '',
       score: '',
       tech_skill_id: group.id,
+      uniqueRowId: crypto.randomUUID(), // Add a unique ID for each row
     };
     console.log('Adding new row:', newRow);
     group.rows.push(newRow);

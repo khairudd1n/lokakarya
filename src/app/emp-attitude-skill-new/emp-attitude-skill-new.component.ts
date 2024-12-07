@@ -18,8 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
-import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
-
+import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 
 interface AttitudeSkill {
   attitude_skill_name: string;
@@ -37,8 +36,8 @@ interface AttitudeSkill {
     ButtonModule,
     FormsModule,
     DropdownModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './emp-attitude-skill-new.component.html',
   styleUrl: './emp-attitude-skill-new.component.css',
 })
@@ -138,93 +137,15 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     }
   }
 
-  // saveSkills(): void {
-  //   const hasIncompleteScores = this.groupData.some((group) =>
-  //     group.attitude_skills.some(
-  //       (skill: AttitudeSkill) =>
-  //         skill.score === null || skill.score === undefined
-  //     )
-  //   );
-
-  //   if (hasIncompleteScores) {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error!',
-  //       text: 'Semua nilai harus diisi sebelum menyimpan.',
-  //     });
-  //     return; // Stop execution
-  //   }
-
-  //   if (this.selectedSkills.length > 0) {
-  //     this.empAttitudeSkillService
-  //       .saveEmpAttitudeSkills(this.selectedSkills)
-  //       .subscribe(
-  //         (response) => {
-  //           console.log('Save successful:', response);
-  //           Swal.fire({
-  //             icon: 'success',
-  //             title: 'Success!',
-  //             text: 'Skills saved successfully!',
-  //           }).then(() => {
-  //             // Store submitted skills in local storage
-  //             const submittedSkills = this.selectedSkills.map(
-  //               (skill) => skill.attitude_skill_id
-  //             );
-  //             const existingData = JSON.parse(
-  //               localStorage.getItem(`submittedSkills_${this.userId}`) || '[]'
-  //             );
-  //             localStorage.setItem(
-  //               `submittedSkills_${this.userId}`,
-  //               JSON.stringify([...existingData, ...submittedSkills])
-  //             );
-
-  //             // Update disabledSkills
-  //             submittedSkills.forEach((skillId) =>
-  //               this.disabledSkills.add(skillId)
-  //             );
-
-  //             // Refresh the page
-  //             window.location.reload();
-  //           });
-  //         },
-  //         (error) => {
-  //           console.error('Save failed:', error);
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error!',
-  //             text: 'Failed to save skills.',
-  //           });
-  //         }
-  //       );
-  //   } else {
-  //     Swal.fire({
-  //       icon: 'warning',
-  //       title: 'Warning!',
-  //       text: 'Input nilai terlebih dahulu.',
-  //     });
-  //   }
-  // }
-
   saveSkills(): void {
-    const hasIncompleteScores = this.groupData.some((group) =>
-      group.attitude_skills.some(
-        (skill: AttitudeSkill) =>
-          skill.score === null || skill.score === undefined
-      )
+    // Filter selectedSkills untuk memastikan ada data yang diisi
+    const filledSkills = this.selectedSkills.filter(
+      (skill) => skill.score !== null && skill.score !== undefined
     );
 
-    if (hasIncompleteScores) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Semua nilai harus diisi sebelum menyimpan.',
-      });
-      return;
-    }
-
-    if (this.selectedSkills.length > 0) {
+    if (filledSkills.length > 0) {
       this.empAttitudeSkillService
-        .saveEmpAttitudeSkills(this.selectedSkills)
+        .saveEmpAttitudeSkills(filledSkills)
         .subscribe(
           (response) => {
             console.log('Save successful:', response);
@@ -234,7 +155,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
               text: 'Skills saved successfully!',
             }).then(() => {
               // Simpan skill yang sudah diisi ke localStorage
-              const submittedSkills = this.selectedSkills.map(
+              const submittedSkills = filledSkills.map(
                 (skill) => skill.attitude_skill_id
               );
               const existingData = JSON.parse(

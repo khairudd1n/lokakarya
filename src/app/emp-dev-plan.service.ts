@@ -11,6 +11,7 @@ export interface EmpDevPlanCreateDto {
   dev_plan_id: UUID;
   plan_detail: string;
   assessment_year: number;
+  status: string;
   created_at: Date;
 }
 
@@ -18,8 +19,9 @@ export interface EmpDevPlanCreateDto {
   providedIn: 'root',
 })
 export class EmpDevPlanService {
-  private apiUrl = 'http://localhost:8080/emp-dev-plan'; // Backend API endpoint
-  private apiUrl2 = 'http://localhost:8080/emp-dev-plan/user';
+  private apiUrl = 'http://localhost:8080/emp-dev-plan'; // untuk insert emp dev plan
+  private apiUrl2 = 'http://localhost:8080/emp-dev-plan/user'; // untuk get data keterangan user yang telah mereka input by userId
+  private apiUrl3 = 'http://localhost:8080/dev-plan'; // untuk get plan (group.plan) dari tabel dev plan
   private token = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -48,6 +50,13 @@ export class EmpDevPlanService {
           console.log('Data fetched successfully:', data);
         })
       );
+  }
+
+  getAllDevPlan(): Observable<any[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http.get<any[]>(`${this.apiUrl3}`, { headers });
   }
 
   deleteEmpDevPlan(id: string): Observable<any> {

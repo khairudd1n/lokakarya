@@ -11,6 +11,7 @@ export interface EmpTechSkillCreateDto {
   tech_detail: string;
   score: number;
   assessment_year: number;
+  uniqueRowId: UUID;
 }
 
 @Injectable({
