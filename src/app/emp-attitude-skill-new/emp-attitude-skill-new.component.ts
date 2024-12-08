@@ -24,6 +24,7 @@ interface AttitudeSkill {
   attitude_skill_name: string;
   score: number;
   id: string;
+  status: string;
 }
 
 @Component({
@@ -42,6 +43,7 @@ interface AttitudeSkill {
   styleUrl: './emp-attitude-skill-new.component.css',
 })
 export class EmpAttitudeSkillNewComponent implements OnInit {
+  empAttSkills: EmpAttitudeSkillCreateDto[] = [];
   groupData: any[] = [];
   userId: string = ''; // For storing the logged-in userId
   selectedSkills: EmpAttitudeSkillCreateDto[] = [];
@@ -63,32 +65,39 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserId();
-    this.getAllGroupWithAttitudeSkills().subscribe((data) => {
-      this.groupData = data;
-
-      // Load disabled skills from local storage
-      const submittedSkills = JSON.parse(
-        localStorage.getItem(`submittedSkills_${this.userId}`) || '[]'
-      );
-      submittedSkills.forEach((skillId: string) =>
-        this.disabledSkills.add(skillId)
-      );
-
-      console.log('Fetched groupData:', this.groupData);
-    });
+    this.loadGroupData();
+    this.loadUserSkills();
   }
 
-  getAllGroupWithAttitudeSkills(): Observable<any[]> {
-    const headers = {
-      Authorization: `Bearer ${this.token}`,
-    };
-    return this.http
-      .get<any[]>(`${this.apiUrl2}`, { headers })
-      .pipe(
-        tap((data) =>
-          console.log('Fetched Group Attitude with Attitude skills:', data)
-        )
-      );
+  loadGroupData(): void {
+    this.empAttitudeSkillService
+      .getAllGroupWithAttitudeSkills()
+      .subscribe((data) => {
+        this.groupData = data;
+        console.log('Fetched groupData:', this.groupData);
+      });
+  }
+
+  loadUserSkills(): void {
+    if (this.userId) {
+      this.empAttitudeSkillService
+        .getEmpAttSkillByUserId(this.userId)
+        .subscribe((skills) => {
+          this.disabledSkills = new Set(
+            skills.map((skill) => skill.attitude_skill_id)
+          );
+          this.groupData.forEach((group) => {
+            group.attitude_skills.forEach((skill: AttitudeSkill) => {
+              const matchedSkill = skills.find(
+                (s) => s.attitude_skill_id === skill.id
+              );
+              if (matchedSkill) {
+                skill.score = matchedSkill.score;
+              }
+            });
+          });
+        });
+    }
   }
 
   getUserId(): void {
@@ -138,60 +147,25 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   saveSkills(): void {
-    // Filter selectedSkills untuk memastikan ada data yang diisi
+    // Filter out the skills that have not been disabled and have a valid score
     const filledSkills = this.selectedSkills.filter(
-      (skill) => skill.score !== null && skill.score !== undefined
+      (skill) =>
+        skill.score != null && !this.disabledSkills.has(skill.attitude_skill_id)
     );
 
+    // Check if there are any skills to save
     if (filledSkills.length > 0) {
       this.empAttitudeSkillService
         .saveEmpAttitudeSkills(filledSkills)
         .subscribe(
-          (response) => {
-            console.log('Save successful:', response);
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'Skills saved successfully!',
-            }).then(() => {
-              // Simpan skill yang sudah diisi ke localStorage
-              const submittedSkills = filledSkills.map(
-                (skill) => skill.attitude_skill_id
-              );
-              const existingData = JSON.parse(
-                localStorage.getItem(`submittedSkills_${this.userId}`) || '[]'
-              );
-              localStorage.setItem(
-                `submittedSkills_${this.userId}`,
-                JSON.stringify([...existingData, ...submittedSkills])
-              );
-
-              // Update disabledSkills
-              submittedSkills.forEach((skillId) =>
-                this.disabledSkills.add(skillId)
-              );
-
-              // Refresh data tanpa reload halaman
-              this.getAllGroupWithAttitudeSkills().subscribe((data) => {
-                this.groupData = data;
-              });
-            });
+          () => {
+            Swal.fire('Success', 'Skills saved successfully!', 'success');
+            this.loadUserSkills(); // Refresh data from server
           },
-          (error) => {
-            console.error('Save failed:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error!',
-              text: 'Failed to save skills.',
-            });
-          }
+          () => Swal.fire('Error', 'Failed to save skills.', 'error')
         );
     } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Warning!',
-        text: 'Input nilai terlebih dahulu.',
-      });
+      Swal.fire('Warning', 'Input nilai terlebih dahulu.', 'warning');
     }
   }
 
@@ -223,7 +197,4 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       0
     );
   }
-
-  token: string = localStorage.getItem('token') || '';
-  private apiUrl2 = 'http://localhost:8080/group-attitude-skill/all';
 }

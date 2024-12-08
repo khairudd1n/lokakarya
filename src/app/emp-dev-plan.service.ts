@@ -58,13 +58,4 @@ export class EmpDevPlanService {
     };
     return this.http.get<any[]>(`${this.apiUrl3}`, { headers });
   }
-
-  deleteEmpDevPlan(id: string): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    });
-
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
-  }
 }

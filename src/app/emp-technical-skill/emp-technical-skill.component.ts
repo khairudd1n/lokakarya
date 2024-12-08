@@ -4,8 +4,6 @@ import {
   EmpTechSkillCreateDto,
 } from '../emp-technical-skill.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
@@ -13,15 +11,16 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
-import { ApiResponse } from '../core/models/api-response.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
+import { forkJoin } from 'rxjs';
 
 interface Row {
   technical_skill: string;
   tech_detail: string;
   score: number;
   tech_skill_id?: string;
+  status: string;
   [key: string]: any;
 }
 
@@ -44,16 +43,14 @@ interface Group {
     NavBarComponent,
   ],
   templateUrl: './emp-technical-skill.component.html',
-  styleUrl: './emp-technical-skill.component.css',
+  styleUrls: ['./emp-technical-skill.component.css'],
 })
 export class EmpTechnicalSkillComponent {
-  token: string = localStorage.getItem('token') || '';
-  private apiUrl2 = 'http://localhost:8080/tech-skill/all';
-
   groupData: any[] = [];
   userId: string = '';
   selectedTechs: EmpTechSkillCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
+  isSubmitted: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -70,27 +67,43 @@ export class EmpTechnicalSkillComponent {
 
   ngOnInit(): void {
     this.getUserId();
-    this.getAllTechSkill().subscribe((data: Group[]) => {
-      // Type the data as an array of Group
-      this.groupData = data.map((group) => ({
-        ...group,
-        rows: group.rows?.map((row: Row) => ({
-          // Explicitly type the row parameter
-          ...row,
-          tech_skill_id: group.id, // Add tech_skill_id to each row
-        })) || [{ tech_detail: '', score: '', tech_skill_id: group.id }], // Ensure dev_plan_id is included if rows are empty
-      }));
-      console.log('Fetched Tech Skill:', this.groupData);
-    });
-  }
+    console.log('User  ID:', this.userId); // Log user ID
 
-  getAllTechSkill(): Observable<any[]> {
-    const headers = {
-      Authorization: `Bearer ${this.token}`,
-    };
-    return this.http
-      .get<ApiResponse<any[]>>(`${this.apiUrl2}`, { headers })
-      .pipe(map((response) => response.content));
+    this.empTechSkillService.getAllTechSkill().subscribe((data: Group[]) => {
+      console.log('Fetched all tech skills:', data); // Log all tech skills
+
+      this.empTechSkillService
+        .getSavedTechs(this.userId)
+        .subscribe((savedSkills: EmpTechSkillCreateDto[]) => {
+          console.log('Fetched saved skills:', savedSkills); // Log saved skills
+
+          this.groupData = data.map((group) => ({
+            ...group,
+            rows: group.rows?.map((row: Row) => {
+              const savedSkill = savedSkills.find(
+                (skill) =>
+                  skill.tech_skill_id === group.id && // Ensure this matches your data structure
+                  skill.user_id === this.userId
+              );
+              return {
+                ...row,
+                tech_skill_id: group.id,
+                tech_detail: savedSkill?.tech_detail || '',
+                score: savedSkill?.score || null,
+                status: savedSkill ? 'saved' : 'unsaved',
+              };
+            }) || [
+              {
+                tech_detail: '',
+                score: null,
+                tech_skill_id: group.id,
+                status: 'unsaved',
+              },
+            ],
+          }));
+          console.log('Loaded Tech Skills with saved data:', this.groupData);
+        });
+    });
   }
 
   getUserId(): void {
@@ -98,12 +111,8 @@ export class EmpTechnicalSkillComponent {
 
     if (userToken) {
       try {
-        const payload = JSON.parse(atob(userToken.split('.')[1])); // Decode JWT payload
-        console.log('Full Token Payload:', payload);
-
-        // Extract userId from the 'sub' key
+        const payload = JSON.parse(atob(userToken.split('.')[1]));
         this.userId = payload.sub;
-        console.log('Logged-in User ID:', this.userId);
       } catch (error) {
         console.error('Error decoding token:', error);
       }
@@ -112,65 +121,19 @@ export class EmpTechnicalSkillComponent {
     }
   }
 
-  // logTechId(
-  //   tech_skill_id: string,
-  //   tech_detail: string,
-  //   score: number,
-  //   row: any
-  // ): void {
-  //   console.log('Event triggered for:', row.tech_skill_id);
-  //   console.log('Current tech_detail:', tech_detail);
-  //   console.log('Current score:', score);
-  //   console.log('Row data:', row);
-  //   console.log('Technical skill:', row.technical_skill);
-
-  //   const existingTechIndex = this.selectedTechs.findIndex(
-  //     (tech) => tech.tech_skill_id === row.tech_skill_id
-  //   );
-
-  //   if (existingTechIndex !== -1) {
-  //     console.log(
-  //       'Updating existing tech:',
-  //       this.selectedTechs[existingTechIndex]
-  //     );
-  //     this.selectedTechs[existingTechIndex].tech_detail = tech_detail;
-  //     this.selectedTechs[existingTechIndex].score = score;
-  //   } else {
-  //     const tech: EmpTechSkillCreateDto = {
-  //       user_id: this.userId as UUID,
-  //       tech_skill_id: row.tech_skill_id as UUID,
-  //       technical_skill: row.technical_skill,
-  //       tech_detail,
-  //       score,
-  //       assessment_year: this.assessmentYear,
-  //     };
-  //     console.log('Adding new tech:', tech);
-  //     this.selectedTechs.push(tech);
-  //   }
-
-  //   console.log('Updated selectedTechs:', this.selectedTechs);
-  // }
-
   logTechId(
     tech_skill_id: string,
     tech_detail: string,
     score: number,
     row: any
   ): void {
-    console.log('Event triggered for:', row.tech_skill_id);
-    console.log('Current tech_detail:', tech_detail);
-    console.log('Current score:', score);
-    console.log('Row data:', row);
-
     const existingTechIndex = this.selectedTechs.findIndex(
-      (tech) => tech.uniqueRowId === row.uniqueRowId // Compare by uniqueRowId
+      (tech) =>
+        tech.tech_skill_id === row.tech_skill_id &&
+        tech.tech_detail === tech_detail
     );
 
     if (existingTechIndex !== -1) {
-      console.log(
-        'Updating existing tech:',
-        this.selectedTechs[existingTechIndex]
-      );
       this.selectedTechs[existingTechIndex].tech_detail = tech_detail;
       this.selectedTechs[existingTechIndex].score = score;
     } else {
@@ -181,13 +144,11 @@ export class EmpTechnicalSkillComponent {
         tech_detail,
         score,
         assessment_year: this.assessmentYear,
-        uniqueRowId: row.uniqueRowId, // Store the unique ID
+        status: 'saved',
       };
-      console.log('Adding new tech:', tech);
       this.selectedTechs.push(tech);
+      row.status = 'saved'; // Mark row as saved
     }
-
-    console.log('Updated selectedTechs:', this.selectedTechs);
   }
 
   saveTechs(): void {
@@ -204,11 +165,12 @@ export class EmpTechnicalSkillComponent {
       this.empTechSkillService.saveEmpTechSkill(this.selectedTechs).subscribe(
         (response) => {
           console.log('Save successful:', response);
+          this.isSubmitted = true; // Set to true after successful save
           Swal.fire({
             icon: 'success',
             title: 'Success!',
             text: 'Techs saved successfully!',
-          }).then(() => {});
+          });
         },
         (error) => {
           console.error('Save failed:', error);
@@ -228,24 +190,13 @@ export class EmpTechnicalSkillComponent {
     }
   }
 
-  // addRow(group: any): void {
-  //   const newRow = {
-  //     technical_skill: group.technical_skill,
-  //     tech_detail: '',
-  //     score: '',
-  //     tech_skill_id: group.id,
-  //   };
-  //   console.log('Adding new row:', newRow);
-  //   group.rows.push(newRow);
-  // }
-
   addRow(group: any): void {
     const newRow = {
       technical_skill: group.technical_skill,
       tech_detail: '',
       score: '',
       tech_skill_id: group.id,
-      uniqueRowId: crypto.randomUUID(), // Add a unique ID for each row
+      status: 'unsaved', // Mark new rows as unsaved
     };
     console.log('Adding new row:', newRow);
     group.rows.push(newRow);

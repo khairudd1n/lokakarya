@@ -183,7 +183,7 @@ export class EmpDevPlanComponent implements OnInit {
   savePlans(): void {
     if (this.selectedPlans.length > 0) {
       Swal.fire({
-        title: 'Apakah anda yakin ingin menyimpan data?',
+        title: 'Apakah anda yakin ingin menyimpan?',
         text: 'Data yang sudah disimpan tidak dapat diubah lagi.',
         icon: 'warning',
         showCancelButton: true,
