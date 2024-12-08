@@ -33,10 +33,11 @@
               pInputTextarea
               [(ngModel)]="row.tech_detail"
               (blur)="
-                logTechId(row.tech_skill_id, row.tech_detail, row.score, row)
+                logTechId2(row.tech_skill_id, row.tech_detail, row.score, row)
               "
               [style.width]="'100%'"
               rows="3"
+              [disabled]="row.status === 'saved'"
             >
             </textarea>
           </td>
@@ -47,8 +48,9 @@
               placeholder="Pilih level"
               [appendTo]="'body'"
               (onChange)="
-                logTechId(row.tech_skill_id, row.tech_detail, row.score, row)
+                logTechId2(row.tech_skill_id, row.tech_detail, row.score, row)
               "
+              [disabled]="row.status === 'saved'"
             >
             </p-dropdown>
           </td>
@@ -59,6 +61,7 @@
               icon="pi pi-trash"
               class="p-button-sm p-button-danger"
               (click)="deleteRow(group, i)"
+              [disabled]="row.status === 'saved'"
             >
             </p-button>
           </td>

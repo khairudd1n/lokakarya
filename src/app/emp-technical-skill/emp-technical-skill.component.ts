@@ -50,7 +50,8 @@ export class EmpTechnicalSkillComponent {
   userId: string = '';
   selectedTechs: EmpTechSkillCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
-  isSubmitted: boolean = false;
+  userData: EmpTechSkillCreateDto[] = [];
+  empTechSkills: EmpTechSkillCreateDto[] = [];
 
   constructor(
     private http: HttpClient,
@@ -67,43 +68,113 @@ export class EmpTechnicalSkillComponent {
 
   ngOnInit(): void {
     this.getUserId();
-    console.log('User  ID:', this.userId); // Log user ID
+    this.fetchData(); // Call the new method to fetch data
+  }
 
-    this.empTechSkillService.getAllTechSkill().subscribe((data: Group[]) => {
-      console.log('Fetched all tech skills:', data); // Log all tech skills
+  fetchData(): void {
+    if (!this.userId) {
+      console.error('User ID is missing. Cannot fetch data.');
+      return;
+    }
 
-      this.empTechSkillService
-        .getSavedTechs(this.userId)
-        .subscribe((savedSkills: EmpTechSkillCreateDto[]) => {
-          console.log('Fetched saved skills:', savedSkills); // Log saved skills
+    const empTechSkills$ = this.empTechSkillService.getSavedTechs(this.userId);
+    const allTechSkills$ = this.empTechSkillService.getAllTechSkill();
 
-          this.groupData = data.map((group) => ({
-            ...group,
-            rows: group.rows?.map((row: Row) => {
-              const savedSkill = savedSkills.find(
-                (skill) =>
-                  skill.tech_skill_id === group.id && // Ensure this matches your data structure
-                  skill.user_id === this.userId
-              );
-              return {
-                ...row,
-                tech_skill_id: group.id,
-                tech_detail: savedSkill?.tech_detail || '',
-                score: savedSkill?.score || null,
-                status: savedSkill ? 'saved' : 'unsaved',
-              };
-            }) || [
-              {
-                tech_detail: '',
-                score: null,
-                tech_skill_id: group.id,
-                status: 'unsaved',
-              },
-            ],
-          }));
-          console.log('Loaded Tech Skills with saved data:', this.groupData);
+    forkJoin([empTechSkills$, allTechSkills$]).subscribe({
+      next: ([empTechSkills, allTechSkills]) => {
+        this.empTechSkills = empTechSkills;
+
+        // Initialize groupData with allDevPlans
+        this.groupData = allTechSkills.map((group) => ({
+          ...group,
+          rows:
+            group.rows?.map((row: Row) => ({
+              ...row,
+              tech_detail:
+                row['user_id'] === this.userId ? row.tech_detail : '', // Check plan_detail based on user_id
+              score: row['user_id'] === this.userId ? row.score : '',
+              status: row['user_id'] === this.userId ? 'saved' : 'unsaved', // Set status for the rows
+            })) || [], // Ensure rows is an empty array if no rows exist
+        }));
+
+        // Structure empDevPlans into groups
+        const empTechSkillGroups = this.organizeDataIntoGroups(empTechSkills);
+
+        // Merge empDevPlanGroups into groupData
+        empTechSkillGroups.forEach((empGroup) => {
+          const existingGroup = this.groupData.find(
+            (group) => group.technical_skill === empGroup.technical_skill
+          );
+          if (existingGroup) {
+            existingGroup.rows = empGroup.rows; // Update existing group with user-specific plans
+          } else {
+            this.groupData.push(empGroup); // Add new group if it doesn't exist
+          }
         });
+
+        console.log('Fetched EmpDevPlans:', this.empTechSkills);
+        console.log('Fetched All Dev Plans:', this.groupData);
+      },
+      error: (err) => {
+        console.error('Error fetching data', err);
+      },
     });
+  }
+
+  organizeDataIntoGroups(data: EmpTechSkillCreateDto[]): any[] {
+    const groups: any[] = [];
+
+    // Group data by plan (you can change the criterion if necessary)
+    data.forEach((technical_skill) => {
+      const group = groups.find(
+        (g) => g.technical_skill === technical_skill.technical_skill
+      );
+      if (group) {
+        group.rows.push(technical_skill); // Add rows to existing group
+      } else {
+        groups.push({
+          technical_skill: technical_skill.technical_skill,
+          rows: [technical_skill],
+        }); // Create new group
+      }
+    });
+    return groups;
+  }
+
+  logTechId2(
+    tech_skill_id: string,
+    tech_detail: string,
+    score: number,
+    row: any
+  ): void {
+    // Check if tech_detail is not empty
+    if (tech_detail.trim() !== '') {
+      // Create or update the technical_skill object
+      const technical_skill: EmpTechSkillCreateDto = {
+        user_id: this.userId as UUID,
+        tech_skill_id: row.tech_skill_id as UUID,
+        technical_skill: row.technical_skill,
+        tech_detail,
+        score,
+        assessment_year: this.assessmentYear,
+        status: 'saved',
+      };
+
+      // Check if the technical_skill already exists in selectedTechs
+      const existingPlanIndex = this.selectedTechs.findIndex(
+        (tech) => tech.tech_skill_id === row.tech_skill_id
+      );
+
+      if (existingPlanIndex !== -1) {
+        // If it exists, update the existing entry
+        this.selectedTechs[existingPlanIndex] = technical_skill;
+        console.log('Updated Plan in Selection:', technical_skill);
+      } else {
+        // If it doesn't exist, add it to selectedTechs
+        console.log('Adding Plan to Selection:', technical_skill);
+        this.selectedTechs.push(technical_skill);
+      }
+    }
   }
 
   getUserId(): void {
@@ -121,38 +192,19 @@ export class EmpTechnicalSkillComponent {
     }
   }
 
-  logTechId(
-    tech_skill_id: string,
-    tech_detail: string,
-    score: number,
-    row: any
-  ): void {
-    const existingTechIndex = this.selectedTechs.findIndex(
-      (tech) =>
-        tech.tech_skill_id === row.tech_skill_id &&
-        tech.tech_detail === tech_detail
-    );
-
-    if (existingTechIndex !== -1) {
-      this.selectedTechs[existingTechIndex].tech_detail = tech_detail;
-      this.selectedTechs[existingTechIndex].score = score;
-    } else {
-      const tech: EmpTechSkillCreateDto = {
-        user_id: this.userId as UUID,
-        tech_skill_id: row.tech_skill_id as UUID,
-        technical_skill: row.technical_skill,
-        tech_detail,
-        score,
-        assessment_year: this.assessmentYear,
-        status: 'saved',
-      };
-      this.selectedTechs.push(tech);
-      row.status = 'saved'; // Mark row as saved
-    }
-  }
-
   saveTechs(): void {
-    if (this.selectedTechs.some((tech) => !tech.score)) {
+    if (this.selectedTechs.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Warning!',
+        text: 'Input keterangan terlebih dahulu.',
+      });
+      return;
+    }
+
+    // Check if any selected tech has a null score
+    const hasNullScore = this.selectedTechs.some((tech) => tech.score === null);
+    if (hasNullScore) {
       Swal.fire({
         icon: 'warning',
         title: 'Warning!',
@@ -160,34 +212,54 @@ export class EmpTechnicalSkillComponent {
       });
       return;
     }
-    if (this.selectedTechs.length > 0) {
-      console.log('Final data to be saved:', this.selectedTechs);
-      this.empTechSkillService.saveEmpTechSkill(this.selectedTechs).subscribe(
-        (response) => {
-          console.log('Save successful:', response);
-          this.isSubmitted = true; // Set to true after successful save
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Techs saved successfully!',
-          });
-        },
-        (error) => {
-          console.error('Save failed:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Failed to save techs.',
-          });
-        }
-      );
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Warning!',
-        text: 'Input keterangan terlebih dahulu.',
-      });
-    }
+
+    Swal.fire({
+      title: 'Apakah anda yakin ingin menyimpan?',
+      text: 'Data yang sudah disimpan tidak dapat diubah lagi.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, simpan',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log('Final data to be saved:', this.selectedTechs);
+        this.empTechSkillService.saveEmpTechSkill(this.selectedTechs).subscribe(
+          (response) => {
+            console.log('Save successful:', response);
+            // Update status in frontend
+            this.selectedTechs.forEach((technical_skill) => {
+              const group = this.groupData.find(
+                (grp) => grp.id === technical_skill.tech_skill_id
+              );
+              if (group) {
+                const row = group.rows.find(
+                  (r: Row) =>
+                    r.tech_detail === technical_skill.tech_detail &&
+                    r.score === technical_skill.score
+                );
+                if (row) {
+                  row.status = 'saved'; // Mark as "saved"
+                }
+              }
+            });
+            this.selectedTechs = []; // Reset selected plans after saving
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Keahlian teknis anda berhasil disimpan',
+            });
+          },
+          (error) => {
+            console.error('Save failed:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Failed to save plans.',
+            });
+          }
+        );
+      }
+    });
   }
 
   addRow(group: any): void {

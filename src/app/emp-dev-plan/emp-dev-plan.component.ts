@@ -242,26 +242,6 @@ export class EmpDevPlanComponent implements OnInit {
     }
   }
 
-  fetchEmpDevPlans(): void {
-    if (!this.userId) {
-      console.error('User ID is missing. Cannot fetch data.');
-      return;
-    }
-
-    this.empDevPlanService.getEmpDevPlanByUserId(this.userId).subscribe({
-      next: (data) => {
-        this.empDevPlans = data;
-        console.log('EmpDevPlans fetched successfully:', data); // Log if data is fetched successfully
-
-        // Structure data into groupData
-        this.groupData = this.organizeDataIntoGroups(data);
-      },
-      error: (err) => {
-        console.error('Error fetching EmpDevPlans', err);
-      },
-    });
-  }
-
   organizeDataIntoGroups(data: EmpDevPlanCreateDto[]): any[] {
     const groups: any[] = [];
 
