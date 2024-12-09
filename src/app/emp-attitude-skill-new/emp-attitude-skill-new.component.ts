@@ -19,6 +19,7 @@ import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
+import { forkJoin } from 'rxjs';
 
 interface AttitudeSkill {
   attitude_skill_name: string;
@@ -65,39 +66,69 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserId();
-    this.loadGroupData();
-    this.loadUserSkills();
+    this.loadData();
+    // this.loadGroupData();
+    // this.loadUserSkills();
   }
 
-  loadGroupData(): void {
-    this.empAttitudeSkillService
-      .getAllGroupWithAttitudeSkills()
-      .subscribe((data) => {
-        this.groupData = data;
-        console.log('Fetched groupData:', this.groupData);
-      });
-  }
+  // loadGroupData(): void {
+  //   this.empAttitudeSkillService
+  //     .getAllGroupWithAttitudeSkills()
+  //     .subscribe((data) => {
+  //       this.groupData = data;
+  //       console.log('Fetched groupData:', this.groupData);
+  //     });
+  // }
 
-  loadUserSkills(): void {
-    if (this.userId) {
-      this.empAttitudeSkillService
-        .getEmpAttSkillByUserId(this.userId)
-        .subscribe((skills) => {
-          this.disabledSkills = new Set(
-            skills.map((skill) => skill.attitude_skill_id)
-          );
-          this.groupData.forEach((group) => {
-            group.attitude_skills.forEach((skill: AttitudeSkill) => {
-              const matchedSkill = skills.find(
-                (s) => s.attitude_skill_id === skill.id
-              );
-              if (matchedSkill) {
-                skill.score = matchedSkill.score;
-              }
-            });
+  // loadUserSkills(): void {
+  //   if (this.userId) {
+  //     this.empAttitudeSkillService
+  //       .getEmpAttSkillByUserId(this.userId)
+  //       .subscribe((skills) => {
+  //         this.disabledSkills = new Set(
+  //           skills.map((skill) => skill.attitude_skill_id)
+  //         );
+  //         this.groupData.forEach((group) => {
+  //           group.attitude_skills.forEach((skill: AttitudeSkill) => {
+  //             const matchedSkill = skills.find(
+  //               (s) => s.attitude_skill_id === skill.id
+  //             );
+  //             if (matchedSkill) {
+  //               skill.score = matchedSkill.score;
+  //             }
+  //           });
+  //         });
+  //       });
+  //   }
+  // }
+
+  loadData(): void {
+    forkJoin({
+      groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
+      userSkills: this.userId
+        ? this.empAttitudeSkillService.getEmpAttSkillByUserId(this.userId)
+        : [],
+    }).subscribe(({ groupData, userSkills }) => {
+      this.groupData = groupData;
+
+      // Populate scores in groupData with userSkills
+      if (userSkills.length > 0) {
+        this.disabledSkills = new Set(
+          userSkills.map((skill) => skill.attitude_skill_id)
+        );
+        this.groupData.forEach((group) => {
+          group.attitude_skills.forEach((skill: AttitudeSkill) => {
+            const matchedSkill = userSkills.find(
+              (s) => s.attitude_skill_id === skill.id
+            );
+            if (matchedSkill) {
+              skill.score = matchedSkill.score;
+            }
           });
         });
-    }
+      }
+      console.log('Synchronized Data:', this.groupData);
+    });
   }
 
   getUserId(): void {
@@ -160,7 +191,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         .subscribe(
           () => {
             Swal.fire('Success', 'Skills saved successfully!', 'success');
-            this.loadUserSkills(); // Refresh data from server
+            this.loadData(); // Refresh data from server
           },
           () => Swal.fire('Error', 'Failed to save skills.', 'error')
         );

@@ -50,7 +50,6 @@ export class EmpDevPlanComponent implements OnInit {
   userId: string = ''; // For storing the logged-in userId
   selectedPlans: EmpDevPlanCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
-  savedPlans: EmpDevPlanCreateDto[] = []; // Menampung data yang sudah disimpan
 
   constructor(
     private http: HttpClient,
