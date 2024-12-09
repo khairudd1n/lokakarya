@@ -1,0 +1,71 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="container">
+  <h1 class="title">BERIKAN TANGGAPAN ANDA (HARAPAN, KENDALA, MASUKAN)</h1>
+
+  <div class="form-group">
+    <label for="assessmentYear">Assessment Year:</label>
+    <input
+      type="number"
+      id="assessmentYear"
+      [(ngModel)]="assessmentYear"
+      disabled="true"
+      class="input-field"
+    />
+  </div>
+
+  <div *ngFor="let group of groupData" class="group-container">
+    <p-table [value]="group.rows" [paginator]="false" class="data-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10%">No.</th>
+          <th style="width: 70%">Tanggapan</th>
+          <th style="width: 20%">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>
+            <textarea
+              pInputTextarea
+              [(ngModel)]="row.suggestion"
+              class="textarea-field"
+              rows="3"
+              [disabled]="row.saved"
+            ></textarea>
+          </td>
+          <td>
+            <p-button
+              label="Hapus"
+              icon="pi pi-trash"
+              class="p-button-sm p-button-danger"
+              (click)="deleteRow(group, i)"
+              [disabled]="row.saved"
+            >
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p-button
+      label="Tambah Row"
+      icon="pi pi-plus"
+      class="btn btn-primary"
+      (click)="addRow(group)"
+    >
+    </p-button>
+  </div>
+
+  <br />
+  <div class="button-container">
+    <p-button
+      label="simpan"
+      icon="pi pi-save"
+      (click)="saveSuggestions()"
+      class="btn btn-success"
+    >
+    </p-button>
+  </div>
+</div>

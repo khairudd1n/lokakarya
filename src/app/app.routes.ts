@@ -18,6 +18,7 @@ import { TechnicalSkillComponent } from './features/technical-skill/technical-sk
 import { RoleMenuComponent } from './features/role-menu/role-menu.component';
 import { UserProfileComponent } from './features/nav-bar/user-profile/user-profile.component';
 import { EmpTechnicalSkillComponent } from './emp-technical-skill/emp-technical-skill.component';
+import { EmpSuggestComponent } from './emp-suggest/emp-suggest.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -97,6 +98,12 @@ export const routes: Routes = [
     component: EmpTechnicalSkillComponent,
     canActivate: [authGuard, roleMenuGuard],
     data: { permission: 'ALL_EMP_TECHNICAL_SKILL' },
+  },
+  {
+    path: 'emp-suggestion',
+    component: EmpSuggestComponent,
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'ALL_EMP_SUGGESTION' },
   },
   {
     path: 'technical-skill',
