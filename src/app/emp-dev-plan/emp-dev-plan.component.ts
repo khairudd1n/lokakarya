@@ -162,19 +162,15 @@ export class EmpDevPlanComponent implements OnInit {
 
       // Cek apakah plan sudah ada di selectedPlans
       const existingPlanIndex = this.selectedPlans.findIndex(
-        (plan) =>
-          plan.dev_plan_id === row.dev_plan_id &&
-          plan.plan_detail === plan_detail &&
-          plan.plan === row.plan
+        (plan) => plan.dev_plan_id === row.dev_plan_id
       );
 
-      if (existingPlanIndex === -1) {
-        // Jika tidak ada, tambahkan ke selectedPlans
-        console.log('Adding Plan to Selection:', plan);
-        this.selectedPlans.push(plan);
+      if (existingPlanIndex !== -1) {
+        this.selectedPlans[existingPlanIndex] = plan;
+        console.log('Updated plan in Selection:', plan);
       } else {
-        // Jika ada, update plan_detail
-        this.selectedPlans[existingPlanIndex].plan_detail = plan_detail;
+        console.log('Add plan added to Selection:', plan);
+        this.selectedPlans.push(plan);
       }
     }
   }

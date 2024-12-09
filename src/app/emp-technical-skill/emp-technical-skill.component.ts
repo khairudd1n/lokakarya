@@ -93,7 +93,7 @@ export class EmpTechnicalSkillComponent {
               tech_detail:
                 row['user_id'] === this.userId ? row.tech_detail : '', // Check plan_detail based on user_id
               score: row['user_id'] === this.userId ? row.score : '',
-              status: row['user_id'] === this.userId ? 'saved' : 'unsaved', // Set status for the rows
+              // status: row['user_id'] === this.userId ? 'saved' : 'unsaved', // Set status for the rows
             })) || [], // Ensure rows is an empty array if no rows exist
         }));
 
