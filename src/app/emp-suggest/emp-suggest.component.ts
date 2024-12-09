@@ -63,19 +63,6 @@ export class EmpSuggestComponent implements OnInit {
     this.groupData = [{ rows: [{ suggestion: '' }] }];
   }
 
-  // loadSavedSuggestions(): void {
-  //   this.empSuggestService.getEmpSuggestByUserId(this.userId).subscribe(
-  //     (data) => {
-  //       this.groupData[0].rows = data.map((item) => ({
-  //         suggestion: item.suggestion,
-  //       }));
-  //     },
-  //     (error) => {
-  //       console.error('Error loading suggestions:', error);
-  //     }
-  //   );
-  // }
-
   loadSavedSuggestions(): void {
     this.empSuggestService.getEmpSuggestByUserId(this.userId).subscribe(
       (data) => {
@@ -89,55 +76,6 @@ export class EmpSuggestComponent implements OnInit {
       }
     );
   }
-
-  // saveSuggestions(): void {
-  //   const payload: EmpSuggestDto[] = this.groupData[0].rows.map((row: any) => ({
-  //     user_id: this.userId as UUID,
-  //     suggestion: row.suggestion,
-  //     assessment_year: this.assessmentYear,
-  //   }));
-
-  //   this.empSuggestService.saveEmpSuggest(payload).subscribe(
-  //     (response) => {
-  //       console.log('Data saved successfully:', response);
-  //       Swal.fire('Success', 'Tanggapan berhasil disimpan!', 'success');
-  //     },
-  //     (error) => {
-  //       console.error('Error saving data:', error);
-  //       Swal.fire('Error', 'Gagal menyimpan tanggapan.', 'error');
-  //     }
-  //   );
-  // }
-
-  // saveSuggestions(): void {
-  //   const newRows = this.groupData[0].rows.filter((row: any) => !row.saved);
-
-  //   if (newRows.length === 0) {
-  //     Swal.fire('Warning', 'Tidak ada data baru untuk disimpan.', 'warning');
-  //     return;
-  //   }
-
-  //   const payload: EmpSuggestDto[] = newRows.map((row: any) => ({
-  //     user_id: this.userId as UUID,
-  //     suggestion: row.suggestion,
-  //     assessment_year: this.assessmentYear,
-  //   }));
-
-  //   this.empSuggestService.saveEmpSuggest(payload).subscribe(
-  //     (response) => {
-  //       console.log('Data saved successfully:', response);
-
-  //       // Tandai data yang baru disimpan sebagai tersimpan
-  //       newRows.forEach((row: any) => (row.saved = true));
-
-  //       Swal.fire('Success', 'Tanggapan berhasil disimpan!', 'success');
-  //     },
-  //     (error) => {
-  //       console.error('Error saving data:', error);
-  //       Swal.fire('Error', 'Gagal menyimpan tanggapan.', 'error');
-  //     }
-  //   );
-  // }
 
   saveSuggestions(): void {
     // Cek jika ada baris baru yang belum diisi
