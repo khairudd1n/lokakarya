@@ -95,26 +95,39 @@ export class EmpSuggestComponent implements OnInit {
       return;
     }
 
-    const payload: EmpSuggestDto[] = newRows.map((row: any) => ({
-      user_id: this.userId as UUID,
-      suggestion: row.suggestion,
-      assessment_year: this.assessmentYear,
-    }));
+    // Tampilkan dialog konfirmasi
+    Swal.fire({
+      title: 'Konfirmasi',
+      text: 'Apakah Anda yakin ingin menyimpan data ini? Data yang sudah tersimpan tidak dapat diubah lagi.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Simpan',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Jika pengguna mengonfirmasi, lanjutkan dengan penyimpanan
+        const payload: EmpSuggestDto[] = newRows.map((row: any) => ({
+          user_id: this.userId as UUID,
+          suggestion: row.suggestion,
+          assessment_year: this.assessmentYear,
+        }));
 
-    this.empSuggestService.saveEmpSuggest(payload).subscribe(
-      (response) => {
-        console.log('Data saved successfully:', response);
+        this.empSuggestService.saveEmpSuggest(payload).subscribe(
+          (response) => {
+            console.log('Data saved successfully:', response);
 
-        // Tandai data yang baru disimpan sebagai tersimpan
-        newRows.forEach((row: any) => (row.saved = true));
+            // Tandai data yang baru disimpan sebagai tersimpan
+            newRows.forEach((row: any) => (row.saved = true));
 
-        Swal.fire('Success', 'Tanggapan berhasil disimpan!', 'success');
-      },
-      (error) => {
-        console.error('Error saving data:', error);
-        Swal.fire('Error', 'Gagal menyimpan tanggapan.', 'error');
+            Swal.fire('Success', 'Tanggapan berhasil disimpan!', 'success');
+          },
+          (error) => {
+            console.error('Error saving data:', error);
+            Swal.fire('Error', 'Gagal menyimpan tanggapan.', 'error');
+          }
+        );
       }
-    );
+    });
   }
 
   addRow(group: any): void {

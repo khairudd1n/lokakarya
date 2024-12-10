@@ -67,40 +67,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   ngOnInit(): void {
     this.getUserId();
     this.loadData();
-    // this.loadGroupData();
-    // this.loadUserSkills();
   }
-
-  // loadGroupData(): void {
-  //   this.empAttitudeSkillService
-  //     .getAllGroupWithAttitudeSkills()
-  //     .subscribe((data) => {
-  //       this.groupData = data;
-  //       console.log('Fetched groupData:', this.groupData);
-  //     });
-  // }
-
-  // loadUserSkills(): void {
-  //   if (this.userId) {
-  //     this.empAttitudeSkillService
-  //       .getEmpAttSkillByUserId(this.userId)
-  //       .subscribe((skills) => {
-  //         this.disabledSkills = new Set(
-  //           skills.map((skill) => skill.attitude_skill_id)
-  //         );
-  //         this.groupData.forEach((group) => {
-  //           group.attitude_skills.forEach((skill: AttitudeSkill) => {
-  //             const matchedSkill = skills.find(
-  //               (s) => s.attitude_skill_id === skill.id
-  //             );
-  //             if (matchedSkill) {
-  //               skill.score = matchedSkill.score;
-  //             }
-  //           });
-  //         });
-  //       });
-  //   }
-  // }
 
   loadData(): void {
     forkJoin({
