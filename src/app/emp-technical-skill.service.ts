@@ -48,20 +48,15 @@ export class EmpTechnicalSkillService {
   getSavedTechs(userId: string): Observable<EmpTechSkillCreateDto[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     };
     return this.http
-      .get<ApiResponse<EmpTechSkillCreateDto[]>>(
-        `${this.apiUrl}/detail/${userId}`,
-        { headers }
-      )
+      .get<EmpTechSkillCreateDto[]>(`${this.apiUrl}/user/${userId}`, {
+        headers,
+      })
       .pipe(
-        map((response) => {
-          console.log(
-            'Fetched technical skills for user:',
-            userId,
-            response.content
-          ); // Log the fetched skills
-          return response.content;
+        tap((data) => {
+          console.log('Data fetched successfully:', data);
         })
       );
   }

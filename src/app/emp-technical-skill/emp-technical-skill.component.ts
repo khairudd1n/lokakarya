@@ -93,7 +93,7 @@ export class EmpTechnicalSkillComponent {
               tech_detail:
                 row['user_id'] === this.userId ? row.tech_detail : '', // Check plan_detail based on user_id
               score: row['user_id'] === this.userId ? row.score : '',
-              // status: row['user_id'] === this.userId ? 'saved' : 'unsaved', // Set status for the rows
+              status: row['user_id'] === this.userId ? 'saved' : 'unsaved', // Set status for the rows
             })) || [], // Ensure rows is an empty array if no rows exist
         }));
 
@@ -112,8 +112,8 @@ export class EmpTechnicalSkillComponent {
           }
         });
 
-        console.log('Fetched EmpDevPlans:', this.empTechSkills);
-        console.log('Fetched All Dev Plans:', this.groupData);
+        console.log('Fetched EmpTechSkills:', this.empTechSkills);
+        console.log('Fetched All Tech Skills:', this.groupData);
       },
       error: (err) => {
         console.error('Error fetching data', err);
@@ -164,6 +164,7 @@ export class EmpTechnicalSkillComponent {
       const existingPlanIndex = this.selectedTechs.findIndex(
         (tech) => tech.tech_skill_id === row.tech_skill_id
       );
+      console.log('Log parameters:', tech_skill_id, tech_detail, score, row);
 
       if (existingPlanIndex !== -1) {
         // If it exists, update the existing entry
