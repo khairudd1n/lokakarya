@@ -2,157 +2,151 @@
 <div *ngIf="error">{{ error }}</div>
 
 <app-nav-bar></app-nav-bar>
+<div class="container">
+  <h2 class="title">RENCANA PENGEMBANGAN</h2>
 
-<h2>Dev Plan</h2>
-
-<!-- Button to open the create modal -->
-<div class="card flex justify-content-center">
-  <p-button
-    label="+ Create new dev plan"
-    icon="pi pi-check"
-    (click)="showCreateDialog()"
-  ></p-button>
-</div>
-
-<!-- PrimeNG Dialog for creating a new dev plan -->
-<p-dialog
-  header="Create Dev Plan"
-  [(visible)]="displayCreateDialog"
-  modal="true"
-  [closable]="true"
-  [style]="{ width: '400px' }"
->
-  <div class="p-fluid">
-    <div class="p-field">
-      <label for="groupName">Dev Plan</label>
-      <input
-        id="groupName"
-        type="text"
-        pInputText
-        [(ngModel)]="newDevPlan.plan"
-      />
-    </div>
+  <!-- Button to open the create modal -->
+  <div class="card flex justify-content-end">
+    <p-button
+      label="Create "
+      icon="pi pi-plus"
+      (click)="showCreateDialog()"
+    ></p-button>
   </div>
-  <p-footer>
-    <button
-      type="button"
-      pButton
-      label="Create"
-      icon="pi pi-check"
-      (click)="createDevPlan()"
-    ></button>
-    <button
-      type="button"
-      pButton
-      label="Cancel"
-      icon="pi pi-times"
-      (click)="displayCreateDialog = false"
-    ></button>
-  </p-footer>
-</p-dialog>
 
-<p-dialog
-  header="Edit Dev Plan"
-  [(visible)]="displayEditDialog"
-  modal="true"
-  [closable]="true"
-  [style]="{ width: '400px' }"
->
-  <div class="p-fluid">
-    <div class="p-field">
-      <label for="editGroupName">Dev Plan</label>
-      <input
-        id="editGroupName"
-        type="text"
-        pInputText
-        [(ngModel)]="selectedDevPlan.plan"
-      />
-    </div>
-  </div>
-  <p-footer>
-    <button
-      type="button"
-      pButton
-      label="Save"
-      icon="pi pi-save"
-      (click)="updateDevPlan()"
-    ></button>
-    <button
-      type="button"
-      pButton
-      label="Cancel"
-      icon="pi pi-times"
-      (click)="displayEditDialog = false"
-    ></button>
-  </p-footer>
-</p-dialog>
-
-<div class="card">
-  <p-table
-    #dt2
-    [value]="devPlans"
-    dataKey="id"
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="isLoading"
-    [paginator]="true"
-    [globalFilterFields]="['plan']"
-    [tableStyle]="{ 'min-width': '75rem' }"
+  <!-- PrimeNG Dialog for creating a new dev plan -->
+  <p-dialog
+    header="Create Dev Plan"
+    [(visible)]="displayCreateDialog"
+    modal="true"
+    [closable]="true"
+    [style]="{ width: '400px' }"
   >
-    <ng-template pTemplate="header">
-      <tr>
-        <!-- <th style="width: 25%">ID</th> -->
-        <th style="width: 35%">Plan</th>
-        <th style="width: 15%">Action</th>
-      </tr>
-      <tr>
-        <!-- <th>
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="groupName">Dev Plan</label>
+        <input
+          id="groupName"
+          type="text"
+          pInputText
+          [(ngModel)]="newDevPlan.plan"
+        />
+      </div>
+    </div>
+    <p-footer>
+      <button
+        type="button"
+        pButton
+        label="Create"
+        icon="pi pi-check"
+        (click)="createDevPlan()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="displayCreateDialog = false"
+      ></button>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog
+    header="Edit Dev Plan"
+    [(visible)]="displayEditDialog"
+    modal="true"
+    [closable]="true"
+    [style]="{ width: '400px' }"
+  >
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="editGroupName">Dev Plan</label>
+        <input
+          id="editGroupName"
+          type="text"
+          pInputText
+          [(ngModel)]="selectedDevPlan.plan"
+        />
+      </div>
+    </div>
+    <p-footer>
+      <button
+        type="button"
+        pButton
+        label="Save"
+        icon="pi pi-save"
+        (click)="updateDevPlan()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="displayEditDialog = false"
+      ></button>
+    </p-footer>
+  </p-dialog>
+
+  <div class="card">
+    <p-table
+      #dt2
+      [value]="devPlans"
+      dataKey="id"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="isLoading"
+      [paginator]="true"
+      [globalFilterFields]="['plan']"
+      [tableStyle]="{ 'min-width': '45rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10px">No.</th>
+          <th class="division-column">Plan</th>
+          <th class="action-column">Action</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>
             <p-columnFilter
               type="text"
-              field="id"
-              placeholder="Search by ID"
-              ariaLabel="Filter ID"
+              field="plan"
+              placeholder="Search by plan"
+              ariaLabel="Filter Plan"
             />
-          </th> -->
-        <th>
-          <p-columnFilter
-            type="text"
-            field="plan"
-            placeholder="Search by plan"
-            ariaLabel="Filter Plan"
-          />
-        </th>
-        <th></th>
-      </tr>
-    </ng-template>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="body" let-achievement>
-      <tr>
-        <!-- <td>{{ achievement.id }}</td> -->
-        <td>{{ achievement.plan }}</td>
-        <td>
-          <button
-            pButton
-            icon="pi pi-pencil"
-            label="Edit"
-            class="p-button-sm p-button-info"
-            (click)="editDevPlan(achievement)"
-          ></button>
-          <button
-            pButton
-            icon="pi pi-trash"
-            label="Delete"
-            class="p-button-sm p-button-danger"
-            (click)="deleteDevPlan(achievement.id)"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="body" let-achievement let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ achievement.plan }}</td>
+          <td>
+            <div class="action-buttons">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-sm p-button-info"
+                (click)="editDevPlan(achievement)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-sm p-button-danger"
+                (click)="deleteDevPlan(achievement.id)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4">No dev plans found.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">No dev plans found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

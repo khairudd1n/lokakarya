@@ -12,11 +12,6 @@ import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 
-interface Row {
-  suggestion: string;
-  [key: string]: any;
-}
-
 @Component({
   selector: 'app-emp-suggest',
   standalone: true,

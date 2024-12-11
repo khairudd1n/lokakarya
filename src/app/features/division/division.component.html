@@ -2,217 +2,153 @@
 <div *ngIf="error">{{ error }}</div>
 
 <app-nav-bar></app-nav-bar>
+<div class="container">
+  <h2 class="title">DIVISI</h2>
 
-<h2>Divisions</h2>
-
-<!-- Button to open the create modal -->
-<div class="card flex justify-content-center">
-  <p-button
-    label="+ Create new division"
-    icon="pi pi-check"
-    (click)="showCreateDialog()"
-  ></p-button>
-</div>
-
-<!-- PrimeNG Dialog for creating a new group attitude skill -->
-<p-dialog
-  header="Create Division"
-  [(visible)]="displayCreateDialog"
-  modal="true"
-  [closable]="true"
-  [style]="{ width: '400px' }"
->
-  <div class="p-fluid">
-    <div class="p-field">
-      <label for="groupName">Division Name</label>
-      <input
-        id="groupName"
-        type="text"
-        pInputText
-        [(ngModel)]="newDivision.division_name"
-      />
-    </div>
-  </div>
-  <p-footer>
-    <button
-      type="button"
-      pButton
+  <!-- Button to open the create modal -->
+  <div class="card flex justify-content-end">
+    <p-button
       label="Create"
-      icon="pi pi-check"
-      (click)="createDivision()"
-    ></button>
-    <button
-      type="button"
-      pButton
-      label="Cancel"
-      icon="pi pi-times"
-      (click)="displayCreateDialog = false"
-    ></button>
-  </p-footer>
-</p-dialog>
-
-<!-- PrimeNG Dialog for editing a group attitude skill -->
-<p-dialog
-  header="Edit Division"
-  [(visible)]="displayEditDialog"
-  modal="true"
-  [closable]="true"
-  [style]="{ width: '400px' }"
->
-  <div class="p-fluid">
-    <div class="p-field">
-      <label for="editGroupName">Division Name</label>
-      <input
-        id="editGroupName"
-        type="text"
-        pInputText
-        [(ngModel)]="selectedDivision.division_name"
-      />
-    </div>
+      icon="pi pi-plus"
+      (click)="showCreateDialog()"
+    ></p-button>
   </div>
-  <p-footer>
-    <button
-      type="button"
-      pButton
-      label="Save"
-      icon="pi pi-save"
-      (click)="updateDivision()"
-    ></button>
-    <button
-      type="button"
-      pButton
-      label="Cancel"
-      icon="pi pi-times"
-      (click)="displayEditDialog = false"
-    ></button>
-  </p-footer>
-</p-dialog>
 
-<!-- PrimeNG Dialog for showing Division Details -->
-<p-dialog
-  header="Division Details"
-  [(visible)]="displayDetailDialog"
-  modal="true"
-  [closable]="true"
-  [style]="{ width: '500px' }"
->
-  <div class="p-fluid">
-    <div class="p-field">
-      <label style="color: maroon">Created At:</label>
-      <p style="color: red">
-        {{ selectedDivisionDetail?.created_at }}
-      </p>
-    </div>
-    <div class="p-field">
-      <label style="color: maroon">Created By:</label>
-      <p style="color: red">
-        {{ selectedDivisionDetail?.created_by?.full_name }}
-      </p>
-    </div>
-    <div class="p-field">
-      <label style="color: maroon">Updated At:</label>
-      <p style="color: red">
-        {{
-          selectedDivisionDetail?.updated_at ??
-            "-- data have not been updated yet --"
-        }}
-      </p>
-    </div>
-    <div class="p-field">
-      <label style="color: maroon">Updated By:</label>
-      <p style="color: red">
-        {{
-          selectedDivisionDetail?.updated_by?.full_name ??
-            "-- data have not been updated yet --"
-        }}
-      </p>
-    </div>
-  </div>
-  <p-footer>
-    <button
-      type="button"
-      pButton
-      label="Close"
-      icon="pi pi-times"
-      (click)="displayDetailDialog = false"
-    ></button>
-  </p-footer>
-</p-dialog>
-
-<!-- Existing Table for Group Attitude Skills -->
-<div class="card">
-  <p-table
-    #dt2
-    [value]="divisions"
-    dataKey="id"
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="isLoading"
-    [paginator]="true"
-    [globalFilterFields]="['division_name']"
-    [tableStyle]="{ 'min-width': '75rem' }"
+  <!-- PrimeNG Dialog for creating a new group attitude skill -->
+  <p-dialog
+    header="Create Division"
+    [(visible)]="displayCreateDialog"
+    modal="true"
+    [closable]="true"
+    [style]="{ width: '400px' }"
   >
-    <ng-template pTemplate="header">
-      <tr>
-        <!-- <th style="width: 25%">ID</th> -->
-        <th style="width: 35%">Division</th>
-        <th style="width: 15%">Action</th>
-      </tr>
-      <tr>
-        <!-- <th>
-          <p-columnFilter
-            type="text"
-            field="id"
-            placeholder="Search by ID"
-            ariaLabel="Filter ID"
-          />
-        </th> -->
-        <th>
-          <p-columnFilter
-            type="text"
-            field="division_name"
-            placeholder="Search by division"
-            ariaLabel="Filter division"
-          />
-        </th>
-        <th></th>
-      </tr>
-    </ng-template>
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="groupName">Division Name</label>
+        <input
+          id="groupName"
+          type="text"
+          pInputText
+          [(ngModel)]="newDivision.division_name"
+        />
+      </div>
+    </div>
+    <p-footer>
+      <button
+        type="button"
+        pButton
+        label="Create"
+        icon="pi pi-check"
+        (click)="createDivision()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="displayCreateDialog = false"
+      ></button>
+    </p-footer>
+  </p-dialog>
 
-    <ng-template pTemplate="body" let-achievement>
-      <tr>
-        <!-- <td>{{ achievement.id }}</td> -->
-        <td>{{ achievement.division_name }}</td>
-        <td>
-          <button
-            pButton
-            icon="pi pi-info-circle"
-            label="Detail"
-            class="p-button-sm p-button-secondary"
-            (click)="showDetailDialog(achievement)"
-          ></button>
-          <button
-            pButton
-            icon="pi pi-pencil"
-            label="Edit"
-            class="p-button-sm p-button-info"
-            (click)="editDivision(achievement)"
-          ></button>
-          <button
-            pButton
-            icon="pi pi-trash"
-            label="Delete"
-            class="p-button-sm p-button-danger"
-            (click)="deleteDivision(achievement.id)"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
+  <!-- PrimeNG Dialog for editing a group attitude skill -->
+  <p-dialog
+    header="Edit Division"
+    [(visible)]="displayEditDialog"
+    modal="true"
+    [closable]="true"
+    [style]="{ width: '400px' }"
+  >
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="editGroupName">Division Name</label>
+        <input
+          id="editGroupName"
+          type="text"
+          pInputText
+          [(ngModel)]="selectedDivision.division_name"
+        />
+      </div>
+    </div>
+    <p-footer>
+      <button
+        type="button"
+        pButton
+        label="Save"
+        icon="pi pi-save"
+        (click)="updateDivision()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="displayEditDialog = false"
+      ></button>
+    </p-footer>
+  </p-dialog>
 
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4">No achievements found.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <!-- Existing Table for Group Attitude Skills -->
+  <div class="card">
+    <p-table
+      #dt2
+      [value]="divisions"
+      dataKey="id"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="isLoading"
+      [paginator]="true"
+      [globalFilterFields]="['division_name']"
+      [tableStyle]="{ 'min-width': '45rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10px">No.</th>
+          <th class="division-column">Division</th>
+          <th class="action-column">Action</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>
+            <p-columnFilter
+              type="text"
+              field="division_name"
+              placeholder="Search by division"
+              ariaLabel="Filter division"
+            />
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-achievement let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ achievement.division_name }}</td>
+          <td>
+            <div class="action-buttons">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-sm p-button-info"
+                (click)="editDivision(achievement)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-sm p-button-danger"
+                (click)="deleteDivision(achievement.id)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">No achievements found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
