@@ -6,13 +6,22 @@
   font-weight: bold; /* Makes labels stand out */
 }
 
+:host ::ng-deep .p-dialog-mask{
+  z-index: 1000 !important;
+}
+
 :host ::ng-deep .p-button-info {
-  background-color: #4caf50; /* Green color */
-  border-color: #4caf50;
+  background-color: #007ad9;
+  border-color: #007ad9;
 }
 
 :host ::ng-deep .p-button-outlined {
   background-color: transparent;
-  border-color: #4caf50; /* Match the border color */
+  border-color: #007ad9;
 }
+
+:host ::ng-deep .my-swal-popup {
+  z-index: 99999 !important;
+}
+
   

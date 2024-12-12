@@ -20,6 +20,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 import { DivisionService } from '../../../core/services/division.service';
+import { UserService } from '../../../core/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -39,18 +41,19 @@ import { DivisionService } from '../../../core/services/division.service';
   styleUrl: './create-user-dialog.component.css',
 })
 export class CreateUserDialogComponent implements OnChanges {
-  @Input() visible: boolean = false; // To control dialog visibility
+  @Input() visible: boolean = false; 
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter();
-  @Output() userSaved: EventEmitter<any> = new EventEmitter(); // Emit when user is saved (create or edit)
+  @Output() userSaved: EventEmitter<any> = new EventEmitter(); 
 
-  @Input() userData: any = null; // Input for editing a user
+  @Input() userData: any = null; 
 
   roles: Role[] = [];
   divisions: any[] = [];
 
   constructor(
     private roleService: RoleService,
-    private divisionService: DivisionService
+    private divisionService: DivisionService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -61,7 +64,7 @@ export class CreateUserDialogComponent implements OnChanges {
       this.divisions = response;
     });
     if (!this.user.selectedRoles) {
-      this.user.selectedRoles = []; // Ensure selectedRoles is initialized
+      this.user.selectedRoles = []; 
     }
     console.log(this.divisions);
   }
@@ -88,7 +91,7 @@ export class CreateUserDialogComponent implements OnChanges {
         this.user.selectedRoles =
           this.userData.role?.map((role: any) => role.id) || [];
         this.user.division = this.userData.division?.id || '';
-        this.user.password = null; // Do not prepopulate the password
+        this.user.password = null; 
         this.user.employee_status? this.setEmployeeStatus(1) : this.setEmployeeStatus(0);
       } else {
         // Creating a new user
@@ -100,13 +103,13 @@ export class CreateUserDialogComponent implements OnChanges {
   }
 
   saveUser() {
-    this.userSaved.emit(this.user); // Emit user data for saving (create or edit)
+    this.userSaved.emit(this.user); 
     console.log(this.user);
     this.closeDialog();
   }
 
   closeDialog() {
-    this.visibleChange.emit(false); // Notify parent to close the dialog
+    this.visibleChange.emit(false); 
     this.resetForm();
   }
 
@@ -131,5 +134,19 @@ export class CreateUserDialogComponent implements OnChanges {
 
   setEmployeeStatus(status: number): void {
     this.user.employee_status = status;
+  }
+
+  resetPassword() {
+    this.userService.resetPassword(this.user.id).subscribe((response) => {
+      console.log(response);
+      Swal.fire({
+        title: 'Success',
+        text: 'New Password : ' + response,
+        icon: 'success',
+        customClass: {
+          popup: 'my-swal-popup'
+        }
+      })
+    })
   }
 }

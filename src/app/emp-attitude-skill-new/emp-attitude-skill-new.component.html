@@ -3,6 +3,7 @@
 <div class="container" style="background-color: #f5f5f5">
   <h1 class="title">FORM EVALUASI KINERJA - SIKAP DAN KEAHLIAN PERSONAL</h1>
 
+
   <div class="form-group">
     <label for="assessmentYear">Assessment Year:</label>
     <input
@@ -16,7 +17,6 @@
 
   <div *ngFor="let group of groupData" class="group-container">
     <h3 class="group-title">{{ group.group_name }}</h3>
-
     <p-table
       [value]="group.attitude_skills"
       [paginator]="false"

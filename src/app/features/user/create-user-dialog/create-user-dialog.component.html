@@ -2,6 +2,7 @@
   [(visible)]="visible"
   [modal]="true"
   [closable]="true"
+  [baseZIndex]="1000"
   [style]="{ width: '50vw' }"
   (onHide)="closeDialog()"
 >
@@ -45,25 +46,36 @@
 
     <!-- Row 2: Password and Full Name -->
     @if(!userData){
-      <div class="field col-12 md:col-6">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          pInputText
-          [(ngModel)]="user.password"
-          name="password"
-          required
-          #password="ngModel"
-        />
-        <div *ngIf="password.invalid && password.touched" class="p-error">
-          <span *ngIf="password.errors?.['required']">Password is required.</span>
-            <span *ngIf="password.errors?.['minlength']">
-              Password must be at least 8 characters long.
-            </span>
-        </div>
+    <div class="field col-12 md:col-6">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        pInputText
+        [(ngModel)]="user.password"
+        name="password"
+        required
+        #password="ngModel"
+      />
+      <div *ngIf="password.touched" class="p-error">
+        @if(password.invalid){
+          <span>Password is required.</span>
+        }@else if(password.value.length < 8){
+          <span>Password must be at least 8 characters long.</span>
+        }
       </div>
-    }   
+    </div>
+    }@else {
+    <div class="field col-12 md:col-6">
+      <label for="password">Password</label>
+      <p-button
+        styleClass="p-button-danger"
+        label="Reset Password"
+        (click)="resetPassword()"
+      >
+      </p-button>
+    </div>
+    }
 
     <div class="field col-12 md:col-6">
       <label for="fullname">Full Name</label>
@@ -207,7 +219,7 @@
         [disabled]="
           !user.username ||
           !user.email_address ||
-          (!userData && !user.password) ||
+          (!userData && !(user.password.length>=8) ) ||
           !user.full_name ||
           !user.position ||
           !user.join_date ||
