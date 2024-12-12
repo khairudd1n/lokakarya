@@ -20,6 +20,7 @@ import { UserProfileComponent } from './features/nav-bar/user-profile/user-profi
 import { EmpTechnicalSkillComponent } from './emp-technical-skill/emp-technical-skill.component';
 import { ViewUserListComponent } from './features/user/view-user-list/view-user-list.component';
 import { UserSummaryComponent } from './features/user-summary/user-summary.component';
+import { SummaryComponent } from './features/summary/summary.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
@@ -129,4 +130,10 @@ export const routes: Routes = [
     component: UserProfileComponent,
     canActivate: [authGuard],
   },
+  {
+    path: 'ass-summary',
+    component: SummaryComponent,
+    canActivate: [authGuard, roleMenuGuard],
+    data: { permission: 'READ_SUMMARY' },
+  }
 ];

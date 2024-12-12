@@ -29,12 +29,12 @@ export class EmpAttitudeSkillNewService {
     return this.http.post(this.apiUrl, payload, { headers });
   }
 
-  getAllAttitudeSkillsByUserId(userId: string): Observable<any[]> {
+  getAllAttitudeSkillsByUserId(userId: string, year: number): Observable<any[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<any[]>(`${this.apiUrl}/user/${userId}`, { headers })
+      .get<any[]>(`${this.apiUrl}/user/${userId}/${year}`, { headers })
       .pipe(tap((data) => console.log('Fetched Attitude Skills:', data)));
   }
 }

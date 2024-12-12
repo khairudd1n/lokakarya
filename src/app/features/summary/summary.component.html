@@ -1,0 +1,110 @@
+<app-nav-bar></app-nav-bar>
+<div class="dropdown-container">
+  <p-dropdown
+    [options]="years"
+    [(ngModel)]="selectedYear"
+    (onChange)="onYearChange($event)"
+    optionLabel="label"
+    placeholder="Select a Year"
+  ></p-dropdown>
+</div>
+
+<p-table
+  #dt1
+  [value]="filteredUsers"
+  selectionMode="single"
+  [(selection)]="selectedUser"
+  (onRowSelect)="onRowSelect($event)"
+  [globalFilterFields]="[
+    'full_name',
+    'position',
+    'email_address',
+    'employee_status'
+  ]"
+  [paginator]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <button
+        pButton
+        label="Clear"
+        class="p-button-outlined"
+        icon="pi pi-filter-slash"
+        (click)="clearFilters(dt1)"
+      ></button>
+      <span class="p-input-icon-left ml-auto">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          (input)="onGlobalSearch($event)"
+          placeholder="Search keyword"
+        />
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Position</th>
+      <th>
+        Division
+        <p-columnFilter
+          field="division.division_name"
+          matchMode="in"
+          [showMenu]="false"
+        >
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-multiSelect
+              [ngModel]="value"
+              [options]="divisionOptions"
+              placeholder="Any"
+              (onChange)="filterDivision($event.value)"
+              optionLabel="label"
+            >
+              <ng-template let-option pTemplate="item">
+                <div class="inline-block vertical-align-middle">
+                  <span class="ml-1 mt-1">{{ option.label }}</span>
+                </div>
+              </ng-template>
+            </p-multiSelect>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+      <th>Score</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-user>
+    <tr [pSelectableRow]="user">
+      <td>{{ user.full_name }}</td>
+      <td>{{ user.position }}</td>
+      <td>{{ user.email_address }}</td>
+      <td>{{ user.division.division_name }}</td>
+      <td>{{ user.assessmentScore }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [(visible)]="displaySummaryDialog"
+  [modal]="true"
+  (onHide)="clearSelectedUser()"
+  header="Summary"
+  [style]="{ width: '80vw', 'max-width': '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  @if (displaySummaryDialog) {
+  <app-user-summary
+    [userId]="selectedUser.id"
+    [year]="selectedYear.value"
+    [isInDialog]="true"
+  ></app-user-summary>
+  }
+</p-dialog>

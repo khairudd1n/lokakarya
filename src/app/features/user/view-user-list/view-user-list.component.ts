@@ -22,7 +22,7 @@ export class ViewUserListComponent implements OnInit {
   displayDialog: boolean = false;
   displayDetailDialog: boolean = false;
   displaySummaryDialog: boolean = false;
-  selectedUser: any = null; // Holds data for the user being edited
+  selectedUser: any = null; 
 
   constructor(private userService: UserService) {}
 
@@ -39,7 +39,7 @@ export class ViewUserListComponent implements OnInit {
     this.userService.getAllUser().subscribe((data) => {
       this.users = data.map(user => ({
         ...user,
-        employee_status: user.employee_status === 1 // Convert 1 to true and 0 to false
+        employee_status: user.employee_status === 1 
       }));
       this.filteredUsers = [...this.users];
       console.log(this.users);
@@ -53,7 +53,7 @@ export class ViewUserListComponent implements OnInit {
   }
 
   clearSelectedUser() {
-    this.selectedUser = null; // Clear selected user when dialog is closed
+    this.selectedUser = null;
   }
 
   clearFilters(table: any): void {
@@ -65,7 +65,7 @@ export class ViewUserListComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt1) {
-      this.dt1.filterGlobal(input, 'contains');  // Pass the input value and match mode
+      this.dt1.filterGlobal(input, 'contains');
     }
   }
 
@@ -78,11 +78,9 @@ export class ViewUserListComponent implements OnInit {
 
   applyStatusFilter() {
     if (this.selectedStatus !== null) {
-      // Apply the filter based on selected status
       this.filteredUsers = this.users.filter(user => user.employee_status === this.selectedStatus);
     } else {
-      // If "All" is selected, show all users
-      this.loadUsers(); // Re-fetch all users
+      this.loadUsers();
     }
   }
 
@@ -90,7 +88,7 @@ export class ViewUserListComponent implements OnInit {
     console.log('On Dialog closed is called', visible);
     if (!visible){
       console.log('Dialog closed');
-      this.clearSelectedUser(); // Clear the selected user when dialog is closed
+      this.clearSelectedUser();
     }
   }
 }
