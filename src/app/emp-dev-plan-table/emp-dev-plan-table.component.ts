@@ -24,6 +24,7 @@ import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
     DialogModule,
     NavBarComponent,
   ],
+
   templateUrl: './emp-dev-plan-table.component.html',
   styleUrl: './emp-dev-plan-table.component.css',
 })
