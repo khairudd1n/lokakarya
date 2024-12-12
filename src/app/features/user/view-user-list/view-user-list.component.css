@@ -1,0 +1,5 @@
+::ng-deep .p-dialog {
+  width: 80vw !important;
+  max-width: 650px !important;
+  min-width: 300px !important;
+}
