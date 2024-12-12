@@ -1,7 +1,7 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="container" style="background-color: #f5f5f5">
-  <h1 class="title">FORM EVALUASI KINERJA - RENCANA PENGEMBANGAN</h1>
+  <h1 class="title">BERIKAN TANGGAPAN ANDA (HARAPAN, KENDALA, MASUKAN)</h1>
 
   <div class="form-group">
     <label for="assessmentYear">Assessment Year:</label>
@@ -15,13 +15,11 @@
   </div>
 
   <div *ngFor="let group of groupData" class="group-container">
-    <h3 class="group-title">{{ group.plan }}</h3>
-
     <p-table [value]="group.rows" [paginator]="false" class="data-table">
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 10%">No.</th>
-          <th style="width: 70%">Keterangan</th>
+          <th style="width: 70%">Tanggapan</th>
           <th style="width: 20%">Action</th>
         </tr>
       </ng-template>
@@ -31,11 +29,10 @@
           <td>
             <textarea
               pInputTextarea
-              [(ngModel)]="row.plan_detail"
-              (blur)="logPlanId(row.dev_plan_id, row.plan_detail, row)"
-              [disabled]="row.status === 'saved'"
+              [(ngModel)]="row.suggestion"
               class="textarea-field"
               rows="3"
+              [disabled]="row.saved"
             ></textarea>
           </td>
           <td>
@@ -44,8 +41,9 @@
               icon="pi pi-trash"
               class="p-button-sm p-button-danger"
               (click)="deleteRow(group, i)"
-              [disabled]="row.status === 'saved'"
-            ></p-button>
+              [disabled]="row.saved"
+            >
+            </p-button>
           </td>
         </tr>
       </ng-template>
@@ -54,18 +52,20 @@
     <p-button
       label="Tambah Row"
       icon="pi pi-plus"
+      class="btn btn-primary"
       (click)="addRow(group)"
-      class="add-row-button"
-    ></p-button>
+    >
+    </p-button>
   </div>
 
   <br />
   <div class="button-container">
     <p-button
-      label="Simpan"
+      label="simpan"
       icon="pi pi-save"
-      (click)="savePlans()"
-      class="save-button"
-    ></p-button>
+      (click)="saveSuggestions()"
+      class="btn btn-success"
+    >
+    </p-button>
   </div>
 </div>

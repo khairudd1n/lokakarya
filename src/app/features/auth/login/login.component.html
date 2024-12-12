@@ -1,6 +1,6 @@
 <div class="login-container">
   <div class="card">
-    <h2>Login</h2>
+    <h2>APLIKASI PENILAIAN KINERJA</h2>
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
       <!-- Username Field -->
       <div class="p-field">
@@ -15,7 +15,10 @@
           #usernameInput="ngModel"
         />
         <!-- Validation Message for Username -->
-        <small class="text-error" *ngIf="usernameInput.invalid && usernameInput.touched">
+        <small
+          class="text-error"
+          *ngIf="usernameInput.invalid && usernameInput.touched"
+        >
           Username is required.
         </small>
       </div>
@@ -34,8 +37,13 @@
           #passwordInput="ngModel"
         />
         <!-- Validation Messages for Password -->
-        <small class="text-error" *ngIf="passwordInput.invalid && passwordInput.touched">
-          <span *ngIf="passwordInput.errors?.['required']">Password is required.</span>
+        <small
+          class="text-error"
+          *ngIf="passwordInput.invalid && passwordInput.touched"
+        >
+          <span *ngIf="passwordInput.errors?.['required']"
+            >Password is required.</span
+          >
           <span *ngIf="passwordInput.errors?.['minlength']">
             Password must be at least 8 characters long.
           </span>

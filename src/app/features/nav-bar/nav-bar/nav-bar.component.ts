@@ -131,12 +131,6 @@ export class NavBarComponent implements OnInit {
     );
     
     if (assessmentItems.length > 0) {
-      if (assessmentItems.some((item) => item.routerLink === '/emp-dev-plan')) {
-        assessmentItems.push({
-          label: 'My Development Plan',
-          routerLink: '/my-emp-dev-plan',
-        });
-      }
       groupedMenus.push({ label: 'Assessment', items: assessmentItems });
     }
     
