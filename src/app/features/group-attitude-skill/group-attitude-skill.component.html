@@ -32,6 +32,9 @@
           pInputText
           [(ngModel)]="newGroupAttitudeSkill.group_name"
         />
+        <div *ngIf="isDuplicate" style="color: red; font-size: 15px">
+          Data sudah ada
+        </div>
       </div>
       <br />
       <div class="p-field">

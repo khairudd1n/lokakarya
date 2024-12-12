@@ -19,7 +19,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
-import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-division',
@@ -39,8 +39,8 @@ import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
     ReactiveFormsModule,
     DialogModule,
     MenubarModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './division.component.html',
   styleUrl: './division.component.css',
 })
@@ -57,6 +57,7 @@ export class DivisionComponent implements OnInit {
     enabled: 1,
   };
   selectedDivision: Partial<DivisionDto> = {};
+  isDuplicate: boolean = false;
 
   constructor(private divisionService: DivisionService) {}
 
@@ -89,7 +90,18 @@ export class DivisionComponent implements OnInit {
   }
 
   createDivision(): void {
-    if (!this.newDivision.division_name === undefined) {
+    if (!this.newDivision.division_name) {
+      return;
+    }
+
+    // Cek apakah data sudah ada di database
+    const existingDivision = this.divisions.find(
+      (division) =>
+        division.division_name.toLowerCase() ===
+        this.newDivision.division_name?.toLowerCase()
+    );
+    if (existingDivision) {
+      this.isDuplicate = true;
       return;
     }
 
@@ -101,6 +113,7 @@ export class DivisionComponent implements OnInit {
           division_name: '',
           enabled: 1,
         };
+        this.isDuplicate = false;
 
         // Success notification
         Swal.fire({

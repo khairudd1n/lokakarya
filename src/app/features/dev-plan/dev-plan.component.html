@@ -32,6 +32,9 @@
           pInputText
           [(ngModel)]="newDevPlan.plan"
         />
+        <div *ngIf="isDuplicate" style="color: red; font-size: 15px">
+          Data sudah ada
+        </div>
       </div>
     </div>
     <p-footer>

@@ -73,7 +73,7 @@ export const routes: Routes = [
     path: 'emp-achievement',
     component: EmpAchieveComponent,
     canActivate: [authGuard, roleMenuGuard],
-    data: { permission: 'ALL_EMP ACHIEVEMENT' },
+    data: { permission: 'ALL_EMP_ACHIEVEMENT' },
   },
   {
     path: 'ass-summary',

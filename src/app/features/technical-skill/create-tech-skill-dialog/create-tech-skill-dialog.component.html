@@ -6,7 +6,9 @@
   (onHide)="closeDialog()"
 >
   <ng-template pTemplate="header">
-    <h3>{{ techSkillData ? "Edit Technical Skill" : "Create Technical Skill" }}</h3>
+    <h3>
+      {{ techSkillData ? "Edit Technical Skill" : "Create Technical Skill" }}
+    </h3>
   </ng-template>
 
   <div class="grid formgrid p-fluid">
@@ -21,17 +23,22 @@
         required
         #technicalSkill="ngModel"
       />
-      <div *ngIf="technicalSkill.invalid && technicalSkill.touched" class="p-error">Technical Skill is required.</div>
+      <div
+        *ngIf="technicalSkill.invalid && technicalSkill.touched"
+        class="p-error"
+      >
+        Technical Skill is required.
+      </div>
     </div>
 
     <div class="field col-12 md:col-3">
-        <label for="enabled">Enabled</label>
-        <p-toggleButton
-          [(ngModel)]="techSkill.enabled"
-          [onLabel]="'Enabled'"
-          [offLabel]="'Disabled'"
-          name="enabled"
-        ></p-toggleButton>
+      <label for="enabled">Enabled</label>
+      <p-toggleButton
+        [(ngModel)]="techSkill.enabled"
+        [onLabel]="'Enabled'"
+        [offLabel]="'Disabled'"
+        name="enabled"
+      ></p-toggleButton>
     </div>
   </div>
 

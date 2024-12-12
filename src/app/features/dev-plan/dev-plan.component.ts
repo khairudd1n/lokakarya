@@ -19,7 +19,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
-import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-dev-plan',
@@ -39,8 +39,8 @@ import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
     ReactiveFormsModule,
     DialogModule,
     MenubarModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './dev-plan.component.html',
   styleUrl: './dev-plan.component.css',
 })
@@ -55,6 +55,7 @@ export class DevPlanComponent implements OnInit {
     enabled: 1,
   };
   selectedDevPlan: Partial<DevPlanDto> = {};
+  isDuplicate: boolean = false;
 
   constructor(private devPlanService: DevPlanService) {}
 
@@ -82,6 +83,16 @@ export class DevPlanComponent implements OnInit {
 
   createDevPlan(): void {
     if (!this.newDevPlan.plan === undefined) {
+      return;
+    }
+
+    // Cek apakah data sudah ada di database
+    const existingDevPlan = this.devPlans.find(
+      (division) =>
+        division.plan.toLowerCase() === this.newDevPlan.plan?.toLowerCase()
+    );
+    if (existingDevPlan) {
+      this.isDuplicate = true;
       return;
     }
 

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChange,
+  SimpleChanges,
+} from '@angular/core';
 import { TechnicalSkill } from '../../../core/models/technical-skill.model';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 
@@ -7,14 +14,14 @@ import { SharedModule } from '../../../shared/primeng/shared/shared.module';
   standalone: true,
   imports: [SharedModule],
   templateUrl: './create-tech-skill-dialog.component.html',
-  styleUrl: './create-tech-skill-dialog.component.css'
+  styleUrl: './create-tech-skill-dialog.component.css',
 })
 export class CreateTechSkillDialogComponent {
   @Input() visible: boolean = false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() techSkillSaved: EventEmitter<any> = new EventEmitter();
 
-  @Input() techSkillData: TechnicalSkill | null = null
+  @Input() techSkillData: TechnicalSkill | null = null;
 
   techSkill: any = {
     technical_skill: '',
@@ -48,5 +55,4 @@ export class CreateTechSkillDialogComponent {
     this.techSkillSaved.emit(this.techSkill);
     this.closeDialog();
   }
-
 }
