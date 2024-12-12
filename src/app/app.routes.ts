@@ -21,7 +21,6 @@ import { ViewUserListComponent } from './features/user/view-user-list/view-user-
 import { UserSummaryComponent } from './features/user-summary/user-summary.component';
 import { SummaryComponent } from './features/summary/summary.component';
 import { EmpSuggestComponent } from './emp-suggest/emp-suggest.component';
-import { EmpDevPlanTableComponent } from './emp-dev-plan-table/emp-dev-plan-table.component';
 
 
 export const routes: Routes = [

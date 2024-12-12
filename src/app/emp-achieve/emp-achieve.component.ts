@@ -15,7 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
-import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-emp-achieve',
@@ -34,8 +34,8 @@ import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
     FormsModule,
     ReactiveFormsModule,
     DialogModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './emp-achieve.component.html',
   styleUrl: './emp-achieve.component.css',
 })

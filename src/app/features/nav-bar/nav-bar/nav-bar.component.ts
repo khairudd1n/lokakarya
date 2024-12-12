@@ -112,7 +112,9 @@ export class NavBarComponent implements OnInit {
 
     // Dynamically add the 'Achievement' group if any relevant "Achievement" items exist
     const achievementItems = menuItems.filter((item) =>
-      ['/achievement', '/group-achievement'].includes(item.routerLink!)
+      ['/achievement', '/group-achievement', '/emp-achievement'].includes(
+        item.routerLink!
+      )
     );
     if (achievementItems.length > 0) {
       groupedMenus.push({ label: 'Achievement', items: achievementItems });
@@ -120,7 +122,6 @@ export class NavBarComponent implements OnInit {
 
     const assessmentItems = menuItems.filter((item) =>
       [
-        '/emp-achievement',
         '/emp-attitude-skill',
         '/emp-technical-skill',
         '/emp-dev-plan',

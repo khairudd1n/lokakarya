@@ -14,7 +14,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
-import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-group-achievement',
@@ -30,8 +30,8 @@ import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './group-achievement.component.html',
   styleUrl: './group-achievement.component.css',
 })
@@ -46,7 +46,7 @@ export class GroupAchievementComponent implements OnInit {
     percentage: 0,
     enabled: 1,
   }; // Model for the new group achievement
-
+  isDuplicate: boolean = false;
   selectedGroupAchievement: Partial<GroupAchieveDto> = {};
 
   constructor(private groupAchieveService: GroupAchievementsService) {}
@@ -80,6 +80,17 @@ export class GroupAchievementComponent implements OnInit {
       !this.newGroupAchievement.group_achievement_name ||
       this.newGroupAchievement.percentage === undefined
     ) {
+      return;
+    }
+
+    // Cek apakah data sudah ada di database
+    const existingGroupAchieve = this.groupAchievements.find(
+      (division) =>
+        division.group_achievement_name.toLowerCase() ===
+        this.newGroupAchievement.group_achievement_name?.toLowerCase()
+    );
+    if (existingGroupAchieve) {
+      this.isDuplicate = true;
       return;
     }
 
