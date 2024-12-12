@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 export interface GroupAttitudeSkillDto {
@@ -33,7 +33,18 @@ export class GroupAttitudeSkillService {
 
   constructor(private http: HttpClient) {}
 
-  // Fetch all group achievements
+
+  getAllGroupAttitudeSkillWithCount(): Observable<any[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .get<GroupAttWithAttDto[]>(`${this.apiUrl}/count`, { headers })
+      .pipe(
+        map((data) => data),
+      );
+  }
+
   getAllGroupAttitudeSkills(): Observable<GroupAttitudeSkillDto[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
 import { tap } from 'rxjs';
@@ -31,6 +31,12 @@ export class EmpAttitudeSkillNewService {
     return this.http.post(this.apiUrl, payload, { headers });
   }
 
+  getAllAttitudeSkillsByUserId(userId: string, year: number): Observable<any[]> {
+      .get<any[]>(`${this.apiUrl}/user/${userId}/${year}`, { headers })
+      .pipe(tap((data) => 
+          console.log('Fetched Attitude Skills:', data)));  
+  }
+  
   getAllGroupWithAttitudeSkills(): Observable<any[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,

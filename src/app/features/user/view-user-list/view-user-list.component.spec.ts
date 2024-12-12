@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssSummaryComponent } from './ass-summary.component';
+import { ViewUserListComponent } from './view-user-list.component';
 
-describe('AssSummaryComponent', () => {
-  let component: AssSummaryComponent;
-  let fixture: ComponentFixture<AssSummaryComponent>;
+describe('ViewUserListComponent', () => {
+  let component: ViewUserListComponent;
+  let fixture: ComponentFixture<ViewUserListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AssSummaryComponent]
+      imports: [ViewUserListComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AssSummaryComponent);
+    fixture = TestBed.createComponent(ViewUserListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

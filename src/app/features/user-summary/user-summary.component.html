@@ -1,0 +1,61 @@
+<div *ngIf="isLoading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+
+@if (!userId){
+<app-nav-bar></app-nav-bar>
+<h2>Summary</h2>
+}
+@if (!year){
+  <p-dropdown
+    [options]="years"
+    [(ngModel)]="selectedYear"
+    (onChange)="onYearChange($event)"
+    optionLabel="label"
+    placeholder="Select a Year"
+  ></p-dropdown>
+}
+<div class="card">
+  <p-table [value]="combinedData">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 35%">Aspect</th>
+        <th class="center-column" style="width: 20%">Score</th>
+        <th class="center-column" style="width: 20%">Weight</th>
+        <th class="center-column" style="width: 25%">Final Score</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+      <tr
+        *ngIf="isNewSection(rowIndex, item.section)"
+        class="section-header-row"
+      >
+        <td colspan="4" class="section-header" style="text-align: center">
+          {{ item.section }}
+        </td>
+      </tr>
+      <tr>
+        <td>{{ item.group_name }}</td>
+        <td class="center-column">{{ item.total_score }}</td>
+        <td class="center-column">{{ item.percentage }}%</td>
+        <td class="center-column">
+          {{ Math.round(item.total_score * (item.percentage / 100)) }}
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <tr>
+        <td colspan="2" style="text-align: center; font-weight: bold;">Total Score:</td>
+        <td style="text-align: center; font-weight: bold;">{{ totalPercentage }}%</td>
+        <td style="text-align: center; font-weight: bold;">{{ assScore }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No data available</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

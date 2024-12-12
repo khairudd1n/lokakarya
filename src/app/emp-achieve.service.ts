@@ -25,12 +25,12 @@ export class EmpAchieveService {
 
   constructor(private http: HttpClient) {}
 
-  getAllEmpAchieveByUserId(userId: string): Observable<any[]> {
+  getAllEmpAchieveByUserId(userId: string, year: number): Observable<any[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<ApiResponse<any[]>>(`${this.apiUrl}/user/${userId}`, {
+      .get<ApiResponse<any[]>>(`${this.apiUrl}/user/${userId}/${year}`, {
         headers,
       })
       .pipe(map((response) => response.content));
