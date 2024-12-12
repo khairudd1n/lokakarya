@@ -1,17 +1,3 @@
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-}
-
-.error-message {
-  color: red;
-  font-size: 16px;
-  text-align: center;
-  margin-top: 20px;
-}
-
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -19,30 +5,6 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.group-column {
-  width: 250px; /* Atur lebar kolom sesuai kebutuhan */
-  max-width: 250px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.percent-column {
-  width: 150px;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.action-buttons button {
-  margin-right: 8px; /* Jarak antar tombol */
-}
-
-.action-buttons button:last-child {
-  margin-right: 0; /* Hapus margin pada tombol terakhir */
 }
 
 .title {
@@ -79,7 +41,6 @@
 .group-title {
   color: #007bff;
   margin-bottom: 10px;
-  text-align: center;
 }
 
 .data-table {
