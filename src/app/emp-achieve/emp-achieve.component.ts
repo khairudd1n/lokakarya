@@ -15,7 +15,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
-import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
+
+import { NavBarComponent } from "../features/nav-bar/nav-bar/nav-bar.component";
+import { AssSummaryService } from '../ass-summary.service';
+
 
 @Component({
   selector: 'app-emp-achieve',
@@ -66,7 +69,7 @@ export class EmpAchieveComponent implements OnInit {
   userOptions: { label: string; value: string }[] = [];
   achievementOptions: { label: string; value: string }[] = [];
 
-  constructor(private empAchieveService: EmpAchieveService) {}
+  constructor(private empAchieveService: EmpAchieveService, private assSummaryService: AssSummaryService) {}
 
   ngOnInit(): void {
     this.fetchEmpAchieve();
@@ -121,7 +124,8 @@ export class EmpAchieveComponent implements OnInit {
       this.empAchieveService.createEmpAchieve(empAchieveData).subscribe({
         next: (response) => {
           console.log('Emp achieve created successfully:', response);
-          this.fetchEmpAchieve(); // Refresh the data table
+          this.assSummaryService.generateAssSummary(this.newEmpAchieve.user_id as UUID, this.newEmpAchieve.assessment_year).subscribe();
+          this.fetchEmpAchieve(); 
           this.displayCreateDialog = false;
           this.newEmpAchieve = {
             user_id: '',
@@ -229,7 +233,7 @@ export class EmpAchieveComponent implements OnInit {
     console.log('Selected achievement_id:', this.editEmpAchieve.achievement_id);
   }
 
-  deleteEmpAchieve(id: UUID): void {
+  deleteEmpAchieve(id: UUID, user_id: UUID, assessment_year: number): void {
     // Use SweetAlert to ask for confirmation before deleting
     Swal.fire({
       title: 'Are you sure?',
@@ -244,6 +248,8 @@ export class EmpAchieveComponent implements OnInit {
         // Proceed with deletion if user confirms
         this.empAchieveService.deleteEmpAchieve(id).subscribe({
           next: () => {
+            this.assSummaryService.generateAssSummary(user_id, assessment_year).subscribe();
+            
             this.fetchEmpAchieve(); // Refresh the data table
 
             // Show success alert using SweetAlert

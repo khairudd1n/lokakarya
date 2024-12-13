@@ -32,7 +32,7 @@ export class LoginComponent {
           localStorage.setItem('token', response.content.token);
           localStorage.setItem('user', JSON.stringify(response.content.user));
           console.log('Login successful:', response);
-          this.router.navigate(['/']);
+          this.router.navigate(['/user-profile']);
           // Handle successful login, e.g., navigate to another page
         },
         (error) => {

@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CreateUserDialogComponent } from '../create-user-dialog/create-user-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import Swal from 'sweetalert2';
+import { AssSummaryService } from '../../../ass-summary.service';
 
 @Component({
   selector: 'app-user-list',
@@ -25,7 +26,7 @@ export class UserListComponent implements OnInit {
   displayDetailDialog: boolean = false;
   selectedUser: any = null; // Holds data for the user being edited
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private assSummaryService: AssSummaryService) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -124,6 +125,7 @@ export class UserListComponent implements OnInit {
             icon: 'success',
             confirmButtonColor: '#3085d6',
           });
+          this.assSummaryService.generateAssSummary(data.id, new Date().getFullYear());
           this.loadUsers();
         },
         error: (err) => {

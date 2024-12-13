@@ -34,15 +34,7 @@ export class SummaryComponent {
     value: 2024,
   };
   years: { label: string; value: number }[] = [
-    { label: '2024', value: 2024 },
-    { label: '2023', value: 2023 },
-    { label: '2022', value: 2022 },
-    { label: '2021', value: 2021 },
-    { label: '2020', value: 2020 },
-    { label: '2019', value: 2019 },
-    { label: '2018', value: 2018 },
-    { label: '2017', value: 2017 },
-    { label: '2016', value: 2016 },
+
   ];
 
   constructor(
@@ -86,33 +78,45 @@ export class SummaryComponent {
     });
   }
   fetchAssessmentSummaries() {
-    this.assSummaryService
-      .getAllAssSummaryByYear(this.selectedYear.value)
-      .subscribe((data) => {
-        console.log('Assessment Summary:', data);
-
-        const userIdsInAssSummary = data.content.map(
-          (assSummary) => assSummary.user.id
-        );
-        console.log('User IDs in Assessment Summary:', userIdsInAssSummary);
-
-        const userScoresMap = new Map(
-          data.content.map((assSummary) => [
-            assSummary.user.id,
-            assSummary.score,
-          ])
-        );
-
-        this.filteredUsers = this.users
-          .filter((user) => userScoresMap.has(user.id))
-          .map((user) => ({
-            ...user,
-            assessmentScore: userScoresMap.get(user.id), // Add the score to each user
-          }));
-        console.log('Filtered Users:', this.filteredUsers);
-        this.prepareDivisionOptions();
-      });
+    this.assSummaryService.getAllAssSummary().subscribe((data) => {
+      console.log('Assessment Summary:', data);
+  
+      // Extract unique years for the dropdown
+      const uniqueYears = Array.from(
+        new Set(data.content.map((assSummary) => assSummary.year))
+      ).sort((a, b) => b - a);
+  
+      this.years = uniqueYears.map((year) => ({ label: year.toString(), value: year }));
+      console.log('Updated Years:', this.years);
+  
+      // Filter based on the selected year (default: all years)
+      const filteredContent = this.selectedYear
+        ? data.content.filter((assSummary) => assSummary.year === this.selectedYear.value)
+        : data.content;
+  
+      console.log('Filtered Assessment Summary:', filteredContent);
+  
+      // Map filtered content to user IDs and scores
+      const userScoresMap = new Map(
+        filteredContent.map((assSummary) => [
+          assSummary.user.id,
+          assSummary.score,
+        ])
+      );
+  
+      this.filteredUsers = this.users
+        .filter((user) => userScoresMap.has(user.id))
+        .map((user) => ({
+          ...user,
+          assessmentScore: userScoresMap.get(user.id),
+        }));
+  
+      console.log('Filtered Users:', this.filteredUsers);
+  
+      this.prepareDivisionOptions();
+    });
   }
+  
 
   onRowSelect(event: any) {
     this.selectedUser = event.data;
@@ -145,7 +149,7 @@ export class SummaryComponent {
     }
 
     const selectedDivisionValues = selectedValues.map(
-      (selected) => selected.value
+      (selected) => selected
     );
 
     this.filteredUsers = this.users

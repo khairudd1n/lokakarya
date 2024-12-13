@@ -246,33 +246,32 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-achievement let-i="rowIndex">
-        <tr>
-          <td>{{ i + 1 }}</td>
-          <td>{{ achievement.username }}</td>
-          <td>{{ achievement.notes }}</td>
-          <td>{{ achievement.achievement_name }}</td>
-          <td>{{ achievement.score }}</td>
-          <td>{{ achievement.assessment_year }}</td>
-          <td>
-            <div class="action-buttons">
-              <button
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-sm p-button-info"
-                (click)="showEditDialog(achievement)"
-              ></button>
-              <button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-sm p-button-danger"
-                (click)="deleteEmpAchieve(achievement.id)"
-              ></button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-
+    <ng-template pTemplate="body" let-achievement>
+      <tr>
+        <!-- <td>{{ achievement.id }}</td> -->
+        <td>{{ achievement.username }}</td>
+        <td>{{ achievement.notes }}</td>
+        <td>{{ achievement.achievement_name }}</td>
+        <td>{{ achievement.score }}</td>
+        <td>{{ achievement.assessment_year }}</td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            label="Edit"
+            class="p-button-sm p-button-info"
+            (click)="showEditDialog(achievement)"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            label="Delete"
+            class="p-button-sm p-button-danger"
+            (click)="deleteEmpAchieve(achievement.id, achievement.user_id, achievement.assessment_year)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="4">No emp achieve found.</td>

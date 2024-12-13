@@ -9,19 +9,19 @@ export const authGuard: CanActivateFn = (route, state) => {
   authService.checkTokenExpiration();
   const token = localStorage.getItem('token');
   if (route.routeConfig?.path === 'login') {
-    // If trying to access login and token exists, redirect to home
+   
     if (token) {
-      router.navigate(['/']);
+      router.navigate(['/user-profile']);
       return false;
     }
-    return true; // Allow access to login if no token
+    return true; 
   }
 
-  // For other routes, protect them if no token exists
+
   if (!token) {
     router.navigate(['/login']);
     return false;
   }
 
-  return true; // Allow access to other routes if token exists
+  return true; 
 };
