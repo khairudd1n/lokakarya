@@ -20,7 +20,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
 import { EventEmitter, Output } from '@angular/core';
-import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-group-attitude-skill',
@@ -40,8 +40,8 @@ import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
     ReactiveFormsModule,
     DialogModule,
     MenubarModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
   templateUrl: './group-attitude-skill.component.html',
   styleUrls: ['./group-attitude-skill.component.css'],
 })
@@ -61,6 +61,7 @@ export class GroupAttitudeSkillComponent implements OnInit {
     enabled: 1,
   };
   selectedGroupAttitudeSkill: Partial<GroupAttitudeSkillDto> = {};
+  isDuplicate: boolean = false;
 
   constructor(private groupAttitudeSkillService: GroupAttitudeSkillService) {}
 
@@ -98,6 +99,17 @@ export class GroupAttitudeSkillComponent implements OnInit {
       !this.newGroupAttitudeSkill.group_name ||
       this.newGroupAttitudeSkill.percentage === undefined
     ) {
+      return;
+    }
+
+    // Cek apakah data sudah ada di database
+    const existingGroupAttitudeSkill = this.groupAttitudeSkills.find(
+      (division) =>
+        division.group_name.toLowerCase() ===
+        this.newGroupAttitudeSkill.group_name?.toLowerCase()
+    );
+    if (existingGroupAttitudeSkill) {
+      this.isDuplicate = true;
       return;
     }
 

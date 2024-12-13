@@ -32,6 +32,9 @@
           pInputText
           [(ngModel)]="newDivision.division_name"
         />
+        <div *ngIf="isDuplicate" style="color: red; font-size: 15px">
+          Data sudah ada
+        </div>
       </div>
     </div>
     <p-footer>
