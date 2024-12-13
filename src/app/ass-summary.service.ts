@@ -58,6 +58,17 @@ export class AssSummaryService {
       );
   }
 
+  generateAssSummary(userId: string, year: number): Observable<any> {
+    console.log('generating ass summary');
+    return this.http
+      .post(
+        `${this.url}/generate/${userId}/${year}`, 
+        {}, 
+        { headers: { Authorization: `Bearer ${this.token}` } } 
+      )
+      .pipe(map((response) => response));
+  }
+
   getAssSummaryDetail(userId: string, year: number): Observable<any> {
     return this.http
       .get(`${this.url}/detail/${userId}/${year}`, {
@@ -68,9 +79,9 @@ export class AssSummaryService {
       );
   }
 
-  getAllAssSummary(): Observable<any> {
+  getAllAssSummary(): Observable<ApiResponse<any[]>> {
     return this.http
-      .get(`${this.url}/all`, {
+      .get<ApiResponse<any[]>>(`${this.url}/all`, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
       .pipe(

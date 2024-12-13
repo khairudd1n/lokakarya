@@ -49,23 +49,30 @@
 
   <ng-template pTemplate="header">
     <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Position</th>
-      <th>
+      <th style="width: 25%; text-align: center">Name</th>
+      <th style="width: 20%; text-align: center">Email</th>
+      <th style="width: 20%; text-align: center">Position</th>
+      <th style="width: 20%; text-align: center">
         Division
         <p-columnFilter
-          field="division.division_name"
+          field="division_name"
           matchMode="in"
-          [showMenu]="false"
+          display="menu"
+          [showMatchModes]="false"
+          [showOperator]="false"
+          [showAddButton]="false"
         >
+          <ng-template pTemplate="header">
+            <div class="px-3 pt-3 pb-0">
+              <span class="font-bold">Agent Picker</span>
+            </div>
+          </ng-template>
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-multiSelect
               [ngModel]="value"
               [options]="divisionOptions"
               placeholder="Any"
               (onChange)="filterDivision($event.value)"
-              optionLabel="label"
             >
               <ng-template let-option pTemplate="item">
                 <div class="inline-block vertical-align-middle">
@@ -76,17 +83,20 @@
           </ng-template>
         </p-columnFilter>
       </th>
-      <th>Score</th>
+      <th pSortableColumn="assessmentScore" style="width: 15%; text-align: center">
+        Score
+        <p-sortIcon field="assessmentScore"></p-sortIcon>
+      </th>
     </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-user>
     <tr [pSelectableRow]="user">
-      <td>{{ user.full_name }}</td>
-      <td>{{ user.position }}</td>
+      <td>{{ user.full_name }}</td>      
       <td>{{ user.email_address }}</td>
-      <td>{{ user.division.division_name }}</td>
-      <td>{{ user.assessmentScore }}</td>
+      <td>{{ user.position }}</td>
+      <td style="text-align: center">{{ user.division.division_name }}</td>
+      <td style="text-align: center">{{ user.assessmentScore }}</td>
     </tr>
   </ng-template>
 </p-table>

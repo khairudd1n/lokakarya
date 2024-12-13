@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { forkJoin } from 'rxjs';
+import { AssSummaryService } from '../ass-summary.service';
 
 interface AttitudeSkill {
   attitude_skill_name: string;
@@ -53,7 +54,8 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private empAttitudeSkillService: EmpAttitudeSkillNewService
+    private empAttitudeSkillService: EmpAttitudeSkillNewService,
+    private assSummaryService: AssSummaryService
   ) {}
 
   scoreOptions = [
@@ -73,7 +75,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     forkJoin({
       groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
       userSkills: this.userId
-        ? this.empAttitudeSkillService.getEmpAttSkillByUserId(this.userId)
+        ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(this.userId, this.assessmentYear)
         : [],
     }).subscribe(({ groupData, userSkills }) => {
       this.groupData = groupData;
@@ -81,12 +83,12 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       // Populate scores in groupData with userSkills
       if (userSkills.length > 0) {
         this.disabledSkills = new Set(
-          userSkills.map((skill) => skill.attitude_skill_id)
+          userSkills.map((skill) => skill.attitude_skill.id)
         );
         this.groupData.forEach((group) => {
           group.attitude_skills.forEach((skill: AttitudeSkill) => {
             const matchedSkill = userSkills.find(
-              (s) => s.attitude_skill_id === skill.id
+              (s) => s.attitude_skill.id === skill.id
             );
             if (matchedSkill) {
               skill.score = matchedSkill.score;
@@ -94,6 +96,9 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           });
         });
       }
+      this.assSummaryService.generateAssSummary(this.userId, this.assessmentYear).subscribe((data) => {
+        console.log(data);
+      });
       console.log('Synchronized Data:', this.groupData);
     });
   }
@@ -158,6 +163,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         .subscribe(
           () => {
             Swal.fire('Success', 'Skills saved successfully!', 'success');
+            
             this.loadData(); // Refresh data from server
           },
           () => Swal.fire('Error', 'Failed to save skills.', 'error')

@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
-import { tap } from 'rxjs';
 
 export interface EmpAttitudeSkillCreateDto {
   user_id: UUID;
@@ -32,6 +31,10 @@ export class EmpAttitudeSkillNewService {
   }
 
   getAllAttitudeSkillsByUserId(userId: string, year: number): Observable<any[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
       .get<any[]>(`${this.apiUrl}/user/${userId}/${year}`, { headers })
       .pipe(tap((data) => 
           console.log('Fetched Attitude Skills:', data)));  

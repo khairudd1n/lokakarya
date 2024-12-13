@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
 @Component({
@@ -9,4 +9,8 @@ import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
-export class HomePageComponent {}
+export class HomePageComponent {
+  constructor(private router: Router) {
+    this.router.navigate(['/login']);
+  }
+}
