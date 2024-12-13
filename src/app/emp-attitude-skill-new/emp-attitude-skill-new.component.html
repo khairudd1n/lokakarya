@@ -3,7 +3,6 @@
 <div class="container" style="background-color: #f5f5f5">
   <h1 class="title">FORM EVALUASI KINERJA - SIKAP DAN KEAHLIAN PERSONAL</h1>
 
-
   <div class="form-group">
     <label for="assessmentYear">Assessment Year:</label>
     <input
@@ -62,6 +61,7 @@
       label="Simpan"
       icon="pi pi-save"
       (click)="saveSkills()"
+      [disabled]="!isSaveDisabled()"
     ></p-button>
   </div>
 </div>
