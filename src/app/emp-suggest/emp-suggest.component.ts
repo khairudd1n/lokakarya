@@ -126,6 +126,11 @@ export class EmpSuggestComponent implements OnInit {
   }
 
   addRow(group: any): void {
+    if (group.rows.length >= 10) {
+      Swal.fire('Warning', 'Maksimum 10 baris saja yang diizinkan.', 'warning');
+      return;
+    }
+
     const newRow = {
       suggestion: '',
       saved: false,

@@ -32,6 +32,7 @@
             <textarea
               pInputTextarea
               [(ngModel)]="row.tech_detail"
+              class="textarea-field"
               (blur)="
                 logTechId2(row.tech_skill_id, row.tech_detail, row.score, row)
               "
@@ -51,6 +52,7 @@
                 logTechId2(row.tech_skill_id, row.tech_detail, row.score, row)
               "
               [disabled]="row.status === 'saved'"
+              [style]="{ width: '175px' }"
             >
             </p-dropdown>
           </td>

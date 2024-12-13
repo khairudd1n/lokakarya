@@ -65,3 +65,11 @@
   justify-content: flex-end; /* Aligns the button to the right */
   margin-top: 20px; /* Adds some space above the button */
 }
+
+.data-table p-dropdown {
+  width: 200px; /* Atur panjang yang diinginkan */
+}
+
+.data-table p-dropdown .p-dropdown-label {
+  text-align: center; /* Opsional, untuk meratakan teks */
+}

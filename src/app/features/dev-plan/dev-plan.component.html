@@ -105,21 +105,23 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 10px">No.</th>
-          <th class="division-column">Plan</th>
-          <th class="action-column">Action</th>
+          <th></th>
+          <th class="percent-column"></th>
+          <th>
+            <div class="column-filter">
+              <p-columnFilter
+                type="text"
+                field="plan"
+                placeholder="Search by plan"
+                ariaLabel="Filter Plan"
+              />
+            </div>
+          </th>
         </tr>
         <tr>
-          <th></th>
-          <th>
-            <p-columnFilter
-              type="text"
-              field="plan"
-              placeholder="Search by plan"
-              ariaLabel="Filter Plan"
-            />
-          </th>
-          <th></th>
+          <th style="width: 10px">No.</th>
+          <th class="division-column" style="text-align: center">Plan</th>
+          <th class="action-column" style="text-align: center">Action</th>
         </tr>
       </ng-template>
 

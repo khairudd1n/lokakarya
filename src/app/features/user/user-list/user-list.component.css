@@ -90,8 +90,10 @@
   margin-top: 10px;
 }
 
-.button-container {
-  display: flex;
-  justify-content: flex-end; /* Aligns the button to the right */
-  margin-top: 20px; /* Adds some space above the button */
+.action-button-spacing {
+  margin-bottom: 10px;
+}
+
+.action-button-spacing:last-child {
+  margin-bottom: 0;
 }

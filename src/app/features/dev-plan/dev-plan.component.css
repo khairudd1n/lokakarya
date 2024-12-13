@@ -31,6 +31,13 @@
   margin-right: 0; /* Hapus margin pada tombol terakhir */
 }
 
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Posisi tombol di tengah */
+  align-items: center; /* Pusatkan tombol secara vertikal */
+  gap: 4px; /* Jarak antar tombol */
+}
+
 .title {
   text-align: center;
   color: #333;
@@ -88,4 +95,10 @@
   display: flex;
   justify-content: flex-end; /* Aligns the button to the right */
   margin-top: 20px; /* Adds some space above the button */
+}
+
+.column-filter {
+  display: flex;
+  align-items: center;
+  width: 275px;
 }

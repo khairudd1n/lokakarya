@@ -114,21 +114,19 @@
         <td>{{ user.employee_status ? "Permanent" : "Contract" }}</td>
         <td>{{ user.join_date | date }}</td>
         <td>
-          <div class="action-buttons">
-            <button
-              pButton
-              icon="pi pi-pencil"
-              class="p-button-sm"
-              style="margin-right: 8px"
-              (click)="openEditDialog(user)"
-            ></button>
-            <button
-              pButton
-              icon="pi pi-trash"
-              class="p-button-sm p-button-danger"
-              (click)="deleteUser(user)"
-            ></button>
-          </div>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-sm action-button-spacing"
+            style="margin-right: 8px"
+            (click)="openEditDialog(user)"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-sm p-button-danger action-button-spacing"
+            (click)="deleteUser(user)"
+          ></button>
         </td>
       </tr>
     </ng-template>
