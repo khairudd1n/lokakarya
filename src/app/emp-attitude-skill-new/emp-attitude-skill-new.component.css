@@ -73,3 +73,33 @@
 .data-table p-dropdown .p-dropdown-label {
   text-align: center; /* Opsional, untuk meratakan teks */
 }
+
+.center-text {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.nilai-table {
+  width: 50%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.nilai-table th,
+.nilai-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+}
+
+.nilai-table th {
+  background-color: lightblue;
+}
+
+.nilai-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.nilai-table tr:hover {
+  background-color: #f1f1f1;
+}
