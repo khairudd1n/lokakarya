@@ -162,20 +162,45 @@ export class EmpDevPlanComponent implements OnInit {
 
       // Cek apakah plan sudah ada di selectedPlans
       const existingPlanIndex = this.selectedPlans.findIndex(
-        (plan) => plan.dev_plan_id === row.dev_plan_id
+        (plan) =>
+          plan.dev_plan_id === row.dev_plan_id &&
+          plan.plan_detail === plan_detail
       );
 
       if (existingPlanIndex !== -1) {
-        this.selectedPlans[existingPlanIndex] = plan;
+        this.selectedPlans[existingPlanIndex] = plan; // Update existing plan
         console.log('Updated plan in Selection:', plan);
       } else {
         console.log('Add plan added to Selection:', plan);
-        this.selectedPlans.push(plan);
+        this.selectedPlans.push(plan); // Add new plan
       }
     }
   }
 
   savePlans(): void {
+    // Reset selectedPlans setiap kali simpan dipanggil
+    this.selectedPlans = [];
+
+    // Loop melalui semua grup dan baris untuk mengumpulkan rencana yang akan disimpan
+    this.groupData.forEach((group: Group) => {
+      group.rows.forEach((row: Row) => {
+        // Menambahkan tipe Row di sini
+        if (row.plan_detail.trim() !== '' && row.status !== 'saved') {
+          // Cek status
+          const plan: EmpDevPlanCreateDto = {
+            user_id: this.userId as UUID,
+            plan: row.plan,
+            dev_plan_id: row.dev_plan_id as UUID,
+            plan_detail: row.plan_detail,
+            assessment_year: this.assessmentYear,
+            status: 'saved',
+            created_at: new Date(),
+          };
+          this.selectedPlans.push(plan);
+        }
+      });
+    });
+
     if (this.selectedPlans.length > 0) {
       Swal.fire({
         title: 'Apakah anda yakin ingin menyimpan?',
