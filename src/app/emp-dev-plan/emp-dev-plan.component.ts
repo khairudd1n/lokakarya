@@ -68,13 +68,17 @@ export class EmpDevPlanComponent implements OnInit {
   }
 
   initializeAssessmentYears(): void {
-    const currentYear = new Date().getFullYear();
-    this.assessmentYears = [
-      currentYear,
-      currentYear - 1,
-      currentYear - 2,
-      currentYear - 3,
-    ]; // Contoh range tahun
+    this.empDevPlanService.getAssessmentYears().subscribe(
+      (years) => {
+        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+        }
+      },
+      (error) => {
+        console.error('Error fetching assessment years:', error);
+      }
+    );
   }
 
   onAssessmentYearChange(): void {
