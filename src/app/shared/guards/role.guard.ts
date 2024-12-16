@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { MenuService } from '../../core/services/menu.service';
@@ -7,6 +7,7 @@ import { Menu } from '../../core/models/menu.model';
 
 export const roleMenuGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
+  const router = inject(Router);
   const token = localStorage.getItem('token');
   const jwtPayload = authService.parseJwt(token!);
   const userId = jwtPayload.sub!;
@@ -20,5 +21,11 @@ export const roleMenuGuard: CanActivateFn = async (route, state) => {
     return false;
   }
   const requiredPermission = route.data['permission'];
-  return menus.some((menu) => menu.menu_name === requiredPermission);
+
+  const canAccess = menus.some((menu) => menu.menu_name === requiredPermission);
+  if(!canAccess){
+    router.navigate(['/user-profile']);
+    return false;
+  }
+  return true;
 };

@@ -24,4 +24,9 @@
   z-index: 99999 !important;
 }
 
+.required {
+  color: red;
+  font-weight: bold;
+}
+
   

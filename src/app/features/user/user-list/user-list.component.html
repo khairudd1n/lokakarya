@@ -138,6 +138,8 @@
   <app-create-user-dialog
     [(visible)]="displayDialog"
     [userData]="selectedUser"
+    [emailList]="emailList"
+    [usernameList]="usernameList"
     (visibleChange)="onDialogClose($event)"
     (userSaved)="onUserSaved($event)"
   >

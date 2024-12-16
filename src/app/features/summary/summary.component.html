@@ -1,14 +1,4 @@
 <app-nav-bar></app-nav-bar>
-<div class="dropdown-container">
-  <p-dropdown
-    [options]="years"
-    [(ngModel)]="selectedYear"
-    (onChange)="onYearChange($event)"
-    optionLabel="label"
-    placeholder="Select a Year"
-  ></p-dropdown>
-</div>
-
 <p-table
   #dt1
   [value]="filteredUsers"
@@ -44,6 +34,15 @@
           placeholder="Search keyword"
         />
       </span>
+      <div class="dropdown-container" style="margin-left: 20px;">
+        <p-dropdown
+          [options]="years"
+          [(ngModel)]="selectedYear"
+          (onChange)="onYearChange($event)"
+          optionLabel="label"
+          placeholder="Select a Year"
+        ></p-dropdown>
+      </div>
     </div>
   </ng-template>
 
@@ -55,7 +54,7 @@
       <th style="width: 20%; text-align: center">
         Division
         <p-columnFilter
-          field="division_name"
+          field="division.division_name"
           matchMode="in"
           display="menu"
           [showMatchModes]="false"
@@ -72,11 +71,11 @@
               [ngModel]="value"
               [options]="divisionOptions"
               placeholder="Any"
-              (onChange)="filterDivision($event.value)"
+              (onChange)="filter($event.value)"
             >
               <ng-template let-option pTemplate="item">
                 <div class="inline-block vertical-align-middle">
-                  <span class="ml-1 mt-1">{{ option.label }}</span>
+                  <span class="ml-1 mt-1">{{ option }}</span>
                 </div>
               </ng-template>
             </p-multiSelect>
