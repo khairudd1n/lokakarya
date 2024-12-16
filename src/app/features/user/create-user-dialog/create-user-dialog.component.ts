@@ -41,14 +41,22 @@ import Swal from 'sweetalert2';
   styleUrl: './create-user-dialog.component.css',
 })
 export class CreateUserDialogComponent implements OnChanges {
-  @Input() visible: boolean = false; 
+  @Input() visible: boolean = false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter();
-  @Output() userSaved: EventEmitter<any> = new EventEmitter(); 
+  @Output() userSaved: EventEmitter<any> = new EventEmitter();
 
-  @Input() userData: any = null; 
+  @Input() userData: any = null;
+  @Input() usernameList: string[] = [];
+  @Input() emailList: string[] = [];
 
   roles: Role[] = [];
   divisions: any[] = [];
+  takenEmails: string[] = [];
+  takenUsernames: string[] = [];
+  emailValid: boolean = false;
+  usernameValid: boolean = false;
+
+  isFormValid: boolean = false;
 
   constructor(
     private roleService: RoleService,
@@ -63,8 +71,10 @@ export class CreateUserDialogComponent implements OnChanges {
     this.divisionService.getAllDivisions().subscribe((response) => {
       this.divisions = response;
     });
+    this.takenEmails = this.emailList;
+    this.takenUsernames = this.usernameList;
     if (!this.user.selectedRoles) {
-      this.user.selectedRoles = []; 
+      this.user.selectedRoles = [];
     }
     console.log(this.divisions);
   }
@@ -85,31 +95,52 @@ export class CreateUserDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['userData']) {
       if (this.userData) {
-        // Editing an existing user
-        console.log("user data : ",this.userData);
+        console.log('user data : ', this.userData);
         this.user = { ...this.userData };
         this.user.selectedRoles =
           this.userData.role?.map((role: any) => role.id) || [];
         this.user.division = this.userData.division?.id || '';
-        this.user.password = null; 
-        this.user.employee_status? this.setEmployeeStatus(1) : this.setEmployeeStatus(0);
+        this.user.password = null;
+        this.user.employee_status
+          ? this.setEmployeeStatus(1)
+          : this.setEmployeeStatus(0);
+        this.takenEmails = this.emailList.filter(
+          (email) => email !== this.user.email_address
+        );
+        this.takenUsernames = this.usernameList.filter(
+          (username) => username !== this.user.username.toLowerCase()
+        );
       } else {
-        // Creating a new user
+        this.takenEmails = this.emailList;
+        this.takenUsernames = this.usernameList;
         this.resetForm();
         this.user.enabled = true;
         this.setEmployeeStatus(0);
       }
+    } else {
+      this.takenEmails = this.emailList;
+      this.takenUsernames = this.usernameList;
     }
   }
 
   saveUser() {
-    this.userSaved.emit(this.user); 
+    this.userSaved.emit(this.user);
     console.log(this.user);
     this.closeDialog();
   }
 
+  isUsernameTaken(username: string): boolean {
+    this.usernameValid = !this.takenUsernames.includes(username.toLowerCase());
+    return !this.usernameValid; // return true if username is taken, false if not
+  }  
+
+  isEmailTaken(email: string): boolean {
+    this.emailValid = !this.takenEmails.includes(email.toLowerCase());
+    return !this.emailValid;
+  }
+
   closeDialog() {
-    this.visibleChange.emit(false); 
+    this.visibleChange.emit(false);
     this.resetForm();
   }
 
@@ -127,7 +158,6 @@ export class CreateUserDialogComponent implements OnChanges {
     }
   }
 
-  // Check if a role is selected
   isSelected(roleId: string): boolean {
     return this.user.selectedRoles.includes(roleId);
   }
@@ -144,9 +174,9 @@ export class CreateUserDialogComponent implements OnChanges {
         text: 'New Password : ' + response,
         icon: 'success',
         customClass: {
-          popup: 'my-swal-popup'
-        }
-      })
-    })
+          popup: 'my-swal-popup',
+        },
+      });
+    });
   }
 }

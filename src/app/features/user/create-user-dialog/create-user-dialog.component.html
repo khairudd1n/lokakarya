@@ -13,7 +13,7 @@
   <div class="grid formgrid p-fluid">
     <!-- Row 1: Username and Email -->
     <div class="field col-12 md:col-6">
-      <label for="username">Username</label>
+      <label for="username">Username<span class="required">*</span></label>
       <input
         id="username"
         type="text"
@@ -23,13 +23,15 @@
         required
         #username="ngModel"
       />
-      <div *ngIf="username.invalid && username.touched" class="p-error">
-        Username is required.
-      </div>
+      @if(isUsernameTaken(username.value.toLowerCase())){
+        <div class="p-error">Username already exists.</div>
+      }@else if(username.invalid && username.touched){
+      <div class="p-error">Username is required.</div>
+      }
     </div>
 
     <div class="field col-12 md:col-6">
-      <label for="email">Email</label>
+      <label for="email">Email<span class="required">*</span></label>
       <input
         id="email"
         type="email"
@@ -39,15 +41,17 @@
         required
         #email="ngModel"
       />
-      <div *ngIf="email.invalid && email.touched" class="p-error">
-        Email is required.
-      </div>
+      @if(email.value){ @if(isEmailTaken(email.value.toLowerCase())){
+      <div class="p-error">Email already exists.</div>
+      } }@else if(email.invalid && email.touched){
+      <div class="p-error">Email is required.</div>
+      }
     </div>
 
     <!-- Row 2: Password and Full Name -->
     @if(!userData){
     <div class="field col-12 md:col-6">
-      <label for="password">Password</label>
+      <label for="password">Password<span class="required">*</span></label>
       <input
         id="password"
         type="password"
@@ -59,9 +63,9 @@
       />
       <div *ngIf="password.touched" class="p-error">
         @if(password.invalid){
-          <span>Password is required.</span>
+        <span>Password is required.</span>
         }@else if(password.value.length < 8){
-          <span>Password must be at least 8 characters long.</span>
+        <span>Password must be at least 8 characters long.</span>
         }
       </div>
     </div>
@@ -78,7 +82,7 @@
     }
 
     <div class="field col-12 md:col-6">
-      <label for="fullname">Full Name</label>
+      <label for="fullname">Full Name<span class="required">*</span></label>
       <input
         id="fullname"
         type="text"
@@ -95,7 +99,7 @@
 
     <!-- Row 3: Position and Status -->
     <div class="field col-12 md:col-6">
-      <label for="position">Position</label>
+      <label for="position">Position<span class="required">*</span></label>
       <input
         id="position"
         type="text"
@@ -111,7 +115,7 @@
     </div>
 
     <div class="field col-12 md:col-6">
-      <label for="status">Status</label>
+      <label for="status">Status<span class="required">*</span></label>
       <div class="flex gap-2">
         <button
           pButton
@@ -141,7 +145,7 @@
 
     <!-- Row 4: Join Date and Enabled -->
     <div class="field col-12 md:col-6">
-      <label for="joinDate">Join Date</label>
+      <label for="joinDate">Join Date<span class="required">*</span></label>
       <input
         id="joinDate"
         type="date"
@@ -157,7 +161,7 @@
     </div>
 
     <div class="field col-12 md:col-6">
-      <label for="enabled">Enabled</label>
+      <label for="enabled">Enabled<span class="required">*</span></label>
       <p-toggleButton
         [(ngModel)]="user.enabled"
         [onLabel]="'Enabled'"
@@ -169,7 +173,7 @@
 
     <!-- Row 5: Roles and Division -->
     <div class="field col-12 md:col-6">
-      <label for="division">Division</label>
+      <label for="division">Division<span class="required">*</span></label>
       <p-dropdown
         [(ngModel)]="user.division"
         [options]="divisions"
@@ -183,7 +187,7 @@
     </div>
 
     <div class="field col-12 md:col-6">
-      <label for="roles">Roles</label>
+      <label for="roles">Roles<span class="required">*</span></label>
       <div class="flex flex-column gap-2">
         <div *ngFor="let role of roles">
           <p-checkbox
@@ -219,14 +223,16 @@
         [disabled]="
           !user.username ||
           !user.email_address ||
-          (!userData && !(user.password.length>=8) ) ||
+          (!userData && !(user.password.length >= 8)) ||
           !user.full_name ||
           !user.position ||
           !user.join_date ||
           user.selectedRoles.length === 0 ||
           !user.division ||
           user.employee_status === null ||
-          user.enabled === null
+          user.enabled === null ||
+          !emailValid ||
+          !usernameValid
         "
         (click)="saveUser()"
       ></button>

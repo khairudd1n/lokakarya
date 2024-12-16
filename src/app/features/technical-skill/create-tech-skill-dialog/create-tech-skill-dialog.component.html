@@ -23,12 +23,12 @@
         required
         #technicalSkill="ngModel"
       />
-      <div
-        *ngIf="technicalSkill.invalid && technicalSkill.touched"
-        class="p-error"
-      >
-        Technical Skill is required.
-      </div>
+      @if(isNameValid(technicalSkill.value)){
+        <div class="p-error">Name already exists.</div>
+      }
+      @else if (technicalSkill.invalid && technicalSkill.touched) {
+        <div class="p-error">Technical Skill is required.</div>
+      }
     </div>
 
     <div class="field col-12 md:col-3">
@@ -57,7 +57,7 @@
         type="submit"
         label="{{ techSkillData ? 'Update' : 'Save' }}"
         icon="pi pi-check"
-        [disabled]="!techSkill.technical_skill || !techSkill.enabled"
+        [disabled]="!techSkill.technical_skill || !techSkill.enabled || nameValid"
         (click)="saveUser()"
       ></button>
     </div>
