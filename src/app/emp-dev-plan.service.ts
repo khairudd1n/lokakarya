@@ -58,4 +58,18 @@ export class EmpDevPlanService {
     };
     return this.http.get<any[]>(`${this.apiUrl3}`, { headers });
   }
+
+  getEmpDevPlanByUserIdAndYear(
+    userId: string,
+    assessmentYear: number
+  ): Observable<EmpDevPlanCreateDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    // const url = `${this.apiUrl}/getByUserIdAndYear?userId=${userId}&year=${year}`;
+    return this.http.get<EmpDevPlanCreateDto[]>(
+      `${this.apiUrl}/getByUserIdAndYear?userId=${userId}&assessmentYear=${assessmentYear}`,
+      { headers }
+    );
+  }
 }

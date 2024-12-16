@@ -22,8 +22,8 @@
 }
 
 .group-column {
-  width: 250px; /* Atur lebar kolom sesuai kebutuhan */
-  max-width: 250px;
+  width: 350px; /* Atur lebar kolom sesuai kebutuhan */
+  max-width: 350px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -43,6 +43,13 @@
 
 .action-buttons button:last-child {
   margin-right: 0; /* Hapus margin pada tombol terakhir */
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Posisi tombol di tengah */
+  align-items: center; /* Pusatkan tombol secara vertikal */
+  gap: 4px; /* Jarak antar tombol */
 }
 
 .title {
@@ -102,4 +109,10 @@
   display: flex;
   justify-content: flex-end; /* Aligns the button to the right */
   margin-top: 20px; /* Adds some space above the button */
+}
+
+.column-filter {
+  display: flex;
+  align-items: center;
+  width: 275px;
 }

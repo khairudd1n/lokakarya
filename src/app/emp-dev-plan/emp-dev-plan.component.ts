@@ -51,6 +51,11 @@ export class EmpDevPlanComponent implements OnInit {
   selectedPlans: EmpDevPlanCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
 
+  assessmentYears: number[] = []; // Array untuk menampung tahun
+  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+
+  isPreviousYearSelected: boolean = false;
+
   constructor(
     private http: HttpClient,
     private empDevPlanService: EmpDevPlanService
@@ -59,6 +64,23 @@ export class EmpDevPlanComponent implements OnInit {
   ngOnInit(): void {
     this.getUserId();
     this.fetchData(); // Call the new method to fetch data
+    this.initializeAssessmentYears(); // Panggil fungsi untuk menginisialisasi tahun
+  }
+
+  initializeAssessmentYears(): void {
+    const currentYear = new Date().getFullYear();
+    this.assessmentYears = [
+      currentYear,
+      currentYear - 1,
+      currentYear - 2,
+      currentYear - 3,
+    ]; // Contoh range tahun
+  }
+
+  onAssessmentYearChange(): void {
+    this.isPreviousYearSelected =
+      this.selectedAssessmentYear < this.assessmentYear;
+    this.fetchData(); // Panggil ulang data ketika tahun berubah
   }
 
   fetchData(): void {
@@ -67,8 +89,9 @@ export class EmpDevPlanComponent implements OnInit {
       return;
     }
 
-    const empDevPlans$ = this.empDevPlanService.getEmpDevPlanByUserId(
-      this.userId
+    const empDevPlans$ = this.empDevPlanService.getEmpDevPlanByUserIdAndYear(
+      this.userId,
+      this.selectedAssessmentYear
     );
     const allDevPlans$ = this.empDevPlanService.getAllDevPlan();
 
@@ -83,7 +106,10 @@ export class EmpDevPlanComponent implements OnInit {
             group.rows?.map((row: Row) => ({
               ...row,
               plan_detail:
-                row['user_id'] === this.userId ? row.plan_detail : '', // Check plan_detail based on user_id
+                row['user_id'] === this.userId &&
+                row['assessment_year'] === this.selectedAssessmentYear
+                  ? row.plan_detail
+                  : '', // Check plan_detail based on user_id
             })) || [], // Ensure rows is an empty array if no rows exist
         }));
 
@@ -162,20 +188,45 @@ export class EmpDevPlanComponent implements OnInit {
 
       // Cek apakah plan sudah ada di selectedPlans
       const existingPlanIndex = this.selectedPlans.findIndex(
-        (plan) => plan.dev_plan_id === row.dev_plan_id
+        (plan) =>
+          plan.dev_plan_id === row.dev_plan_id &&
+          plan.plan_detail === plan_detail
       );
 
       if (existingPlanIndex !== -1) {
-        this.selectedPlans[existingPlanIndex] = plan;
+        this.selectedPlans[existingPlanIndex] = plan; // Update existing plan
         console.log('Updated plan in Selection:', plan);
       } else {
         console.log('Add plan added to Selection:', plan);
-        this.selectedPlans.push(plan);
+        this.selectedPlans.push(plan); // Add new plan
       }
     }
   }
 
   savePlans(): void {
+    // Reset selectedPlans setiap kali simpan dipanggil
+    this.selectedPlans = [];
+
+    // Loop melalui semua grup dan baris untuk mengumpulkan rencana yang akan disimpan
+    this.groupData.forEach((group: Group) => {
+      group.rows.forEach((row: Row) => {
+        // Menambahkan tipe Row di sini
+        if (row.plan_detail.trim() !== '' && row.status !== 'saved') {
+          // Cek status
+          const plan: EmpDevPlanCreateDto = {
+            user_id: this.userId as UUID,
+            plan: row.plan,
+            dev_plan_id: row.dev_plan_id as UUID,
+            plan_detail: row.plan_detail,
+            assessment_year: this.assessmentYear,
+            status: 'saved',
+            created_at: new Date(),
+          };
+          this.selectedPlans.push(plan);
+        }
+      });
+    });
+
     if (this.selectedPlans.length > 0) {
       Swal.fire({
         title: 'Apakah anda yakin ingin menyimpan?',
