@@ -8,8 +8,8 @@
 }
 
 .division-column {
-  width: 350px; /* Atur lebar kolom sesuai kebutuhan */
-  max-width: 350px;
+  width: 250px; /* Atur lebar kolom sesuai kebutuhan */
+  max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -84,8 +84,10 @@
   margin-top: 10px;
 }
 
-.button-container {
-  display: flex;
-  justify-content: flex-end; /* Aligns the button to the right */
-  margin-top: 20px; /* Adds some space above the button */
+.action-button-spacing {
+  margin-bottom: 10px;
+}
+
+.action-button-spacing:last-child {
+  margin-bottom: 0;
 }

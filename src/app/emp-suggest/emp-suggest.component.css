@@ -64,3 +64,34 @@
   justify-content: flex-end; /* Aligns the button to the right */
   margin-top: 20px; /* Adds some space above the button */
 }
+
+.form-group {
+  margin-bottom: 15px; /* Jarak antara elemen form */
+  font-family: Arial, sans-serif; /* Font yang digunakan */
+}
+
+label {
+  display: block; /* Membuat label menjadi block untuk memisahkan dari dropdown */
+  margin-bottom: 5px; /* Jarak antara label dan dropdown */
+  font-weight: bold; /* Membuat teks label menjadi tebal */
+  color: #333; /* Warna teks label */
+}
+
+.dropdown {
+  width: 100%; /* Lebar dropdown 100% dari elemen induk */
+  padding: 10px; /* Jarak dalam dropdown */
+  border: 1px solid #ccc; /* Garis border */
+  border-radius: 4px; /* Sudut yang membulat */
+  font-size: 16px; /* Ukuran font */
+  background-color: #fff; /* Warna latar belakang */
+  transition: border-color 0.3s; /* Transisi untuk border */
+}
+
+.dropdown:focus {
+  border-color: #007bff; /* Warna border saat dropdown difokuskan */
+  outline: none; /* Menghilangkan outline default */
+}
+
+.dropdown option {
+  padding: 10px; /* Jarak dalam opsi dropdown */
+}

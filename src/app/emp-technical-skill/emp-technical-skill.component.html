@@ -2,15 +2,50 @@
 <div class="container" style="background-color: #f5f5f5">
   <h1 class="title">FORM EVALUASI KINERJA - KEAHLIAN TEKNIS</h1>
 
+  <p class="center-text">Level tiap tingkat kemahiran:</p>
+  <table class="kemahiran-table">
+    <thead>
+      <tr>
+        <th>Tingkat Kemahiran</th>
+        <th>Level</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ahli (Mampu memberikan solusi dan konsultasi)</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>Advance (Mampu sharing knowledge)</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>Praktisi (Pernah handle project)</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>Memahami (Pernah mengikuti training)</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>Berpengetahuan</td>
+        <td>1</td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="form-group">
-    <label for="assessmentYear">Assessment Year:</label>
-    <input
-      type="number"
-      id="assessmentYear"
-      [(ngModel)]="assessmentYear"
-      disabled="true"
-      class="input-field"
-    />
+    <label for="assessmentYearDropdown">Assessment Year:</label>
+    <select
+      id="assessmentYearDropdown"
+      [(ngModel)]="selectedAssessmentYear"
+      (change)="onAssessmentYearChange()"
+      class="dropdown"
+    >
+      <option *ngFor="let year of assessmentYears" [value]="year">
+        {{ year }}
+      </option>
+    </select>
   </div>
 
   <div *ngFor="let group of groupData" class="group-container">
@@ -32,6 +67,7 @@
             <textarea
               pInputTextarea
               [(ngModel)]="row.tech_detail"
+              class="textarea-field"
               (blur)="
                 logTechId2(row.tech_skill_id, row.tech_detail, row.score, row)
               "
@@ -51,6 +87,7 @@
                 logTechId2(row.tech_skill_id, row.tech_detail, row.score, row)
               "
               [disabled]="row.status === 'saved'"
+              [style]="{ width: '175px' }"
             >
             </p-dropdown>
           </td>
@@ -69,11 +106,21 @@
       </ng-template>
     </p-table>
     <br />
-    <p-button label="Tambah Row" icon="pi pi-plus" (click)="addRow(group)">
+    <p-button
+      label="Tambah Row"
+      icon="pi pi-plus"
+      (click)="addRow(group)"
+      [disabled]="isPreviousYearSelected"
+    >
     </p-button>
   </div>
   <br />
   <div class="button-container">
-    <p-button label="Simpan" icon="pi pi-save" (click)="saveTechs()"></p-button>
+    <p-button
+      label="Simpan"
+      icon="pi pi-save"
+      (click)="saveTechs()"
+      [disabled]="isPreviousYearSelected"
+    ></p-button>
   </div>
 </div>

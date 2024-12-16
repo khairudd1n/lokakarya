@@ -65,3 +65,72 @@
   justify-content: flex-end; /* Aligns the button to the right */
   margin-top: 20px; /* Adds some space above the button */
 }
+
+.data-table p-dropdown {
+  width: 200px; /* Atur panjang yang diinginkan */
+}
+
+.data-table p-dropdown .p-dropdown-label {
+  text-align: center; /* Opsional, untuk meratakan teks */
+}
+
+.center-text {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.nilai-table {
+  width: 50%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.nilai-table th,
+.nilai-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+}
+
+.nilai-table th {
+  background-color: lightblue;
+}
+
+.nilai-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.nilai-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.form-group {
+  margin-bottom: 15px; /* Jarak antara elemen form */
+  font-family: Arial, sans-serif; /* Font yang digunakan */
+}
+
+label {
+  display: block; /* Membuat label menjadi block untuk memisahkan dari dropdown */
+  margin-bottom: 5px; /* Jarak antara label dan dropdown */
+  font-weight: bold; /* Membuat teks label menjadi tebal */
+  color: #333; /* Warna teks label */
+}
+
+.dropdown {
+  width: 100%; /* Lebar dropdown 100% dari elemen induk */
+  padding: 10px; /* Jarak dalam dropdown */
+  border: 1px solid #ccc; /* Garis border */
+  border-radius: 4px; /* Sudut yang membulat */
+  font-size: 16px; /* Ukuran font */
+  background-color: #fff; /* Warna latar belakang */
+  transition: border-color 0.3s; /* Transisi untuk border */
+}
+
+.dropdown:focus {
+  border-color: #007bff; /* Warna border saat dropdown difokuskan */
+  outline: none; /* Menghilangkan outline default */
+}
+
+.dropdown option {
+  padding: 10px; /* Jarak dalam opsi dropdown */
+}

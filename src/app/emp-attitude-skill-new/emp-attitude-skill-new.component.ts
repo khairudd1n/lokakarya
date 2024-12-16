@@ -52,6 +52,9 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   assessmentYear: number = new Date().getFullYear();
   disabledSkills: Set<string> = new Set();
 
+  assessmentYears: number[] = []; // Array untuk menampung tahun
+  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+
   constructor(
     private http: HttpClient,
     private empAttitudeSkillService: EmpAttitudeSkillNewService,
@@ -69,13 +72,31 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   ngOnInit(): void {
     this.getUserId();
     this.loadData();
+    this.initializeAssessmentYears();
+  }
+
+  initializeAssessmentYears(): void {
+    const currentYear = new Date().getFullYear();
+    this.assessmentYears = [
+      currentYear,
+      currentYear - 1,
+      currentYear - 2,
+      currentYear - 3,
+    ]; // Contoh range tahun
+  }
+
+  onAssessmentYearChange(): void {
+    this.loadData(); // Panggil ulang data ketika tahun berubah
   }
 
   loadData(): void {
     forkJoin({
       groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
       userSkills: this.userId
-        ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(this.userId, this.assessmentYear)
+        ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(
+            this.userId,
+            this.selectedAssessmentYear
+          )
         : [],
     }).subscribe(({ groupData, userSkills }) => {
       this.groupData = groupData;
@@ -96,9 +117,11 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           });
         });
       }
-      this.assSummaryService.generateAssSummary(this.userId, this.assessmentYear).subscribe((data) => {
-        console.log(data);
-      });
+      this.assSummaryService
+        .generateAssSummary(this.userId, this.assessmentYear)
+        .subscribe((data) => {
+          console.log(data);
+        });
       console.log('Synchronized Data:', this.groupData);
     });
   }
@@ -129,6 +152,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       'Score:',
       score
     );
+
     const existingSkillIndex = this.selectedSkills.findIndex(
       (skill) => skill.attitude_skill_id === attitudeSkillId
     );
@@ -144,33 +168,70 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         score,
         assessment_year: this.assessmentYear,
       };
-      console.log('Adding Skill to Selection:', skill);
       this.selectedSkills.push(skill);
     }
+
+    // Update the groupData with the new score
+    this.groupData.forEach((group) => {
+      group.attitude_skills.forEach((skill: AttitudeSkill) => {
+        if (skill.id === attitudeSkillId) {
+          skill.score = score;
+        }
+      });
+    });
   }
 
   saveSkills(): void {
-    // Filter out the skills that have not been disabled and have a valid score
+    const unfilledCount = this.getUnfilledScoresCount();
+
+    if (unfilledCount > 0) {
+      Swal.fire('Warning', 'Input nilai terlebih dahulu.', 'warning');
+      return; // Jangan lanjutkan proses simpan
+    }
+
     const filledSkills = this.selectedSkills.filter(
       (skill) =>
         skill.score != null && !this.disabledSkills.has(skill.attitude_skill_id)
     );
 
-    // Check if there are any skills to save
     if (filledSkills.length > 0) {
-      this.empAttitudeSkillService
-        .saveEmpAttitudeSkills(filledSkills)
-        .subscribe(
-          () => {
-            Swal.fire('Success', 'Skills saved successfully!', 'success');
-            
-            this.loadData(); // Refresh data from server
-          },
-          () => Swal.fire('Error', 'Failed to save skills.', 'error')
-        );
+      Swal.fire({
+        title: 'Apakah anda yakin dengan nilai yang anda pilih?',
+        text: 'Nilai yang sudah disimpan tidak dapat diubah lagi.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, simpan!',
+        cancelButtonText: 'Batal',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.empAttitudeSkillService
+            .saveEmpAttitudeSkills(filledSkills)
+            .subscribe(
+              () => {
+                Swal.fire('Success', 'Nilai berhasil disimpan!', 'success');
+                this.loadData(); // Refresh data dari server
+              },
+              () => Swal.fire('Error', 'gagal menyimpan nilai.', 'error')
+            );
+        } else {
+          Swal.fire('Cancelled', 'Nilai tidak jadi disimpan.', 'info');
+        }
+      });
     } else {
-      Swal.fire('Warning', 'Input nilai terlebih dahulu.', 'warning');
+      Swal.fire('Warning', 'Anda sudah mengisi semua nilai.', 'warning');
     }
+  }
+
+  getUnfilledScoresCount(): number {
+    return this.groupData.reduce((total, group) => {
+      return (
+        total +
+        group.attitude_skills.filter(
+          (skill: AttitudeSkill) =>
+            skill.score === null || skill.score === undefined
+        ).length
+      );
+    }, 0);
   }
 
   getStatusText(skillId: string): string {

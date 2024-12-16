@@ -107,28 +107,30 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 10px">No.</th>
-          <th class="division-column">Division</th>
-          <th class="action-column">Action</th>
+          <th></th>
+          <th class="percent-column"></th>
+          <th>
+            <div class="column-filter">
+              <p-columnFilter
+                type="text"
+                field="division_name"
+                placeholder="Search by division"
+                ariaLabel="Filter division"
+              />
+            </div>
+          </th>
         </tr>
         <tr>
-          <th></th>
-          <th>
-            <p-columnFilter
-              type="text"
-              field="division_name"
-              placeholder="Search by division"
-              ariaLabel="Filter division"
-            />
-          </th>
-          <th></th>
+          <th style="width: 10px">No.</th>
+          <th class="division-column" style="text-align: center">Division</th>
+          <th class="action-column" style="text-align: center">Action</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-achievement let-i="rowIndex">
         <tr>
           <td>{{ i + 1 }}</td>
-          <td>{{ achievement.division_name }}</td>
+          <td style="text-align: center">{{ achievement.division_name }}</td>
           <td>
             <div class="action-buttons">
               <button

@@ -38,7 +38,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="percentage">Percentage</label>
+        <label for="percentage">Weight</label>
         <input
           id="percentage"
           type="number"
@@ -85,7 +85,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editPercentage">Percentage</label>
+        <label for="editPercentage">Weight</label>
         <input
           id="editPercentage"
           type="number"
@@ -127,38 +127,40 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 10px">No.</th>
-          <th class="group-column">Group Name</th>
-          <th class="percent-column">Percentage</th>
-          <th class="percent-column">Action</th>
+          <th></th>
+          <th class="percent-column"></th>
+          <th class="percent-column"></th>
+          <th class="percent-column">
+            <div class="column-filter">
+              <p-columnFilter
+                type="text"
+                field="group_name"
+                placeholder="Search by group name"
+                ariaLabel="Filter Group Name"
+              />
+            </div>
+          </th>
         </tr>
         <tr>
-          <th></th>
-          <th>
-            <p-columnFilter
-              type="text"
-              field="group_name"
-              placeholder="Search by group name"
-              ariaLabel="Filter Group Name"
-            />
+          <th style="width: 10px">No.</th>
+          <th class="group-column" style="text-align: center">Group Name</th>
+          <th
+            class="percent-column"
+            pSortableColumn="percentage"
+            style="text-align: center"
+          >
+            Weight
+            <p-sortIcon field="percentage"></p-sortIcon>
           </th>
-          <th>
-            <p-columnFilter
-              type="text"
-              field="percentage"
-              placeholder="Search by Percentage"
-              ariaLabel="Filter Percentage"
-            />
-          </th>
-          <th></th>
+          <th class="percent-column" style="text-align: center">Action</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-achievement let-i="rowIndex">
         <tr>
-          <td>{{ i + 1 }}</td>
-          <td>{{ achievement.group_name }}</td>
-          <td>{{ achievement.percentage }}%</td>
+          <td style="text-align: center">{{ i + 1 }}</td>
+          <td style="text-align: center">{{ achievement.group_name }}</td>
+          <td style="text-align: center">{{ achievement.percentage }}</td>
           <td>
             <div class="action-buttons">
               <button

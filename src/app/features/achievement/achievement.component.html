@@ -128,10 +128,10 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th class="no-column">No.</th>
-          <th style="width: 35%">Achievement Name</th>
-          <th style="width: 25%">Group Achievement Name</th>
-          <th style="width: 15%">Action</th>
+          <th style="width: 10px">No.</th>
+          <th class="division-column">Achievement Name</th>
+          <th class="division-column">Group Achievement Name</th>
+          <th class="action-column">Action</th>
         </tr>
         <tr>
           <th></th>
@@ -139,7 +139,7 @@
             <p-columnFilter
               type="text"
               field="achievement_name"
-              placeholder="Search by name"
+              placeholder="Search by achievement"
               ariaLabel="Filter Achievement Name"
             />
           </th>
@@ -147,7 +147,7 @@
             <p-columnFilter
               type="text"
               field="group_achievement_name"
-              placeholder="Search by Group Name"
+              placeholder="Search by group achievement"
               ariaLabel="Filter Group Achievement Name"
             />
           </th>

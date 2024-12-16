@@ -60,4 +60,17 @@ export class EmpTechnicalSkillService {
         })
       );
   }
+
+  getEmpTechSkillByUserIdAndYear(
+    userId: string,
+    assessmentYear: number
+  ): Observable<EmpTechSkillCreateDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http.get<EmpTechSkillCreateDto[]>(
+      `${this.apiUrl}/by-user-and-year?userId=${userId}&assessmentYear=${assessmentYear}`,
+      { headers }
+    );
+  }
 }
