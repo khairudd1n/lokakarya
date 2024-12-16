@@ -15,6 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../core/services/auth.service';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
+import { EmpSuggestService } from '../../emp-suggest.service';
 
 @Component({
   selector: 'app-user-summary',
@@ -48,6 +49,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
 
   token: string = localStorage.getItem('token') || '';
   combinedData: any[] = [];
+  suggestions: any[] = [];
   isLoading: boolean = true;
   error: string | null = null;
   id: string = '';
@@ -57,21 +59,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     label: '2024',
     value: 2024,
   };
-  years: { label: string; value: number }[] = [
-    { label: '2024', value: 2024 },
-    { label: '2023', value: 2023 },
-    { label: '2022', value: 2022 },
-    { label: '2021', value: 2021 },
-    { label: '2020', value: 2020 },
-    { label: '2019', value: 2019 },
-    { label: '2018', value: 2018 },
-    { label: '2017', value: 2017 },
-    { label: '2016', value: 2016 },
-  ];
+  years: { label: string; value: number }[] = [];
 
   constructor(
     private authService: AuthService,
-    private summaryService: AssSummaryService
+    private summaryService: AssSummaryService,
+    private empSuggestService: EmpSuggestService
   ) {}
 
   onYearChange(event: any): void {
@@ -87,27 +80,42 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     if (!this.userId) {
       this.id = this.authService.parseJwt(this.token).sub;
     }
-    this.summaryService
-      .getAssSummaryDetail(this.id, this.selectedYear.value)
-      .subscribe({
-        next: (data) => {
-          this.assScore = data.content.assess_sum.score;
-          this.combinedData = [
-            ...data.content.achieve_results,
-            ...data.content.attitude_results,
-          ];
-          if (this.combinedData.length > 0) {
-            this.totalPercentage = 100;
-          }
-          this.isLoading = false;
-          console.log('data : ', this.combinedData);
-          console.log('assScore : ', this.assScore);
-        },
-      });
+    this.summaryService.getAllUserAssSummary(this.id).subscribe({
+      next: (data) => {
+        this.years = data.content.map((item: any) => ({
+          label: item.year.toString(),
+          value: item.year,
+        }));
+        this.selectedYear = this.years[this.years.length - 1];
+        this.summaryService
+          .getAssSummaryDetail(this.id, this.selectedYear.value)
+          .subscribe({
+            next: (data) => {
+              this.assScore = data.content.assess_sum.score;
+              this.combinedData = [
+                ...data.content.achieve_results,
+                ...data.content.attitude_results,
+              ];
+              if (this.combinedData.length > 0) {
+                this.totalPercentage = 100;
+              }
+              this.isLoading = false;
+              console.log('data : ', this.combinedData);
+              console.log('assScore : ', this.assScore);
+            },
+          });
+      },
+    });
   }
 
   ngOnChanges(): void {
     if (this.userId) {
+      this.empSuggestService
+        .getEmpSuggestByUserIdAndYear(this.userId, this.year!)
+        .subscribe((data) => {
+          console.log('data suggesttion : ', data);
+          this.suggestions = data;
+        });
       this.summaryService
         .getAssSummaryDetail(this.userId, this.year!)
         .subscribe({
