@@ -35,14 +35,17 @@
   </table>
 
   <div class="form-group">
-    <label for="assessmentYear">Assessment Year:</label>
-    <input
-      type="number"
-      id="assessmentYear"
-      [(ngModel)]="assessmentYear"
-      disabled="true"
-      class="input-field"
-    />
+    <label for="assessmentYearDropdown">Assessment Year:</label>
+    <select
+      id="assessmentYearDropdown"
+      [(ngModel)]="selectedAssessmentYear"
+      (change)="onAssessmentYearChange()"
+      class="dropdown"
+    >
+      <option *ngFor="let year of assessmentYears" [value]="year">
+        {{ year }}
+      </option>
+    </select>
   </div>
 
   <div *ngFor="let group of groupData" class="group-container">
@@ -103,11 +106,21 @@
       </ng-template>
     </p-table>
     <br />
-    <p-button label="Tambah Row" icon="pi pi-plus" (click)="addRow(group)">
+    <p-button
+      label="Tambah Row"
+      icon="pi pi-plus"
+      (click)="addRow(group)"
+      [disabled]="isPreviousYearSelected"
+    >
     </p-button>
   </div>
   <br />
   <div class="button-container">
-    <p-button label="Simpan" icon="pi pi-save" (click)="saveTechs()"></p-button>
+    <p-button
+      label="Simpan"
+      icon="pi pi-save"
+      (click)="saveTechs()"
+      [disabled]="isPreviousYearSelected"
+    ></p-button>
   </div>
 </div>

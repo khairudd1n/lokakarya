@@ -52,6 +52,9 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   assessmentYear: number = new Date().getFullYear();
   disabledSkills: Set<string> = new Set();
 
+  assessmentYears: number[] = []; // Array untuk menampung tahun
+  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+
   constructor(
     private http: HttpClient,
     private empAttitudeSkillService: EmpAttitudeSkillNewService,
@@ -69,6 +72,21 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   ngOnInit(): void {
     this.getUserId();
     this.loadData();
+    this.initializeAssessmentYears();
+  }
+
+  initializeAssessmentYears(): void {
+    const currentYear = new Date().getFullYear();
+    this.assessmentYears = [
+      currentYear,
+      currentYear - 1,
+      currentYear - 2,
+      currentYear - 3,
+    ]; // Contoh range tahun
+  }
+
+  onAssessmentYearChange(): void {
+    this.loadData(); // Panggil ulang data ketika tahun berubah
   }
 
   loadData(): void {
@@ -77,7 +95,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       userSkills: this.userId
         ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(
             this.userId,
-            this.assessmentYear
+            this.selectedAssessmentYear
           )
         : [],
     }).subscribe(({ groupData, userSkills }) => {

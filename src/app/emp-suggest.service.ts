@@ -49,4 +49,32 @@ export class EmpSuggestService {
       })
       .pipe(map((response) => response.content));
   }
+
+  getEmpSuggestByUserIdAndYear(
+    userId: string,
+    assessmentYear: number
+  ): Observable<EmpSuggestDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http.get<EmpSuggestDto[]>(
+      `${this.apiUrl}/userId&Year?userId=${userId}&assessmentYear=${assessmentYear}`,
+      { headers }
+    );
+  }
+
+  getAssessmentYears(): Observable<number[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .get<number[]>(`${this.apiUrl}/assessment-years`, { headers })
+      .pipe(
+        tap((years) => {
+          console.log('Retrieved assessment years:', years);
+        })
+      );
+  }
 }

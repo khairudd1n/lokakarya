@@ -31,12 +31,38 @@ export class EmpSuggestComponent implements OnInit {
   userId: string = '';
   assessmentYear: number = new Date().getFullYear();
 
+  assessmentYears: number[] = []; // Array untuk menampung tahun
+  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+
+  isPreviousYearSelected: boolean = false;
+
   constructor(private empSuggestService: EmpSuggestService) {}
 
   ngOnInit(): void {
     this.getUserId();
     this.initializeGroupData();
     this.loadSavedSuggestions();
+    this.initializeAssessmentYears(); // Panggil fungsi untuk menginisialisasi tahun
+  }
+
+  initializeAssessmentYears(): void {
+    this.empSuggestService.getAssessmentYears().subscribe(
+      (years) => {
+        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+        }
+      },
+      (error) => {
+        console.error('Error fetching assessment years:', error);
+      }
+    );
+  }
+
+  onAssessmentYearChange(): void {
+    this.isPreviousYearSelected =
+      this.selectedAssessmentYear < this.assessmentYear;
+    this.loadSavedSuggestions(); // Panggil ulang data ketika tahun berubah
   }
 
   getUserId(): void {
@@ -59,17 +85,19 @@ export class EmpSuggestComponent implements OnInit {
   }
 
   loadSavedSuggestions(): void {
-    this.empSuggestService.getEmpSuggestByUserId(this.userId).subscribe(
-      (data) => {
-        this.groupData[0].rows = data.map((item) => ({
-          suggestion: item.suggestion,
-          saved: true, // Tandai sebagai data tersimpan
-        }));
-      },
-      (error) => {
-        console.error('Error loading suggestions:', error);
-      }
-    );
+    this.empSuggestService
+      .getEmpSuggestByUserIdAndYear(this.userId, this.selectedAssessmentYear)
+      .subscribe(
+        (data) => {
+          this.groupData[0].rows = data.map((item) => ({
+            suggestion: item.suggestion,
+            saved: true, // Tandai sebagai data tersimpan
+          }));
+        },
+        (error) => {
+          console.error('Error loading suggestions:', error);
+        }
+      );
   }
 
   saveSuggestions(): void {

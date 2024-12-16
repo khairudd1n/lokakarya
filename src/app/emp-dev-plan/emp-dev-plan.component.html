@@ -4,14 +4,17 @@
   <h1 class="title">FORM EVALUASI KINERJA - RENCANA PENGEMBANGAN</h1>
 
   <div class="form-group">
-    <label for="assessmentYear">Assessment Year:</label>
-    <input
-      type="number"
-      id="assessmentYear"
-      [(ngModel)]="assessmentYear"
-      disabled="true"
-      class="input-field"
-    />
+    <label for="assessmentYearDropdown">Assessment Year:</label>
+    <select
+      id="assessmentYearDropdown"
+      [(ngModel)]="selectedAssessmentYear"
+      (change)="onAssessmentYearChange()"
+      class="dropdown"
+    >
+      <option *ngFor="let year of assessmentYears" [value]="year">
+        {{ year }}
+      </option>
+    </select>
   </div>
 
   <div *ngFor="let group of groupData" class="group-container">
@@ -56,6 +59,7 @@
       icon="pi pi-plus"
       (click)="addRow(group)"
       class="add-row-button"
+      [disabled]="isPreviousYearSelected"
     ></p-button>
   </div>
 
@@ -66,6 +70,7 @@
       icon="pi pi-save"
       (click)="savePlans()"
       class="save-button"
+      [disabled]="isPreviousYearSelected"
     ></p-button>
   </div>
 </div>

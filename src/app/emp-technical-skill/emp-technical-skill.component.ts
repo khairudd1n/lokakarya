@@ -53,6 +53,11 @@ export class EmpTechnicalSkillComponent {
   userData: EmpTechSkillCreateDto[] = [];
   empTechSkills: EmpTechSkillCreateDto[] = [];
 
+  assessmentYears: number[] = []; // Array untuk menampung tahun
+  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+
+  isPreviousYearSelected: boolean = false;
+
   constructor(
     private http: HttpClient,
     private empTechSkillService: EmpTechnicalSkillService
@@ -69,6 +74,23 @@ export class EmpTechnicalSkillComponent {
   ngOnInit(): void {
     this.getUserId();
     this.fetchData(); // Call the new method to fetch data
+    this.initializeAssessmentYears();
+  }
+
+  initializeAssessmentYears(): void {
+    const currentYear = new Date().getFullYear();
+    this.assessmentYears = [
+      currentYear,
+      currentYear - 1,
+      currentYear - 2,
+      currentYear - 3,
+    ]; // Contoh range tahun
+  }
+
+  onAssessmentYearChange(): void {
+    this.isPreviousYearSelected =
+      this.selectedAssessmentYear < this.assessmentYear;
+    this.fetchData(); // Panggil ulang data ketika tahun berubah
   }
 
   fetchData(): void {
@@ -77,7 +99,11 @@ export class EmpTechnicalSkillComponent {
       return;
     }
 
-    const empTechSkills$ = this.empTechSkillService.getSavedTechs(this.userId);
+    const empTechSkills$ =
+      this.empTechSkillService.getEmpTechSkillByUserIdAndYear(
+        this.userId,
+        this.selectedAssessmentYear
+      );
     const allTechSkills$ = this.empTechSkillService.getAllTechSkill();
 
     forkJoin([empTechSkills$, allTechSkills$]).subscribe({
