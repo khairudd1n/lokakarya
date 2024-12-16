@@ -15,6 +15,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { forkJoin } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
 
 interface Row {
   technical_skill: string;
@@ -43,6 +46,9 @@ interface Group {
     DropdownModule,
     NavBarComponent,
     TooltipModule,
+    InputIconModule,
+    InputTextModule,
+    IconFieldModule,
   ],
   templateUrl: './emp-technical-skill.component.html',
   styleUrls: ['./emp-technical-skill.component.css'],
@@ -297,7 +303,7 @@ export class EmpTechnicalSkillComponent {
                 Swal.fire({
                   icon: 'error',
                   title: 'Error!',
-                  text: 'Failed to save plans.',
+                  text: 'Isi skill level terlebih dahulu.',
                 });
               }
             );

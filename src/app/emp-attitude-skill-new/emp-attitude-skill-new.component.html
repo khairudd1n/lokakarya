@@ -1,8 +1,8 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="container" style="background-color: #f5f5f5">
-  <h1 class="title">FORM EVALUASI KINERJA - SIKAP DAN KEAHLIAN PERSONAL</h1>
-
+  <h2 class="title">PERFORMANCE EVALUATION FORM - ATTITUDE & SKILL</h2>
+  <br />
   <div class="form-group">
     <label for="assessmentYearDropdown">Assessment Year:</label>
     <select
@@ -27,13 +27,12 @@
       <ng-template pTemplate="header">
         <tr>
           <th>No.</th>
-          <th>Kriteria</th>
+          <th>Criteria</th>
           <th>
-            Nilai
+            Score
             <i
               class="pi pi-info-circle"
-              pTooltip="Bobot Nilai: 
-              Sangat Baik = 100 
+              pTooltip="Sangat Baik = 100 
               Baik = 80
               Cukup = 60 
               Kurang = 40 
@@ -52,7 +51,7 @@
             <p-dropdown
               [options]="scoreOptions"
               [ngModel]="skill.score"
-              placeholder="Pilih nilai"
+              placeholder="Select score"
               [appendTo]="'body'"
               (onChange)="logSkillId(skill.id, $event.value)"
               [disabled]="isSkillDisabled(skill.id)"
