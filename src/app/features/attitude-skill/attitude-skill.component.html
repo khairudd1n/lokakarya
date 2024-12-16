@@ -42,6 +42,19 @@
         >
         </p-dropdown>
       </div>
+      <br />
+      <div class="p-field">
+        <label for="enabled">Enabled</label>
+        <br />
+        <select
+          id="enabled"
+          [(ngModel)]="newAttitudeSkill.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
+      </div>
     </div>
     <p-footer>
       <button
@@ -88,6 +101,18 @@
           placeholder="Select Group Achievement"
         >
         </p-dropdown>
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editEnabled">Enabled</label>
+        <select
+          id="editEnabled"
+          [(ngModel)]="editAttitudeSkill.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>

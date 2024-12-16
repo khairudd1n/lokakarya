@@ -33,16 +33,13 @@ export class GroupAttitudeSkillService {
 
   constructor(private http: HttpClient) {}
 
-
   getAllGroupAttitudeSkillWithCount(): Observable<any[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
       .get<GroupAttWithAttDto[]>(`${this.apiUrl}/count`, { headers })
-      .pipe(
-        map((data) => data),
-      );
+      .pipe(map((data) => data));
   }
 
   getAllGroupAttitudeSkills(): Observable<GroupAttitudeSkillDto[]> {
