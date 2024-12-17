@@ -22,8 +22,8 @@
 }
 
 .group-column {
-  width: 350px; /* Atur lebar kolom sesuai kebutuhan */
-  max-width: 350px;
+  width: 265px; /* Atur lebar kolom sesuai kebutuhan */
+  max-width: 265px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -115,4 +115,9 @@
   display: flex;
   align-items: center;
   width: 275px;
+}
+
+.form-label1 {
+  display: block;
+  margin-bottom: 8px; /* Jarak antara label dan input */
 }

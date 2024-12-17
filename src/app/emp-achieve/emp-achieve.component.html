@@ -25,7 +25,7 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="userId">User</label>
+        <label for="userId" class="form-label1">User</label>
         <p-dropdown
           [options]="userOptions"
           [(ngModel)]="newEmpAchieve.user_id"
@@ -36,7 +36,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="notes">Notes</label>
+        <label for="notes" class="form-label1">Notes</label>
         <input
           pInputText
           id="notes"
@@ -46,7 +46,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="achievementId">Achievement</label>
+        <label for="achievementId" class="form-label1">Achievement</label>
         <p-dropdown
           [options]="achievementOptions"
           [(ngModel)]="newEmpAchieve.achievement_id"
@@ -57,7 +57,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="score">Score</label>
+        <label for="score" class="form-label1">Score</label>
         <input
           pInputText
           id="score"
@@ -67,7 +67,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="assessmentYear">Assessment Year</label>
+        <label for="assessmentYear" class="form-label1">Assessment Year</label>
         <input
           pInputText
           id="assessmentYear"
@@ -103,7 +103,7 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="editGroupAchievement">User</label>
+        <label for="editGroupAchievement" class="form-label1">User</label>
         <p-dropdown
           [options]="userOptions"
           [(ngModel)]="editEmpAchieve.user_id"
@@ -114,7 +114,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editAchievementName">Notes</label>
+        <label for="editAchievementName" class="form-label1">Notes</label>
         <input
           pInputText
           id="editAchievementName"
@@ -124,7 +124,9 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editGroupAchievement">Achievement</label>
+        <label for="editGroupAchievement" class="form-label1"
+          >Achievement</label
+        >
         <p-dropdown
           [options]="achievementOptions"
           [(ngModel)]="editEmpAchieve.achievement_id"
@@ -135,7 +137,7 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editGroupAchievement">Score</label>
+        <label for="editGroupAchievement" class="form-label1">Score</label>
         <input
           pInputText
           id="editGroupAchievement"
@@ -145,7 +147,9 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editGroupAchievement">Assessment Year</label>
+        <label for="editGroupAchievement" class="form-label1"
+          >Assessment Year</label
+        >
         <input
           pInputText
           id="editGroupAchievement"

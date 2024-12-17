@@ -91,3 +91,8 @@
 .action-button-spacing:last-child {
   margin-bottom: 0;
 }
+
+.form-label1 {
+  display: block;
+  margin-bottom: 8px; /* Jarak antara label dan input */
+}
