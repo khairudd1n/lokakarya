@@ -78,17 +78,21 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   initializeAssessmentYears(): void {
-    this.empAttitudeSkillService.getAssessmentYears().subscribe(
-      (years) => {
-        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
-        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
-        }
-      },
-      (error) => {
-        console.error('Error fetching assessment years:', error);
-      }
-    );
+    this.assessmentYears = [2024, 2023, 2022, 2021];
+    if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+      this.selectedAssessmentYear = this.assessmentYears[0];
+    }
+    // this.empAttitudeSkillService.getAssessmentYears().subscribe(
+    //   (years) => {
+    //     this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+    //     if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+    //       this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching assessment years:', error);
+    //   }
+    // );
   }
 
   onAssessmentYearChange(): void {
