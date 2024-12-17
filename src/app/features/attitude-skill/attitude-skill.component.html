@@ -81,7 +81,7 @@
 
   <!-- PrimeNG Dialog for editing an achievement -->
   <p-dialog
-    header="Edit Achievement"
+    header="Edit Attitude Skill"
     [(visible)]="displayEditDialog"
     modal="true"
     [closable]="true"
@@ -143,81 +143,85 @@
     </p-footer>
   </p-dialog>
 
-  <!-- Existing Table for Achievements -->
   <div class="card">
-    <p-table
-      #dt2
-      [value]="attitudeSkills"
-      dataKey="id"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [loading]="isLoading"
-      [paginator]="true"
-      [globalFilterFields]="[
-        'attitude_skill_name',
-        'group_name',
-        'group_attitude_skill_id'
-      ]"
-      [tableStyle]="{ 'min-width': '55rem' }"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 10px">No.</th>
-          <th class="division-column">Attitude Skill</th>
-          <th class="division-column">Group Attitude Skill</th>
-          <th class="action-column">Action</th>
-        </tr>
-        <tr>
-          <th></th>
-          <th>
-            <p-columnFilter
-              type="text"
-              field="attitude_skill_name"
-              placeholder="Search by attitude skill"
-              ariaLabel="Filter Attitude Skill"
-            />
-          </th>
-          <th>
-            <p-columnFilter
-              type="text"
-              field="group_name"
-              placeholder="Search by group attitude skill"
-              ariaLabel="Filter Group Attitude skill"
-            />
-          </th>
-          <th></th>
-        </tr>
-      </ng-template>
+    <div class="p-inputgroup" style="width: 250px">
+      <input
+        type="text"
+        pInputText
+        placeholder="Search..."
+        (input)="onGlobalSearch($event)"
+      />
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-search"></i>
+      </span>
+    </div>
 
-      <ng-template pTemplate="body" let-achievement let-i="rowIndex">
-        <tr>
-          <td>{{ i + 1 }}</td>
-          <td>{{ achievement.attitude_skill_name }}</td>
-          <td>{{ achievement.group_name }}</td>
-          <td>
-            <div class="action-buttons">
-              <button
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-sm p-button-info"
-                (click)="showEditDialog(achievement)"
-              ></button>
-              <button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-sm p-button-danger"
-                (click)="deleteAttitudeSkill(achievement.id)"
-              ></button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
+    <div class="card">
+      <p-table
+        #dt2
+        [value]="attitudeSkills"
+        dataKey="id"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="isLoading"
+        [paginator]="true"
+        [globalFilterFields]="[
+          'attitude_skill_name',
+          'group_name',
+          'group_attitude_skill_id'
+        ]"
+        [tableStyle]="{ 'min-width': '55rem' }"
+        rowGroupMode="subheader"
+        groupRowsBy="group_name"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 10px">No.</th>
+            <th class="division-column">Attitude Skill</th>
+            <th class="action-column">Action</th>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="4">No achievements found.</td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="body" let-attitudeSkill let-i="rowIndex">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ attitudeSkill.attitude_skill_name }}</td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  pButton
+                  icon="pi pi-pencil"
+                  class="p-button-sm p-button-info"
+                  (click)="showEditDialog(attitudeSkill)"
+                ></button>
+                <button
+                  pButton
+                  icon="pi pi-trash"
+                  class="p-button-sm p-button-danger"
+                  (click)="deleteAttitudeSkill(attitudeSkill.id)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">No achievements found.</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="groupheader" let-group>
+          <tr>
+            <td
+              colspan="4"
+              style="font-weight: bold; background-color: #f0f0f0"
+            >
+              Group: {{ group.group_name }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
 </div>

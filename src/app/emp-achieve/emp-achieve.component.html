@@ -207,15 +207,16 @@
           'score',
           'assessment_year'
         ]"
-        [tableStyle]="{ 'min-width': '75rem' }"
+        [tableStyle]="{ 'min-width': '45rem' }"
+        rowGroupMode="subheader"
+        groupRowsBy="username"
       >
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 10px">No.</th>
-            <th class="division-column">Username</th>
             <th class="division-column">Notes</th>
             <th class="division-column">Achievement Name</th>
-            <th class="division-column" pSortableColumn="score">
+            <th style="width: 10px" pSortableColumn="score">
               Score
               <p-sortIcon field="score"></p-sortIcon>
             </th>
@@ -223,29 +224,29 @@
               Assessment Year
               <p-sortIcon field="assessment_year"></p-sortIcon>
             </th>
-            <th class="action-column">Action</th>
+            <th style="width: 20px">Action</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-achievement let-i="rowIndex">
           <tr>
             <td>{{ i + 1 }}</td>
-            <td class="division-column">{{ achievement.username }}</td>
             <td class="division-column">{{ achievement.notes }}</td>
             <td class="division-column">{{ achievement.achievement_name }}</td>
-            <td class="division-column">{{ achievement.score }}</td>
+            <td style="width: 10px">{{ achievement.score }}</td>
             <td class="division-column">{{ achievement.assessment_year }}</td>
             <td>
               <button
                 pButton
                 icon="pi pi-pencil"
-                class="p-button-sm p-button-info action-button-spacing"
+                class="p-button-sm p-button-info"
+                style="margin-right: 8px"
                 (click)="showEditDialog(achievement)"
               ></button>
               <button
                 pButton
                 icon="pi pi-trash"
-                class="p-button-sm p-button-danger action-button-spacing"
+                class="p-button-sm p-button-danger"
                 (click)="
                   deleteEmpAchieve(
                     achievement.id,
@@ -260,6 +261,17 @@
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="4">No emp achieve found.</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="groupheader" let-group>
+          <tr>
+            <td
+              colspan="6"
+              style="font-weight: bold; background-color: #f0f0f0"
+            >
+              Username: {{ group.username }}
+            </td>
           </tr>
         </ng-template>
       </p-table>

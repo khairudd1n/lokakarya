@@ -106,6 +106,8 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         : [],
     }).subscribe(({ groupData, userSkills }) => {
       this.groupData = groupData;
+      console.log('Group Data:', this.groupData);
+      console.log('User Skills:', userSkills);
 
       // Populate scores in groupData with userSkills
       if (userSkills.length > 0) {

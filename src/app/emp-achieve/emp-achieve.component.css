@@ -8,8 +8,8 @@
 }
 
 .division-column {
-  width: 250px; /* Atur lebar kolom sesuai kebutuhan */
-  max-width: 250px;
+  width: 90px; /* Atur lebar kolom sesuai kebutuhan */
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -82,14 +82,6 @@
 
 .add-row-button {
   margin-top: 10px;
-}
-
-.action-button-spacing {
-  margin-bottom: 10px;
-}
-
-.action-button-spacing:last-child {
-  margin-bottom: 0;
 }
 
 .form-label1 {
