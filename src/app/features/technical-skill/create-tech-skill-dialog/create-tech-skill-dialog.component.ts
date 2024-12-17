@@ -22,21 +22,27 @@ export class CreateTechSkillDialogComponent {
   @Output() techSkillSaved: EventEmitter<any> = new EventEmitter();
 
   @Input() techSkillData: TechnicalSkill | null = null;
+  @Input() nameList: string[] = [];
 
   techSkill: any = {
     technical_skill: '',
     enabled: 1,
   };
+  takenNames: string[] = [];
+  nameValid: boolean = false;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['techSkillData']) {
       if (this.techSkillData) {
-        // Editing an existing user
         this.techSkill = { ...this.techSkillData };
+        this.takenNames = this.nameList.filter(
+          (name) => name !== this.techSkill.technical_skill.toLowerCase()
+        );
       } else {
-        // Creating a new user
         this.resetForm();
       }
+    }else{
+      this.takenNames = this.nameList;
     }
   }
   resetForm() {
@@ -44,6 +50,13 @@ export class CreateTechSkillDialogComponent {
       technical_skill: '',
       enabled: 1,
     };
+  }
+
+  isNameValid(name: string) {
+    console.log("Taken Names: ",this.takenNames);
+    console.log("Name: ",name);
+    this.nameValid = this.takenNames.includes(name.toLowerCase());
+    return this.nameValid;
   }
 
   closeDialog() {

@@ -33,9 +33,9 @@ export class SummaryComponent {
     label: '2024',
     value: 2024,
   };
-  years: { label: string; value: number }[] = [
-
-  ];
+  years: { label: string; value: number }[] = [];
+  assSummary: any[] = [];
+  userSummaryList: any[] = [];
 
   constructor(
     private userService: UserService,
@@ -52,14 +52,12 @@ export class SummaryComponent {
 
   prepareDivisionOptions() {
     this.divisionOptions = this.filteredUsers
-      .map((user) => ({
-        label: user.division.division_name,
-        value: user.division.division_name,
-      }))
-      .filter(
-        (option, index, self) =>
-          index === self.findIndex((t) => t.value === option.value)
-      );
+      .map((user) => user.division.division_name);
+
+
+    this.divisionOptions = Array.from(new Set(this.divisionOptions));
+
+    console.log("divisi : ",this.divisionOptions);
   }
 
   openSummaryDialog() {
@@ -80,43 +78,48 @@ export class SummaryComponent {
   fetchAssessmentSummaries() {
     this.assSummaryService.getAllAssSummary().subscribe((data) => {
       console.log('Assessment Summary:', data);
-  
-      // Extract unique years for the dropdown
+
+      this.assSummary = data.content;
+
       const uniqueYears = Array.from(
-        new Set(data.content.map((assSummary) => assSummary.year))
+        new Set(this.assSummary.map((assSummary) => assSummary.year))
       ).sort((a, b) => b - a);
-  
-      this.years = uniqueYears.map((year) => ({ label: year.toString(), value: year }));
+
+      this.years = uniqueYears.map((year) => ({
+        label: year.toString(),
+        value: year,
+      }));
       console.log('Updated Years:', this.years);
-  
-      // Filter based on the selected year (default: all years)
+
       const filteredContent = this.selectedYear
-        ? data.content.filter((assSummary) => assSummary.year === this.selectedYear.value)
-        : data.content;
-  
+        ? this.assSummary.filter(
+            (assSummary) => assSummary.year === this.selectedYear.value
+          )
+        : this.assSummary;
+
       console.log('Filtered Assessment Summary:', filteredContent);
-  
-      // Map filtered content to user IDs and scores
+
       const userScoresMap = new Map(
         filteredContent.map((assSummary) => [
           assSummary.user.id,
           assSummary.score,
         ])
       );
-  
-      this.filteredUsers = this.users
+
+      this.userSummaryList = this.users
         .filter((user) => userScoresMap.has(user.id))
         .map((user) => ({
           ...user,
           assessmentScore: userScoresMap.get(user.id),
         }));
-  
-      console.log('Filtered Users:', this.filteredUsers);
-  
+
+      this.filteredUsers = this.userSummaryList;
+
+      console.log('Filtered Users:', this.userSummaryList);
+
       this.prepareDivisionOptions();
     });
   }
-  
 
   onRowSelect(event: any) {
     this.selectedUser = event.data;
@@ -144,25 +147,27 @@ export class SummaryComponent {
     console.log('Filter called with:', selectedValues);
 
     if (!selectedValues || selectedValues.length === 0) {
-      this.filteredUsers = [...this.users]; // Show all users if no division is selected
+      this.filteredUsers = [...this.userSummaryList]; // Show all users if no division is selected
       return;
     }
 
-    const selectedDivisionValues = selectedValues.map(
-      (selected) => selected
-    );
+    const selectedDivisionValues = selectedValues.map((selected) => selected);
 
-    this.filteredUsers = this.users
-    .filter((user) =>
-      selectedDivisionValues.includes(user.division?.division_name || 'Unknown')
-    )
-    .map((user) => {
-      const score = this.filteredUsers.find((u) => u.id === user.id)?.assessmentScore;
-      return { ...user, assessmentScore: score };
-    });
+    this.filteredUsers = this.userSummaryList
+      .filter((user) =>
+        selectedDivisionValues.includes(
+          user.division?.division_name || 'Unknown'
+        )
+      )
+      .map((user) => {
+        const score = this.filteredUsers.find(
+          (u) => u.id === user.id
+        )?.assessmentScore;
+        return { ...user, assessmentScore: score };
+      });
 
-  console.log('Filtered Users:', this.filteredUsers);
-}
+    console.log('Filtered Users:', this.filteredUsers);
+  }
 
   onDialogClose(visible: boolean) {
     console.log('On Dialog closed is called', visible);
