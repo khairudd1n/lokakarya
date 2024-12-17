@@ -3,7 +3,7 @@
 
 <app-nav-bar></app-nav-bar>
 <div class="container" style="background-color: #f5f5f5">
-  <h2 class="title">RENCANA PENGEMBANGAN</h2>
+  <h2 class="title">DEVELOPMENT PLAN</h2>
 
   <!-- Button to open the create modal -->
   <div class="card flex justify-content-end">
@@ -25,7 +25,7 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="groupName">Dev Plan</label>
+        <label for="groupName" class="form-label1">Dev Plan</label>
         <input
           id="groupName"
           type="text"
@@ -35,6 +35,19 @@
         <div *ngIf="isDuplicate" style="color: red; font-size: 15px">
           Data sudah ada
         </div>
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="enabled" class="form-label1">Enabled</label>
+
+        <select
+          id="enabled"
+          [(ngModel)]="newDevPlan.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>
@@ -64,13 +77,25 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="editGroupName">Dev Plan</label>
+        <label for="editGroupName" class="form-label1">Dev Plan</label>
         <input
           id="editGroupName"
           type="text"
           pInputText
           [(ngModel)]="selectedDevPlan.plan"
         />
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editEnabled" class="form-label1">Enabled</label>
+        <select
+          id="editEnabled"
+          [(ngModel)]="selectedDevPlan.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>

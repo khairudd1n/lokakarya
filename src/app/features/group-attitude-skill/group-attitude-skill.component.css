@@ -102,3 +102,13 @@
   align-items: center;
   width: 275px;
 }
+
+.form-label1 {
+  display: block;
+  margin-bottom: -10px; /* Jarak antara label dan input */
+}
+
+.form-label2 {
+  display: block;
+  margin-bottom: 8px; /* Jarak antara label dan input */
+}

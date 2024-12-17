@@ -72,4 +72,19 @@ export class EmpDevPlanService {
       { headers }
     );
   }
+
+  getAssessmentYears(): Observable<number[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .get<number[]>(`${this.apiUrl}/assessment-years`, { headers })
+      .pipe(
+        tap((years) => {
+          console.log('Retrieved assessment years:', years);
+        })
+      );
+  }
 }

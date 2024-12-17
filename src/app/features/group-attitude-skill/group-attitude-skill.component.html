@@ -3,7 +3,7 @@
 
 <app-nav-bar></app-nav-bar>
 <div class="container" style="background-color: #f5f5f5">
-  <h2 class="title">GRUP SIKAP & KEAHLIAN</h2>
+  <h2 class="title">GROUP ATTITUDE & SKILL</h2>
 
   <!-- Button to open the create modal -->
   <div class="card flex justify-content-end">
@@ -25,7 +25,8 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="groupName">Group Attitude Skill</label>
+        <label for="groupName" class="form-label1">Group Attitude Skill</label>
+        <br />
         <input
           id="groupName"
           type="text"
@@ -38,13 +39,27 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="percentage">Weight</label>
+        <label for="percentage" class="form-label1">Weight</label>
+        <br />
         <input
           id="percentage"
           type="number"
           pInputText
           [(ngModel)]="newGroupAttitudeSkill.percentage"
         />
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="enabled" class="form-label1">Enabled</label>
+        <br />
+        <select
+          id="enabled"
+          [(ngModel)]="newGroupAttitudeSkill.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>
@@ -75,7 +90,9 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="editGroupName">Group Attitude Skill</label>
+        <label for="editGroupName" class="form-label2"
+          >Group Attitude Skill</label
+        >
         <input
           id="editGroupName"
           type="text"
@@ -85,13 +102,25 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editPercentage">Weight</label>
+        <label for="editPercentage" class="form-label2">Weight</label>
         <input
           id="editPercentage"
           type="number"
           pInputText
           [(ngModel)]="selectedGroupAttitudeSkill.percentage"
         />
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editEnabled" class="form-label2">Enabled</label>
+        <select
+          id="editEnabled"
+          [(ngModel)]="selectedGroupAttitudeSkill.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>

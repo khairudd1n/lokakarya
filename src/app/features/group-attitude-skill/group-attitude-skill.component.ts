@@ -21,6 +21,7 @@ import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
 import { EventEmitter, Output } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-group-attitude-skill',
@@ -41,6 +42,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
     DialogModule,
     MenubarModule,
     NavBarComponent,
+    ToggleButtonModule,
   ],
   templateUrl: './group-attitude-skill.component.html',
   styleUrls: ['./group-attitude-skill.component.css'],

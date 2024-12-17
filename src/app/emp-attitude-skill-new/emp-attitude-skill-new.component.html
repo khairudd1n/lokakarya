@@ -1,40 +1,8 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="container" style="background-color: #f5f5f5">
-  <h1 class="title">FORM EVALUASI KINERJA - SIKAP DAN KEAHLIAN PERSONAL</h1>
-
-  <p class="center-text">Bobot tiap kriteria nilai:</p>
-  <table class="nilai-table">
-    <thead>
-      <tr>
-        <th>Kriteria Nilai</th>
-        <th>Nilai</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Sangat Baik</td>
-        <td>100</td>
-      </tr>
-      <tr>
-        <td>Baik</td>
-        <td>80</td>
-      </tr>
-      <tr>
-        <td>Cukup</td>
-        <td>60</td>
-      </tr>
-      <tr>
-        <td>Kurang</td>
-        <td>40</td>
-      </tr>
-      <tr>
-        <td>Sangat Kurang</td>
-        <td>20</td>
-      </tr>
-    </tbody>
-  </table>
-
+  <h2 class="title">PERFORMANCE EVALUATION FORM - ATTITUDE & SKILL</h2>
+  <br />
   <div class="form-group">
     <label for="assessmentYearDropdown">Assessment Year:</label>
     <select
@@ -59,8 +27,20 @@
       <ng-template pTemplate="header">
         <tr>
           <th>No.</th>
-          <th>Kriteria</th>
-          <th>Nilai</th>
+          <th>Criteria</th>
+          <th>
+            Score
+            <i
+              class="pi pi-info-circle"
+              pTooltip="Sangat Baik = 100 
+              Baik = 80
+              Cukup = 60 
+              Kurang = 40 
+              Sangat Kurang = 20"
+              tooltipPosition="top"
+              style="margin-left: 5px; cursor: pointer; color: #007ad9"
+            ></i>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-skill let-i="rowIndex">
@@ -71,7 +51,7 @@
             <p-dropdown
               [options]="scoreOptions"
               [ngModel]="skill.score"
-              placeholder="Pilih nilai"
+              placeholder="Select score"
               [appendTo]="'body'"
               (onChange)="logSkillId(skill.id, $event.value)"
               [disabled]="isSkillDisabled(skill.id)"
