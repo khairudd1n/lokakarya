@@ -102,7 +102,7 @@ export class EmpTechnicalSkillComponent {
   onAssessmentYearChange(): void {
     this.isPreviousYearSelected =
       this.selectedAssessmentYear < this.assessmentYear;
-    this.fetchData(); // Panggil ulang data ketika tahun berubah
+    this.fetchData(); 
   }
 
   fetchData(): void {
@@ -121,35 +121,32 @@ export class EmpTechnicalSkillComponent {
     forkJoin([empTechSkills$, allTechSkills$]).subscribe({
       next: ([empTechSkills, allTechSkills]) => {
         this.empTechSkills = empTechSkills;
-
-        // Initialize groupData with allDevPlans
+        
         this.groupData = allTechSkills.map((group) => ({
           ...group,
           rows:
             group.rows?.map((row: Row) => ({
               ...row,
               tech_detail:
-                row['user_id'] === this.userId ? row.tech_detail : '', // Check plan_detail based on user_id
+                row['user_id'] === this.userId ? row.tech_detail : '', 
               score: row['user_id'] === this.userId ? row.score : '',
-              status: row['user_id'] === this.userId ? 'saved' : 'unsaved', // Set status for the rows
-            })) || [], // Ensure rows is an empty array if no rows exist
+              status: row['user_id'] === this.userId ? 'saved' : 'unsaved', 
+            })) || [], 
         }));
-
-        // Structure empDevPlans into groups
+       
         const empTechSkillGroups = this.organizeDataIntoGroups(empTechSkills);
+        console.log('empTechSkillGroups:', empTechSkillGroups);
 
-        // Merge empDevPlanGroups into groupData
         empTechSkillGroups.forEach((empGroup) => {
           const existingGroup = this.groupData.find(
             (group) => group.technical_skill === empGroup.technical_skill
           );
           if (existingGroup) {
-            existingGroup.rows = empGroup.rows; // Update existing group with user-specific plans
+            existingGroup.rows = empGroup.rows; 
           } else {
-            this.groupData.push(empGroup); // Add new group if it doesn't exist
+            this.groupData.push(empGroup); 
           }
         });
-
         console.log('Fetched EmpTechSkills:', this.empTechSkills);
         console.log('Fetched All Tech Skills:', this.groupData);
       },
@@ -159,21 +156,20 @@ export class EmpTechnicalSkillComponent {
     });
   }
 
-  organizeDataIntoGroups(data: EmpTechSkillCreateDto[]): any[] {
+  organizeDataIntoGroups(data: any[]): any[] {
     const groups: any[] = [];
 
-    // Group data by plan (you can change the criterion if necessary)
     data.forEach((technical_skill) => {
       const group = groups.find(
-        (g) => g.technical_skill === technical_skill.technical_skill
+        (g) => g.technical_skill === technical_skill.tech_skill.technical_skill
       );
       if (group) {
-        group.rows.push(technical_skill); // Add rows to existing group
+        group.rows.push(technical_skill); 
       } else {
         groups.push({
-          technical_skill: technical_skill.technical_skill,
+          technical_skill: technical_skill.tech_skill.technical_skill,
           rows: [technical_skill],
-        }); // Create new group
+        });
       }
     });
     return groups;
@@ -185,9 +181,9 @@ export class EmpTechnicalSkillComponent {
     score: number,
     row: Row
   ): void {
-    // Check if tech_detail is not empty
+    
     if (tech_detail.trim() !== '' && score !== null) {
-      // Create or update the technical_skill object
+      
       const technical_skill: EmpTechSkillCreateDto = {
         user_id: this.userId as UUID,
         tech_skill_id: row.tech_skill_id as UUID,
@@ -198,7 +194,7 @@ export class EmpTechnicalSkillComponent {
         status: 'saved',
       };
 
-      // Check if the technical_skill already exists in selectedTechs
+      
       const existingPlanIndex = this.selectedTechs.findIndex(
         (tech) =>
           tech.tech_skill_id === row.tech_skill_id &&
@@ -207,11 +203,11 @@ export class EmpTechnicalSkillComponent {
       );
 
       if (existingPlanIndex !== -1) {
-        // If it exists, update the existing entry
+        
         this.selectedTechs[existingPlanIndex] = technical_skill;
         console.log('Updated Plan in Selection:', technical_skill);
       } else {
-        // If it doesn't exist, add it to selectedTechs
+        
         console.log('Adding Plan to Selection:', technical_skill);
         this.selectedTechs.push(technical_skill);
       }

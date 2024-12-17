@@ -57,7 +57,7 @@
         type="submit"
         label="{{ techSkillData ? 'Update' : 'Save' }}"
         icon="pi pi-check"
-        [disabled]="!techSkill.technical_skill"
+        [disabled]="!techSkill.technical_skill || nameValid"
         (click)="saveUser()"
       ></button>
     </div>

@@ -41,7 +41,7 @@ export class EmpTechnicalSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<ApiResponse<any[]>>(`${this.apiUrl2}`, { headers })
+      .get<ApiResponse<any[]>>(`${this.apiUrl2}?enabledOnly=${true}`, { headers })
       .pipe(map((response) => response.content));
   }
 
