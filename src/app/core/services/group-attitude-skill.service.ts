@@ -50,7 +50,7 @@ export class GroupAttitudeSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<ApiResponse<GroupAttitudeSkillDto[]>>(`${this.apiUrl}`, { headers })
+      .get<ApiResponse<GroupAttitudeSkillDto[]>>(`${this.apiUrl}/all`, { headers })
       .pipe(
         map((data) => data.content));
   }

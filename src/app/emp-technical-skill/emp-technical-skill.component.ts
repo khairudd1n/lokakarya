@@ -61,8 +61,8 @@ export class EmpTechnicalSkillComponent {
   userData: EmpTechSkillCreateDto[] = [];
   empTechSkills: EmpTechSkillCreateDto[] = [];
 
-  assessmentYears: number[] = []; // Array untuk menampung tahun
-  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+  assessmentYears: number[] = [];
+  selectedAssessmentYear: number = new Date().getFullYear();
 
   isPreviousYearSelected: boolean = false;
 
@@ -86,6 +86,10 @@ export class EmpTechnicalSkillComponent {
   }
 
   initializeAssessmentYears(): void {
+    // this.assessmentYears = [2024,2023,2022,2021];
+    // if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+    //   this.selectedAssessmentYear = this.assessmentYears[0];
+    // }
     this.empTechSkillService.getAssessmentYears().subscribe(
       (years) => {
         this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima

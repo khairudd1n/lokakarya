@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
 import { EmpTechSkillCreateDto } from './emp-technical-skill.service';
+import { ApiResponse } from './core/models/api-response.model';
 
 export interface EmpAttitudeSkillCreateDto {
   user_id: UUID;
@@ -16,8 +17,8 @@ export interface EmpAttitudeSkillCreateDto {
   providedIn: 'root',
 })
 export class EmpAttitudeSkillNewService {
-  private apiUrl = 'http://localhost:8080/emp-attitude-skill'; // Backend API endpoint
-  private apiUrl2 = 'http://localhost:8080/group-attitude-skill/all';
+  private apiUrl = 'http://localhost:8080/emp-attitude-skill';
+  private apiUrl2 = 'http://localhost:8080/group-attitude-skill/all-with-att';
   private token = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -48,11 +49,9 @@ export class EmpAttitudeSkillNewService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<any[]>(`${this.apiUrl2}`, { headers })
+      .get<ApiResponse<any[]>>(`${this.apiUrl2}`, { headers })
       .pipe(
-        tap((data) =>
-          console.log('Fetched Group Attitude with Attitude skills:', data)
-        )
+        map((response) => response.content)
       );
   }
 
