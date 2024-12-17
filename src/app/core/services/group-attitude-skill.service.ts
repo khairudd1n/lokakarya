@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
 import { map, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ApiResponse } from '../models/api-response.model';
 
 export interface GroupAttitudeSkillDto {
   id: UUID;
@@ -39,9 +40,9 @@ export class GroupAttitudeSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<GroupAttWithAttDto[]>(`${this.apiUrl}/count`, { headers })
+      .get<ApiResponse<GroupAttWithAttDto[]>>(`${this.apiUrl}/count`, { headers })
       .pipe(
-        map((data) => data),
+        map((data) => data.content),
       );
   }
 
@@ -50,8 +51,9 @@ export class GroupAttitudeSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<GroupAttitudeSkillDto[]>(`${this.apiUrl}`, { headers })
-      .pipe(tap((data) => console.log('Fetched Group Attitude Skills:', data)));
+      .get<ApiResponse<GroupAttitudeSkillDto[]>>(`${this.apiUrl}`, { headers })
+      .pipe(
+        map((data) => data.content));
   }
 
   getAllGroupWithAttitudeSkills(): Observable<GroupAttWithAttDto[]> {
@@ -59,11 +61,9 @@ export class GroupAttitudeSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<GroupAttWithAttDto[]>(`${this.apiUrl2}`, { headers })
+      .get<ApiResponse<GroupAttWithAttDto[]>>(`${this.apiUrl2}`, { headers })
       .pipe(
-        tap((data) =>
-          console.log('Fetched Group Attitude with Attitude skills:', data)
-        )
+        map((data) => data.content)
       );
   }
 
@@ -71,9 +71,11 @@ export class GroupAttitudeSkillService {
     data: Partial<GroupAttitudeSkillDto>
   ): Observable<GroupAttitudeSkillDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
-    return this.http.post<GroupAttitudeSkillDto>(`${this.apiUrl}`, data, {
+    return this.http.post<ApiResponse<GroupAttitudeSkillDto>>(`${this.apiUrl}`, data, {
       headers,
-    });
+    }).pipe(
+      map((response) => response.content)
+    );
   }
 
   // Update an existing group attitude skill
@@ -83,11 +85,9 @@ export class GroupAttitudeSkillService {
   ): Observable<GroupAttitudeSkillDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
     return this.http
-      .put<GroupAttitudeSkillDto>(`${this.apiUrl}/${id}`, data, { headers })
+      .put<ApiResponse<GroupAttitudeSkillDto>>(`${this.apiUrl}/${id}`, data, { headers })
       .pipe(
-        tap((updatedData) =>
-          console.log('Updated Group Attitude Skill:', updatedData)
-        )
+        map((response) => response.content)
       );
   }
 
