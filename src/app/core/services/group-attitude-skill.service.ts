@@ -34,7 +34,6 @@ export class GroupAttitudeSkillService {
 
   constructor(private http: HttpClient) {}
 
-
   getAllGroupAttitudeSkillWithCount(): Observable<any[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,

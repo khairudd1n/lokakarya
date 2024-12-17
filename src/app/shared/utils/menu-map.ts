@@ -3,7 +3,7 @@ import { MenuItem } from 'primeng/api';
 export const MENU_MAP: {
   [key: string]: { label: string; routerLink: string };
 } = {
-  ALL_USER: { label: 'Manage User', routerLink: '/user' },
+  ALL_USER: { label: 'User', routerLink: '/user' },
   ALL_DIVISION: { label: 'Division', routerLink: '/division' },
   ALL_APP_ROLE_MENU: { label: 'Role Menu', routerLink: '/role-menu' },
   ALL_GROUP_ATTITUDE_SKILL: {

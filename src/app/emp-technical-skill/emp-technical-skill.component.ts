@@ -14,6 +14,10 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { forkJoin } from 'rxjs';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
 
 interface Row {
   technical_skill: string;
@@ -41,6 +45,10 @@ interface Group {
     ButtonModule,
     DropdownModule,
     NavBarComponent,
+    TooltipModule,
+    InputIconModule,
+    InputTextModule,
+    IconFieldModule,
   ],
   templateUrl: './emp-technical-skill.component.html',
   styleUrls: ['./emp-technical-skill.component.css'],
@@ -78,13 +86,17 @@ export class EmpTechnicalSkillComponent {
   }
 
   initializeAssessmentYears(): void {
-    const currentYear = new Date().getFullYear();
-    this.assessmentYears = [
-      currentYear,
-      currentYear - 1,
-      currentYear - 2,
-      currentYear - 3,
-    ]; // Contoh range tahun
+    this.empTechSkillService.getAssessmentYears().subscribe(
+      (years) => {
+        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+        }
+      },
+      (error) => {
+        console.error('Error fetching assessment years:', error);
+      }
+    );
   }
 
   onAssessmentYearChange(): void {
@@ -287,7 +299,7 @@ export class EmpTechnicalSkillComponent {
                 Swal.fire({
                   icon: 'error',
                   title: 'Error!',
-                  text: 'Failed to save plans.',
+                  text: 'Isi skill level terlebih dahulu.',
                 });
               }
             );

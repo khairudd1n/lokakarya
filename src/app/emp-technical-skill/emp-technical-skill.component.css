@@ -126,3 +126,8 @@ label {
 .dropdown option {
   padding: 10px; /* Jarak dalam opsi dropdown */
 }
+
+.p-tooltip {
+  max-width: 400px; /* Lebar maksimum tooltip */
+  white-space: normal; /* Izinkan teks wrapping */
+}

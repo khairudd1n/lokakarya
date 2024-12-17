@@ -92,3 +92,8 @@
   justify-content: flex-end; /* Aligns the button to the right */
   margin-top: 20px; /* Adds some space above the button */
 }
+
+.form-label1 {
+  display: block;
+  margin-bottom: 8px; /* Jarak antara label dan input */
+}

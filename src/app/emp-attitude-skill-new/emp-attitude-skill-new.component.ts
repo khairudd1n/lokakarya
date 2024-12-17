@@ -21,6 +21,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { forkJoin } from 'rxjs';
 import { AssSummaryService } from '../ass-summary.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 interface AttitudeSkill {
   attitude_skill_name: string;
@@ -40,6 +41,7 @@ interface AttitudeSkill {
     FormsModule,
     DropdownModule,
     NavBarComponent,
+    TooltipModule,
   ],
   templateUrl: './emp-attitude-skill-new.component.html',
   styleUrl: './emp-attitude-skill-new.component.css',
@@ -76,13 +78,17 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   initializeAssessmentYears(): void {
-    const currentYear = new Date().getFullYear();
-    this.assessmentYears = [
-      currentYear,
-      currentYear - 1,
-      currentYear - 2,
-      currentYear - 3,
-    ]; // Contoh range tahun
+    this.empAttitudeSkillService.getAssessmentYears().subscribe(
+      (years) => {
+        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+        }
+      },
+      (error) => {
+        console.error('Error fetching assessment years:', error);
+      }
+    );
   }
 
   onAssessmentYearChange(): void {

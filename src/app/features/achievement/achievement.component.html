@@ -3,7 +3,7 @@
 
 <app-nav-bar></app-nav-bar>
 <div class="container" style="background-color: #f5f5f5">
-  <h2 class="title">PENCAPAIAN</h2>
+  <h2 class="title">ACHIEVEMENT</h2>
 
   <!-- Button to open the create modal -->
   <div class="card flex justify-content-end">
@@ -24,7 +24,9 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="achievementName">Achievement Name</label>
+        <label for="achievementName" class="form-label1"
+          >Achievement Name</label
+        >
         <input
           pInputText
           id="achievementName"
@@ -34,14 +36,30 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="groupAchievement">Group Achievement</label>
+        <label for="groupAchievement" class="form-label1"
+          >Group Achievement</label
+        >
         <p-dropdown
           [options]="groupAchievementOptions"
           [(ngModel)]="newAchievement.group_achievement_id"
           (onChange)="onGroupAchievementChange($event)"
           placeholder="Select Group Achievement"
+          [appendTo]="'body'"
         >
         </p-dropdown>
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="enabled" class="form-label1">Enabled</label>
+
+        <select
+          id="enabled"
+          [(ngModel)]="newAchievement.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>
@@ -72,7 +90,9 @@
   >
     <div class="p-fluid">
       <div class="p-field">
-        <label for="editAchievementName">Achievement Name</label>
+        <label for="editAchievementName" class="form-label1"
+          >Achievement Name</label
+        >
         <input
           pInputText
           id="editAchievementName"
@@ -82,13 +102,28 @@
       </div>
       <br />
       <div class="p-field">
-        <label for="editGroupAchievement">Group Achievement</label>
+        <label for="editGroupAchievement" class="form-label1"
+          >Group Achievement</label
+        >
         <p-dropdown
           [options]="groupAchievementOptions"
           [(ngModel)]="editAchievement.group_achievement_id"
           placeholder="Select Group Achievement"
+          [appendTo]="'body'"
         >
         </p-dropdown>
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editEnabled" class="form-label1">Enabled</label>
+        <select
+          id="editEnabled"
+          [(ngModel)]="editAchievement.enabled"
+          class="p-inputtext"
+        >
+          <option [value]="1">Enabled</option>
+          <option [value]="0">Disabled</option>
+        </select>
       </div>
     </div>
     <p-footer>
