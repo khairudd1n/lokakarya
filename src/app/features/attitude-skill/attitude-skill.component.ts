@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AttitudeWithGroupNameDto,
   AttitudeSkillService,
@@ -70,6 +70,15 @@ export class AttitudeSkillComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAttitudeSkills();
     this.fetchGroupAttitudeSkillOptions();
+  }
+
+  @ViewChild('dt2') dt2: Table | undefined;
+
+  onGlobalSearch(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+    if (this.dt2) {
+      this.dt2.filterGlobal(input, 'contains'); // Pass the input value and match mode
+    }
   }
 
   // Method to show detail dialog

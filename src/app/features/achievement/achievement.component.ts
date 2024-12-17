@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AchieveWithGroupNameDto,
   AchievementService,
@@ -18,7 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
-import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
+import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-achievement',
@@ -39,8 +39,8 @@ import { NavBarComponent } from "../nav-bar/nav-bar/nav-bar.component";
     FormsModule,
     ReactiveFormsModule,
     DialogModule,
-    NavBarComponent
-],
+    NavBarComponent,
+  ],
 })
 export class AchievementComponent implements OnInit {
   achievements: AchieveWithGroupNameDto[] = [];
@@ -68,6 +68,15 @@ export class AchievementComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAchievements();
     this.fetchGroupAchievementOptions(); // Fetch options from the service
+  }
+
+  @ViewChild('dt2') dt2: Table | undefined;
+
+  onGlobalSearch(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+    if (this.dt2) {
+      this.dt2.filterGlobal(input, 'contains'); // Pass the input value and match mode
+    }
   }
 
   fetchAchievements(): void {
