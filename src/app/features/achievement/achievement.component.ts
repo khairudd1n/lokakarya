@@ -19,6 +19,7 @@ import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-achievement',
@@ -40,6 +41,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
     ReactiveFormsModule,
     DialogModule,
     NavBarComponent,
+    ToggleButtonModule,
   ],
 })
 export class AchievementComponent implements OnInit {

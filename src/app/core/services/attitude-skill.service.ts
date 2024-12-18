@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { ApiResponse } from '../models/api-response.model';
 
 export interface AttitudeWithGroupNameDto {
   id: UUID;
   attitude_skill_name: string;
   group_attitude_skill_id: UUID;
   group_name: string;
-  enabled: 1;
+  enabled: number;
 }
 
 @Injectable({
@@ -75,14 +76,14 @@ export class AttitudeSkillService {
       Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
     };
     return this.http
-      .get<AttitudeWithGroupNameDto[]>(
-        'http://localhost:8080/group-attitude-skill',
+      .get<ApiResponse<AttitudeWithGroupNameDto[]>>(
+        'http://localhost:8080/group-attitude-skill/all',
         { headers }
       )
       .pipe(
         // Transform the fetched data to fit the dropdown's requirement
         map((data) =>
-          data.map((item) => ({
+          data.content.map((item) => ({
             label: item.group_name, // Use the correct field here
             value: item.id, // Use the correct field here, or an ID if applicable
           }))

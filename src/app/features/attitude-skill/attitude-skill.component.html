@@ -51,14 +51,22 @@
       <div class="p-field">
         <label for="enabled" class="form-label1">Enabled</label>
 
-        <select
+        <!-- <select
           id="enabled"
           [(ngModel)]="newAttitudeSkill.enabled"
           class="p-inputtext"
         >
           <option [value]="1">Enabled</option>
           <option [value]="0">Disabled</option>
-        </select>
+        </select> -->
+
+        <p-toggleButton
+          [(ngModel)]="newAttitudeSkill.enabled"
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="newAttitudeSkill.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -115,14 +123,22 @@
       <br />
       <div class="p-field">
         <label for="editEnabled" class="form-label1">Enabled</label>
-        <select
+        <!-- <select
           id="editEnabled"
           [(ngModel)]="editAttitudeSkill.enabled"
           class="p-inputtext"
         >
           <option [value]="1">Enabled</option>
           <option [value]="0">Disabled</option>
-        </select>
+        </select> -->
+
+        <p-toggleButton
+          [(ngModel)]="editAttitudeSkill.enabled"
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="editAttitudeSkill.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -178,6 +194,7 @@
           <tr>
             <th style="width: 10px">No.</th>
             <th class="division-column">Attitude Skill</th>
+            <th class="action-column" style="text-align: center">Status</th>
             <th class="action-column">Action</th>
           </tr>
         </ng-template>
@@ -186,6 +203,12 @@
           <tr>
             <td>{{ i + 1 }}</td>
             <td>{{ attitudeSkill.attitude_skill_name }}</td>
+            <td style="text-align: center">
+              <p-tag
+                [severity]="attitudeSkill.enabled ? 'success' : 'danger'"
+                [value]="attitudeSkill.enabled ? 'Enabled' : 'Disabled'"
+              ></p-tag>
+            </td>
             <td>
               <div class="action-buttons">
                 <button

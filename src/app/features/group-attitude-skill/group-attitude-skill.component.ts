@@ -62,6 +62,7 @@ export class GroupAttitudeSkillComponent implements OnInit {
     percentage: 0,
     enabled: 1,
   };
+
   selectedGroupAttitudeSkill: Partial<GroupAttitudeSkillDto> = {};
   isDuplicate: boolean = false;
 

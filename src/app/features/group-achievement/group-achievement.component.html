@@ -48,15 +48,13 @@
       <br />
       <div class="p-field">
         <label for="enabled" class="form-label1">Enabled</label>
-
-        <select
-          id="enabled"
+        <p-toggleButton
           [(ngModel)]="newGroupAchievement.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select>
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="newGroupAchievement.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -108,14 +106,14 @@
       <br />
       <div class="p-field">
         <label for="editEnabled" class="form-label1">Enabled</label>
-        <select
-          id="editEnabled"
+
+        <p-toggleButton
           [(ngModel)]="selectedGroupAchievement.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select>
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="selectedGroupAchievement.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -154,6 +152,7 @@
           <th></th>
           <th class="percent-column"></th>
           <th class="percent-column"></th>
+          <th class="percent-column"></th>
           <th class="percent-column">
             <div class="column-filter">
               <p-columnFilter
@@ -176,6 +175,7 @@
             Weight
             <p-sortIcon field="percentage"></p-sortIcon>
           </th>
+          <th style="text-align: center; width: 10px">Status</th>
           <th class="group-column" style="text-align: center">Action</th>
         </tr>
       </ng-template>
@@ -187,6 +187,12 @@
             {{ achievement.group_achievement_name }}
           </td>
           <td style="text-align: center">{{ achievement.percentage }}</td>
+          <td style="text-align: center">
+            <p-tag
+              [severity]="achievement.enabled ? 'success' : 'danger'"
+              [value]="achievement.enabled ? 'Enabled' : 'Disabled'"
+            ></p-tag>
+          </td>
           <td>
             <div class="action-buttons">
               <button

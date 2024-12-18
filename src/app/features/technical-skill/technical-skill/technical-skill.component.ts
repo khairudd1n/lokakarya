@@ -5,11 +5,12 @@ import { TechnicalSkill } from '../../../core/models/technical-skill.model';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 import { CreateTechSkillDialogComponent } from '../create-tech-skill-dialog/create-tech-skill-dialog.component';
 import Swal from 'sweetalert2';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-technical-skill',
   standalone: true,
-  imports: [SharedModule, CreateTechSkillDialogComponent],
+  imports: [SharedModule, CreateTechSkillDialogComponent, TagModule],
   templateUrl: './technical-skill.component.html',
   styleUrl: './technical-skill.component.css',
 })
@@ -33,12 +34,11 @@ export class TechnicalSkillComponent {
           .map((techSkill) => techSkill.technical_skill?.toLowerCase())
           .filter(
             (name): name is string => name !== null && name !== undefined
-          ); 
+          );
 
         if (technical_skills.length > 0) {
           this.nameList = technical_skills;
         }
-
 
         console.log(this.technicalSkills);
       },
@@ -123,13 +123,15 @@ export class TechnicalSkillComponent {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt1) {
-      this.dt1.filterGlobal(input, 'contains'); 
+      this.dt1.filterGlobal(input, 'contains');
     }
   }
 
   clearFilters(table: any): void {
     table.clear();
-    const globalSearchInput = document.querySelector('.p-input-icon-left input') as HTMLInputElement;
+    const globalSearchInput = document.querySelector(
+      '.p-input-icon-left input'
+    ) as HTMLInputElement;
     if (globalSearchInput) {
       globalSearchInput.value = ''; // Clear the input field
     }

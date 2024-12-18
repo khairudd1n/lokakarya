@@ -40,14 +40,13 @@
       <div class="p-field">
         <label for="enabled" class="form-label1">Enabled</label>
 
-        <select
-          id="enabled"
+        <p-toggleButton
           [(ngModel)]="newDevPlan.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select>
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="newDevPlan.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -88,14 +87,14 @@
       <br />
       <div class="p-field">
         <label for="editEnabled" class="form-label1">Enabled</label>
-        <select
-          id="editEnabled"
+
+        <p-toggleButton
           [(ngModel)]="selectedDevPlan.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select>
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="selectedDevPlan.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -132,6 +131,7 @@
         <tr>
           <th></th>
           <th class="percent-column"></th>
+          <th></th>
           <th>
             <div class="column-filter">
               <p-columnFilter
@@ -145,7 +145,8 @@
         </tr>
         <tr>
           <th style="width: 10px">No.</th>
-          <th class="division-column" style="text-align: center">Plan</th>
+          <th class="division-column">Plan</th>
+          <th class="action-column" style="text-align: center">Status</th>
           <th class="action-column" style="text-align: center">Action</th>
         </tr>
       </ng-template>
@@ -154,6 +155,12 @@
         <tr>
           <td>{{ i + 1 }}</td>
           <td>{{ achievement.plan }}</td>
+          <td style="text-align: center">
+            <p-tag
+              [severity]="achievement.enabled ? 'success' : 'danger'"
+              [value]="achievement.enabled ? 'Enabled' : 'Disabled'"
+            ></p-tag>
+          </td>
           <td>
             <div class="action-buttons">
               <button
