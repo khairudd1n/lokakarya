@@ -175,6 +175,7 @@ export class GroupAttitudeSkillComponent implements OnInit {
       )
       .subscribe({
         next: (updatedGroupAttitudeSkill) => {
+          console.log("Group Data: ", updatedGroupAttitudeSkill);
           const index = this.groupAttitudeSkills.findIndex(
             (item) => item.id === updatedGroupAttitudeSkill.id
           );

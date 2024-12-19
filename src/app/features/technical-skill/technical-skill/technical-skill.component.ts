@@ -138,27 +138,38 @@ export class TechnicalSkillComponent {
   }
 
   onDelete(techSkill: any) {
-    console.log(techSkill);
-    this.techSkillService.delete(techSkill.id).subscribe({
-      next: (data) => {
-        console.log(data);
-        Swal.fire({
-          title: 'Success!',
-          text: 'Technical Skill deleted successfully.',
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this Technical Skill?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.techSkillService.delete(techSkill.id).subscribe({
+          next: (data) => {
+            console.log(data);
+            Swal.fire({
+              title: 'Success!',
+              text: 'Technical Skill deleted successfully.',
+              icon: 'success',
+              confirmButtonColor: '#3085d6',
+            });
+            this.loadData();
+          },
+          error: (err) => {
+            console.log(err);
+            Swal.fire({
+              title: 'Failed!',
+              text: 'Failed to delete Technical Skill. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#d33',
+            });
+          },
         });
-        this.loadData();
-      },
-      error: (err) => {
-        console.log(err);
-        Swal.fire({
-          title: 'Failed!',
-          text: 'Failed to delete Technical Skill. Please try again.',
-          icon: 'error',
-          confirmButtonColor: '#d33',
-        });
-      },
+      }
     });
+    
   }
 }
