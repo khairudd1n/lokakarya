@@ -49,6 +49,7 @@
         <tr>
           <th class="action-column">No.</th>
           <th class="division-column">Technical Skill</th>
+          <th class="action-column" style="text-align: center">Status</th>
           <th class="action-column">Action</th>
         </tr>
       </ng-template>
@@ -56,6 +57,12 @@
         <tr>
           <td>{{ i + 1 }}</td>
           <td>{{ skill.technical_skill }}</td>
+          <td style="text-align: center">
+            <p-tag
+              [severity]="skill.enabled ? 'success' : 'danger'"
+              [value]="skill.enabled ? 'Enabled' : 'Disabled'"
+            ></p-tag>
+          </td>
           <td>
             <button
               pButton

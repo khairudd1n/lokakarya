@@ -102,7 +102,7 @@ export class EmpTechnicalSkillComponent {
   onAssessmentYearChange(): void {
     this.isPreviousYearSelected =
       this.selectedAssessmentYear < this.assessmentYear;
-    this.fetchData(); 
+    this.fetchData();
   }
 
   fetchData(): void {
@@ -121,19 +121,19 @@ export class EmpTechnicalSkillComponent {
     forkJoin([empTechSkills$, allTechSkills$]).subscribe({
       next: ([empTechSkills, allTechSkills]) => {
         this.empTechSkills = empTechSkills;
-        
+
         this.groupData = allTechSkills.map((group) => ({
           ...group,
           rows:
             group.rows?.map((row: Row) => ({
               ...row,
               tech_detail:
-                row['user_id'] === this.userId ? row.tech_detail : '', 
+                row['user_id'] === this.userId ? row.tech_detail : '',
               score: row['user_id'] === this.userId ? row.score : '',
-              status: row['user_id'] === this.userId ? 'saved' : 'unsaved', 
-            })) || [], 
+              status: row['user_id'] === this.userId ? 'saved' : 'unsaved',
+            })) || [],
         }));
-       
+
         const empTechSkillGroups = this.organizeDataIntoGroups(empTechSkills);
         console.log('empTechSkillGroups:', empTechSkillGroups);
 
@@ -142,9 +142,9 @@ export class EmpTechnicalSkillComponent {
             (group) => group.technical_skill === empGroup.technical_skill
           );
           if (existingGroup) {
-            existingGroup.rows = empGroup.rows; 
+            existingGroup.rows = empGroup.rows;
           } else {
-            this.groupData.push(empGroup); 
+            this.groupData.push(empGroup);
           }
         });
         console.log('Fetched EmpTechSkills:', this.empTechSkills);
@@ -164,7 +164,7 @@ export class EmpTechnicalSkillComponent {
         (g) => g.technical_skill === technical_skill.tech_skill.technical_skill
       );
       if (group) {
-        group.rows.push(technical_skill); 
+        group.rows.push(technical_skill);
       } else {
         groups.push({
           technical_skill: technical_skill.tech_skill.technical_skill,
@@ -181,9 +181,7 @@ export class EmpTechnicalSkillComponent {
     score: number,
     row: Row
   ): void {
-    
     if (tech_detail.trim() !== '' && score !== null) {
-      
       const technical_skill: EmpTechSkillCreateDto = {
         user_id: this.userId as UUID,
         tech_skill_id: row.tech_skill_id as UUID,
@@ -194,7 +192,6 @@ export class EmpTechnicalSkillComponent {
         status: 'saved',
       };
 
-      
       const existingPlanIndex = this.selectedTechs.findIndex(
         (tech) =>
           tech.tech_skill_id === row.tech_skill_id &&
@@ -203,11 +200,9 @@ export class EmpTechnicalSkillComponent {
       );
 
       if (existingPlanIndex !== -1) {
-        
         this.selectedTechs[existingPlanIndex] = technical_skill;
         console.log('Updated Plan in Selection:', technical_skill);
       } else {
-        
         console.log('Adding Plan to Selection:', technical_skill);
         this.selectedTechs.push(technical_skill);
       }
@@ -257,12 +252,12 @@ export class EmpTechnicalSkillComponent {
 
     if (this.selectedTechs.length > 0) {
       Swal.fire({
-        title: 'Apakah anda yakin ingin menyimpan?',
-        text: 'Data yang sudah disimpan tidak dapat diubah lagi.',
+        title: 'Are you sure you want to submit?',
+        text: 'All data that have been submitted cannot be change anymore.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Ya, simpan',
-        cancelButtonText: 'Batal',
+        confirmButtonText: 'Yes, I am sure',
+        cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
           console.log('Final data to be saved:', this.selectedTechs);
@@ -291,7 +286,7 @@ export class EmpTechnicalSkillComponent {
                 Swal.fire({
                   icon: 'success',
                   title: 'Success!',
-                  text: 'Keahlian teknis anda berhasil disimpan',
+                  text: 'Your data has been submitted successfully.',
                 });
               },
               (error) => {
@@ -299,7 +294,7 @@ export class EmpTechnicalSkillComponent {
                 Swal.fire({
                   icon: 'error',
                   title: 'Error!',
-                  text: 'Isi skill level terlebih dahulu.',
+                  text: 'Fill in the skill level first.',
                 });
               }
             );
@@ -309,7 +304,7 @@ export class EmpTechnicalSkillComponent {
       Swal.fire({
         icon: 'warning',
         title: 'Warning!',
-        text: 'Input keterangan terlebih dahulu.',
+        text: 'Fill in the description first.',
       });
     }
   }

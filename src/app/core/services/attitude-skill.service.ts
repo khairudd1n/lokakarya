@@ -12,7 +12,7 @@ export interface AttitudeWithGroupNameDto {
   attitude_skill_name: string;
   group_attitude_skill_id: UUID;
   group_name: string;
-  enabled: 1;
+  enabled: number;
 }
 
 @Injectable({

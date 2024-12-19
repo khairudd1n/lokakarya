@@ -107,25 +107,25 @@ export class EmpSuggestComponent implements OnInit {
     );
 
     if (hasEmptyNewRows) {
-      Swal.fire('Warning', 'Input tanggapan terlebih dahulu.', 'warning');
+      Swal.fire('Warning', 'Fill in the description first.', 'warning');
       return;
     }
 
     const newRows = this.groupData[0].rows.filter((row: any) => !row.saved);
 
     if (newRows.length === 0) {
-      Swal.fire('Warning', 'Tidak ada data baru untuk disimpan.', 'warning');
+      Swal.fire('Warning', 'No new row has been made.', 'warning');
       return;
     }
 
     // Tampilkan dialog konfirmasi
     Swal.fire({
-      title: 'Konfirmasi',
-      text: 'Apakah Anda yakin ingin menyimpan data ini? Data yang sudah tersimpan tidak dapat diubah lagi.',
+      title: 'Confirmation',
+      text: 'Are you sure you want to submit? Data that has been submitted cannot be change anymore.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Ya, Simpan',
-      cancelButtonText: 'Batal',
+      confirmButtonText: 'Yes, I am sure',
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         // Jika pengguna mengonfirmasi, lanjutkan dengan penyimpanan
@@ -142,11 +142,15 @@ export class EmpSuggestComponent implements OnInit {
             // Tandai data yang baru disimpan sebagai tersimpan
             newRows.forEach((row: any) => (row.saved = true));
 
-            Swal.fire('Success', 'Tanggapan berhasil disimpan!', 'success');
+            Swal.fire(
+              'Success',
+              'Data has been submitted successfully!',
+              'success'
+            );
           },
           (error) => {
             console.error('Error saving data:', error);
-            Swal.fire('Error', 'Gagal menyimpan tanggapan.', 'error');
+            Swal.fire('Error', 'Failed to submit.', 'error');
           }
         );
       }
@@ -155,7 +159,7 @@ export class EmpSuggestComponent implements OnInit {
 
   addRow(group: any): void {
     if (group.rows.length >= 10) {
-      Swal.fire('Warning', 'Maksimum 10 baris saja yang diizinkan.', 'warning');
+      Swal.fire('Warning', 'Maximun only 10 rows are allowed.', 'warning');
       return;
     }
 
