@@ -84,9 +84,9 @@ export class GroupAttitudeSkillService {
   ): Observable<GroupAttitudeSkillDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
     return this.http
-      .put<ApiResponse<GroupAttitudeSkillDto>>(`${this.apiUrl}/${id}`, data, { headers })
+      .put<GroupAttitudeSkillDto>(`${this.apiUrl}/${id}`, data, { headers })
       .pipe(
-        map((response) => response.content)
+        map((response) => response)
       );
   }
 
