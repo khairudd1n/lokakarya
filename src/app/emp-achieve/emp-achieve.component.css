@@ -8,8 +8,16 @@
 }
 
 .division-column {
-  width: 90px; /* Atur lebar kolom sesuai kebutuhan */
-  max-width: 120px;
+  width: 180px; /* Atur lebar kolom sesuai kebutuhan */
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.year-column {
+  width: 220px; /* Atur lebar kolom sesuai kebutuhan */
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

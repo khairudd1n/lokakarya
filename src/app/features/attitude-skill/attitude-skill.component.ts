@@ -62,6 +62,8 @@ export class AttitudeSkillComponent implements OnInit {
     group_name: '',
     enabled: 1,
   };
+  currentGroup: string = ''; // Untuk melacak grup saat ini
+  groupIndex: number = 0;
 
   groupAttitudeSkillOptions: { label: string; value: string }[] = [];
 
@@ -70,6 +72,16 @@ export class AttitudeSkillComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAttitudeSkills();
     this.fetchGroupAttitudeSkillOptions();
+  }
+
+  resetGroupIndex(attitudeSkill: any): number {
+    if (this.currentGroup !== attitudeSkill.group_name) {
+      this.currentGroup = attitudeSkill.group_name;
+      this.groupIndex = 1; // Reset nomor urut ke 1 untuk grup baru
+    } else {
+      this.groupIndex++; // Tambahkan nomor urut untuk grup yang sama
+    }
+    return this.groupIndex;
   }
 
   @ViewChild('dt2') dt2: Table | undefined;

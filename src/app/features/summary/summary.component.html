@@ -2,95 +2,102 @@
 <h2 class="title">Users Summary</h2>
 <div class="container" style="background-color: #f5f5f5">
   <p-table
-  #dt1
-  [value]="filteredUsers"
-  selectionMode="single"
-  [(selection)]="selectedUser"
-  (onRowSelect)="onRowSelect($event)"
-  [globalFilterFields]="[
-    'full_name',
-    'position',
-    'email_address',
-    'employee_status'
-  ]"
-  [paginator]="true"
-  [rows]="10"
-  [rowsPerPageOptions]="[10, 25, 50]"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
->
-  <ng-template pTemplate="caption">
-    <div class="flex">
-      <button
-        pButton
-        label="Clear"
-        class="p-button-outlined"
-        icon="pi pi-filter-slash"
-        (click)="clearFilters(dt1)"
-      ></button>
-      <span class="p-input-icon-left ml-auto">
-        <i class="pi pi-search"></i>
-        <input
-          pInputText
-          type="text"
-          (input)="onGlobalSearch($event)"
-          placeholder="Search keyword"
-        />
-      </span>
-      <div class="dropdown-container" style="margin-left: 20px;">
-        <p-dropdown
-          [options]="years"
-          [(ngModel)]="selectedYear"
-          (onChange)="onYearChange($event)"
-          optionLabel="label"
-          placeholder="Select a Year"
-        ></p-dropdown>
+    #dt1
+    [value]="filteredUsers"
+    selectionMode="single"
+    [(selection)]="selectedUser"
+    (onRowSelect)="onRowSelect($event)"
+    [globalFilterFields]="[
+      'full_name',
+      'position',
+      'email_address',
+      'employee_status'
+    ]"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <button
+          pButton
+          label="Clear"
+          class="p-button-outlined"
+          icon="pi pi-filter-slash"
+          (click)="clearFilters(dt1)"
+        ></button>
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="onGlobalSearch($event)"
+            placeholder="Search keyword"
+          />
+        </span>
+        <div class="dropdown-container" style="margin-left: 20px">
+          <p-dropdown
+            [options]="years"
+            [(ngModel)]="selectedYear"
+            (onChange)="onYearChange($event)"
+            optionLabel="label"
+            placeholder="Select a Year"
+          ></p-dropdown>
+        </div>
       </div>
-    </div>
-  </ng-template>
+    </ng-template>
 
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="width: 25%; text-align: center">Name</th>
-      <th style="width: 20%; text-align: center">Email</th>
-      <th style="width: 20%; text-align: center">Position</th>
-      <th style="width: 20%; text-align: center">
-        Division
-        <p-columnFilter
-          field="division.division_name"
-          matchMode="in"
-          display="menu"
-          [showMatchModes]="false"
-          [showOperator]="false"
-          [showAddButton]="false"
-        >
-          <ng-template pTemplate="header">
-            <div class="px-3 pt-3 pb-0">
-              <span class="font-bold">Agent Picker</span>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-            <p-multiSelect
-              [ngModel]="value"
-              [options]="divisionOptions"
-              placeholder="Any"
-              (onChange)="filter($event.value)"
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 25%; text-align: center">Name</th>
+        <th style="width: 20%; text-align: center">Email</th>
+        <th style="width: 20%; text-align: center">Position</th>
+        <th style="width: 20%; text-align: center">
+          Division
+          <p-columnFilter
+            field="division.division_name"
+            matchMode="in"
+            display="menu"
+            [showMatchModes]="false"
+            [showOperator]="false"
+            [showAddButton]="false"
+          >
+            <ng-template pTemplate="header">
+              <div class="px-3 pt-3 pb-0">
+                <span class="font-bold">Agent Picker</span>
+              </div>
+            </ng-template>
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback"
             >
-              <ng-template let-option pTemplate="item">
-                <div class="inline-block vertical-align-middle">
-                  <span class="ml-1 mt-1">{{ option }}</span>
-                </div>
-              </ng-template>
-            </p-multiSelect>
-          </ng-template>
-        </p-columnFilter>
-      </th>
-      <th pSortableColumn="assessmentScore" style="width: 15%; text-align: center">
-        Score
-        <p-sortIcon field="assessmentScore"></p-sortIcon>
-      </th>
-    </tr>
-  </ng-template>
-    
+              <p-multiSelect
+                [ngModel]="value"
+                [options]="divisionOptions"
+                placeholder="Any"
+                (onChange)="filter($event.value)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="inline-block vertical-align-middle">
+                    <span class="ml-1 mt-1">{{ option }}</span>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th
+          pSortableColumn="assessmentScore"
+          style="width: 15%; text-align: center"
+        >
+          Score
+          <p-sortIcon field="assessmentScore"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+
     <ng-template pTemplate="body" let-user>
       <tr [pSelectableRow]="user">
         <td>{{ user.full_name }}</td>
