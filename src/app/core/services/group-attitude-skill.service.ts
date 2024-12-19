@@ -84,7 +84,9 @@ export class GroupAttitudeSkillService {
     const headers = { Authorization: `Bearer ${this.token}` };
     return this.http
       .put<GroupAttitudeSkillDto>(`${this.apiUrl}/${id}`, data, { headers })
-      .pipe(map((response) => response));
+      .pipe(
+        map((response) => response)
+      );
   }
 
   // Delete a group attitude skill by ID

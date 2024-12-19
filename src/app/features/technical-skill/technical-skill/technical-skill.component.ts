@@ -170,5 +170,6 @@ export class TechnicalSkillComponent {
         });
       }
     });
+    
   }
 }
