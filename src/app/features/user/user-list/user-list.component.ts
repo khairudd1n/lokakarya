@@ -125,16 +125,16 @@ export class UserListComponent implements OnInit {
       this.userService.saveUser(user).subscribe({
         next: (data) => {
           console.log('Saved : ', data);
+          this.assSummaryService.generateAssSummary(
+            data.id,
+            new Date().getFullYear()
+          ).subscribe();
           Swal.fire({
             title: 'Success!',
             text: 'User created successfully.',
             icon: 'success',
             confirmButtonColor: '#3085d6',
           });
-          this.assSummaryService.generateAssSummary(
-            data.id,
-            new Date().getFullYear()
-          );
           this.loadUsers();
         },
         error: (err) => {

@@ -120,6 +120,8 @@ export class CreateUserDialogComponent implements OnChanges {
     } else {
       this.takenEmails = this.emailList;
       this.takenUsernames = this.usernameList;
+      this.user.enabled = true;
+      this.setEmployeeStatus(0);
     }
   }
 

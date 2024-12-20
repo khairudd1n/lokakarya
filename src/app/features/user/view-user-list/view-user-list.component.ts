@@ -30,11 +30,6 @@ export class ViewUserListComponent implements OnInit {
     this.loadUsers();
   }
 
-  openSummaryDialog() {
-    this.displaySummaryDialog = true;
-    console.log(this.selectedUser.id);
-  }
-
   loadUsers() {
     this.userService.getAllUser().subscribe((data) => {
       this.users = data.map(user => ({
