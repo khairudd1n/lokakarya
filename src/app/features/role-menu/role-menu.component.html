@@ -8,7 +8,6 @@
     [loading]="isLoading"
     class="p-datatable-sm p-mt-3 p-datatable-striped"
   >
-    <!-- Table Header -->
     <ng-template pTemplate="header">
       <tr>
         <th class="p-text-center">Permission</th>
@@ -18,7 +17,6 @@
       </tr>
     </ng-template>
 
-    <!-- Table Body -->
     <ng-template pTemplate="body" let-menu>
       <tr>
         <td class="p-text-center">{{ menu.menu_name }}</td>
@@ -39,15 +37,12 @@
   </p-table>
 
   <br />
-  <!-- Save Button -->
   <div class="card flex justify-content-end">
-    <!-- <div class="save-button-container"> -->
     <button
       pButton
       label="Save Changes"
       (click)="saveChanges()"
       class="p-button-success p-mt-3"
     ></button>
-    <!-- </div> -->
   </div>
 </div>

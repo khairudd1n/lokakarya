@@ -103,7 +103,7 @@ export class EmpTechnicalSkillComponent {
     this.empTechSkillService.getAssessmentYears().subscribe(
       (years) => {
         if (years.length > 0) {
-          this.assessmentYears = years;
+          this.assessmentYears = years;          
         } else {
           this.assessmentYears = [new Date().getFullYear()];
         }
