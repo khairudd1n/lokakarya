@@ -50,16 +50,6 @@
       <br />
       <div class="p-field">
         <label for="enabled" class="form-label1">Enabled</label>
-
-        <!-- <select
-          id="enabled"
-          [(ngModel)]="newAttitudeSkill.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select> -->
-
         <p-toggleButton
           [(ngModel)]="newAttitudeSkill.enabled"
           [onLabel]="'Enabled'"
@@ -123,14 +113,6 @@
       <br />
       <div class="p-field">
         <label for="editEnabled" class="form-label1">Enabled</label>
-        <!-- <select
-          id="editEnabled"
-          [(ngModel)]="editAttitudeSkill.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select> -->
 
         <p-toggleButton
           [(ngModel)]="editAttitudeSkill.enabled"
@@ -180,7 +162,7 @@
         [rows]="10"
         [rowsPerPageOptions]="[10, 25, 50]"
         [loading]="isLoading"
-        [paginator]="true"
+        [paginator]="false"
         [globalFilterFields]="[
           'attitude_skill_name',
           'group_name',
@@ -201,7 +183,7 @@
 
         <ng-template pTemplate="body" let-attitudeSkill let-i="rowIndex">
           <tr>
-            <td>{{ i + 1 }}</td>
+            <td>{{ resetGroupIndex(attitudeSkill) }}</td>
             <td>{{ attitudeSkill.attitude_skill_name }}</td>
             <td style="text-align: center">
               <p-tag

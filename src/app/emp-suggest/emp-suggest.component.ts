@@ -45,12 +45,30 @@ export class EmpSuggestComponent implements OnInit {
     this.initializeAssessmentYears(); // Panggil fungsi untuk menginisialisasi tahun
   }
 
+  // initializeAssessmentYears(): void {
+  //   this.empSuggestService.getAssessmentYears().subscribe(
+  //     (years) => {
+  //       this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+  //       if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+  //         this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching assessment years:', error);
+  //     }
+  //   );
+  // }
+
   initializeAssessmentYears(): void {
     this.empSuggestService.getAssessmentYears().subscribe(
       (years) => {
-        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+        if (years.length > 0) {
+          this.assessmentYears = years;
+        } else {
+          this.assessmentYears = [new Date().getFullYear()];
+        }
         if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+          this.selectedAssessmentYear = this.assessmentYears[0];
         }
       },
       (error) => {

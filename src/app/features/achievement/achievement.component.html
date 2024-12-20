@@ -168,7 +168,7 @@
         [rows]="10"
         [rowsPerPageOptions]="[10, 25, 50]"
         [loading]="isLoading"
-        [paginator]="true"
+        [paginator]="false"
         [globalFilterFields]="[
           'achievement_name',
           'group_achievement_name',
@@ -189,7 +189,7 @@
 
         <ng-template pTemplate="body" let-achievement let-i="rowIndex">
           <tr>
-            <td class="no-column">{{ i + 1 }}</td>
+            <td class="no-column">{{ resetGroupIndex(achievement) }}</td>
             <td>{{ achievement.achievement_name }}</td>
             <td style="text-align: center">
               <p-tag

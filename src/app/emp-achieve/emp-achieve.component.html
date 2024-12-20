@@ -212,34 +212,34 @@
           'assessment_year'
         ]"
         [tableStyle]="{ 'min-width': '45rem' }"
-        rowGroupMode="subheader"
-        groupRowsBy="username"
       >
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 10px">No.</th>
+            <th class="division-column">Username</th>
             <th class="division-column">Notes</th>
             <th class="division-column">Achievement Name</th>
-            <th style="width: 10px" pSortableColumn="score">
+            <th class="division-column" pSortableColumn="score">
               Score
               <p-sortIcon field="score"></p-sortIcon>
             </th>
-            <th class="division-column" pSortableColumn="assessment_year">
+            <th class="year-column" pSortableColumn="assessment_year">
               Assessment Year
               <p-sortIcon field="assessment_year"></p-sortIcon>
             </th>
-            <th style="width: 20px">Action</th>
+            <th class="action-column">Action</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-achievement let-i="rowIndex">
           <tr>
             <td>{{ i + 1 }}</td>
+            <td class="division-column">{{ achievement.username }}</td>
             <td class="division-column">{{ achievement.notes }}</td>
             <td class="division-column">{{ achievement.achievement_name }}</td>
-            <td style="width: 10px">{{ achievement.score }}</td>
-            <td class="division-column">{{ achievement.assessment_year }}</td>
-            <td>
+            <td class="division-column">{{ achievement.score }}</td>
+            <td class="year-column">{{ achievement.assessment_year }}</td>
+            <td class="action-column">
               <button
                 pButton
                 icon="pi pi-pencil"
@@ -268,7 +268,7 @@
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="groupheader" let-group>
+        <!-- <ng-template pTemplate="groupheader" let-group>
           <tr>
             <td
               colspan="6"
@@ -277,7 +277,7 @@
               Username: {{ group.username }}
             </td>
           </tr>
-        </ng-template>
+        </ng-template> -->
       </p-table>
     </div>
   </div>

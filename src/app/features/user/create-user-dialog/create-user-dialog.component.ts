@@ -120,6 +120,8 @@ export class CreateUserDialogComponent implements OnChanges {
     } else {
       this.takenEmails = this.emailList;
       this.takenUsernames = this.usernameList;
+      this.setEmployeeStatus(0);
+      this.user.enabled = true;
     }
   }
 
@@ -132,7 +134,7 @@ export class CreateUserDialogComponent implements OnChanges {
   isUsernameTaken(username: string): boolean {
     this.usernameValid = !this.takenUsernames.includes(username.toLowerCase());
     return !this.usernameValid; // return true if username is taken, false if not
-  }  
+  }
 
   isEmailTaken(email: string): boolean {
     this.emailValid = !this.takenEmails.includes(email.toLowerCase());
