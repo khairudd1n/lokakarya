@@ -40,18 +40,20 @@ export class UserListComponent implements OnInit {
     this.userService.getAllUser().subscribe((data) => {
       this.users = data.map((user) => ({
         ...user,
-        employee_status: user.employee_status === 1, 
+        employee_status: user.employee_status === 1,
       }));
       this.filteredUsers = [...this.users];
       this.usernameList = this.users.map((user) => user.username.toLowerCase());
-      this.emailList = this.users.map((user) => user.email_address.toLowerCase());
+      this.emailList = this.users.map((user) =>
+        user.email_address.toLowerCase()
+      );
       console.log(this.users);
     });
   }
 
   openCreateDialog() {
     console.log('Opening create dialog');
-    this.selectedUser = null; 
+    this.selectedUser = null;
     this.displayDialog = true;
   }
 
@@ -135,6 +137,9 @@ export class UserListComponent implements OnInit {
             icon: 'success',
             confirmButtonColor: '#3085d6',
           });
+          this.assSummaryService
+            .generateAssSummary(data.id, new Date().getFullYear())
+            .subscribe();
           this.loadUsers();
         },
         error: (err) => {
@@ -166,7 +171,6 @@ export class UserListComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        
         this.userService.deleteUser(user.id).subscribe({
           next: () => {
             Swal.fire(
@@ -195,12 +199,14 @@ export class UserListComponent implements OnInit {
   }
 
   clearSelectedUser() {
-    this.selectedUser = null; 
+    this.selectedUser = null;
   }
 
   clearFilters(table: any): void {
     table.clear();
-    const globalSearchInput = document.querySelector('.p-input-icon-left input') as HTMLInputElement;
+    const globalSearchInput = document.querySelector(
+      '.p-input-icon-left input'
+    ) as HTMLInputElement;
     if (globalSearchInput) {
       globalSearchInput.value = ''; // Clear the input field
     }
@@ -211,7 +217,7 @@ export class UserListComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt1) {
-      this.dt1.filterGlobal(input, 'contains'); 
+      this.dt1.filterGlobal(input, 'contains');
     }
   }
 
@@ -224,7 +230,6 @@ export class UserListComponent implements OnInit {
 
   applyStatusFilter() {
     if (this.selectedStatus !== null) {
-      
       this.filteredUsers = this.users.filter(
         (user) => user.employee_status === this.selectedStatus
       );

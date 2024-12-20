@@ -77,12 +77,30 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     this.initializeAssessmentYears();
   }
 
+  // initializeAssessmentYears(): void {
+  //   this.empAttitudeSkillService.getAssessmentYears().subscribe(
+  //     (years) => {
+  //       this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+  //       if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+  //         this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching assessment years:', error);
+  //     }
+  //   );
+  // }
+
   initializeAssessmentYears(): void {
     this.empAttitudeSkillService.getAssessmentYears().subscribe(
       (years) => {
-        this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+        if (years.length > 0) {
+          this.assessmentYears = years;
+        } else {
+          this.assessmentYears = [new Date().getFullYear()];
+        }
         if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-          this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+          this.selectedAssessmentYear = this.assessmentYears[0];
         }
       },
       (error) => {
@@ -204,29 +222,37 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
     if (filledSkills.length > 0) {
       Swal.fire({
-        title: 'Apakah anda yakin dengan nilai yang anda pilih?',
-        text: 'Nilai yang sudah disimpan tidak dapat diubah lagi.',
+        title: 'Are you sure with your selected score?',
+        text: 'Scores that have been submitted cannot be change anymore',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Ya, simpan!',
-        cancelButtonText: 'Batal',
+        confirmButtonText: 'Yes, I am sure!',
+        cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
           this.empAttitudeSkillService
             .saveEmpAttitudeSkills(filledSkills)
             .subscribe(
               () => {
-                Swal.fire('Success', 'Nilai berhasil disimpan!', 'success');
+                Swal.fire(
+                  'Success',
+                  'Scores have been successfully submitted!',
+                  'success'
+                );
                 this.loadData(); // Refresh data dari server
               },
-              () => Swal.fire('Error', 'gagal menyimpan nilai.', 'error')
+              () => Swal.fire('Error', 'Failed to submit scores.', 'error')
             );
         } else {
-          Swal.fire('Cancelled', 'Nilai tidak jadi disimpan.', 'info');
+          Swal.fire('Cancelled', 'Submission cancelled.', 'info');
         }
       });
     } else {
-      Swal.fire('Warning', 'Anda sudah mengisi semua nilai.', 'warning');
+      Swal.fire(
+        'Warning',
+        'You have already submitted your scores.',
+        'warning'
+      );
     }
   }
 

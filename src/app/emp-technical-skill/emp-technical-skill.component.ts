@@ -85,6 +85,20 @@ export class EmpTechnicalSkillComponent {
     this.initializeAssessmentYears();
   }
 
+  // initializeAssessmentYears(): void {
+  //   this.empTechSkillService.getAssessmentYears().subscribe(
+  //     (years) => {
+  //       this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
+  //       if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+  //         this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching assessment years:', error);
+  //     }
+  //   );
+  // }
+
   initializeAssessmentYears(): void {
     this.empTechSkillService.getAssessmentYears().subscribe(
       (years) => {
@@ -256,12 +270,12 @@ export class EmpTechnicalSkillComponent {
 
     if (this.selectedTechs.length > 0) {
       Swal.fire({
-        title: 'Apakah anda yakin ingin menyimpan?',
-        text: 'Data yang sudah disimpan tidak dapat diubah lagi.',
+        title: 'Are you sure you want to submit?',
+        text: 'All data that have been submitted cannot be change anymore.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Ya, simpan',
-        cancelButtonText: 'Batal',
+        confirmButtonText: 'Yes, I am sure',
+        cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
           console.log('Final data to be saved:', this.selectedTechs);
@@ -290,7 +304,7 @@ export class EmpTechnicalSkillComponent {
                 Swal.fire({
                   icon: 'success',
                   title: 'Success!',
-                  text: 'Keahlian teknis anda berhasil disimpan',
+                  text: 'Your data has been submitted successfully.',
                 });
               },
               (error) => {
@@ -298,7 +312,7 @@ export class EmpTechnicalSkillComponent {
                 Swal.fire({
                   icon: 'error',
                   title: 'Error!',
-                  text: 'Isi skill level terlebih dahulu.',
+                  text: 'Fill in the skill level first.',
                 });
               }
             );
@@ -308,7 +322,7 @@ export class EmpTechnicalSkillComponent {
       Swal.fire({
         icon: 'warning',
         title: 'Warning!',
-        text: 'Input keterangan terlebih dahulu.',
+        text: 'Fill in the description first.',
       });
     }
   }

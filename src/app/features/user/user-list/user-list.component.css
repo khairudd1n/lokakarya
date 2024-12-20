@@ -5,7 +5,7 @@
 }
 
 .container {
-  max-width: 950px;
+  max-width: 1050px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -88,12 +88,4 @@
 
 .add-row-button {
   margin-top: 10px;
-}
-
-.action-button-spacing {
-  margin-bottom: 10px;
-}
-
-.action-button-spacing:last-child {
-  margin-bottom: 0;
 }

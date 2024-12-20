@@ -39,10 +39,10 @@ export class GroupAttitudeSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<ApiResponse<GroupAttWithAttDto[]>>(`${this.apiUrl}/count`, { headers })
-      .pipe(
-        map((data) => data.content),
-      );
+      .get<ApiResponse<GroupAttWithAttDto[]>>(`${this.apiUrl}/count`, {
+        headers,
+      })
+      .pipe(map((data) => data.content));
   }
 
   getAllGroupAttitudeSkills(): Observable<GroupAttitudeSkillDto[]> {
@@ -50,9 +50,10 @@ export class GroupAttitudeSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<ApiResponse<GroupAttitudeSkillDto[]>>(`${this.apiUrl}/all`, { headers })
-      .pipe(
-        map((data) => data.content));
+      .get<ApiResponse<GroupAttitudeSkillDto[]>>(`${this.apiUrl}/all`, {
+        headers,
+      })
+      .pipe(map((data) => data.content));
   }
 
   getAllGroupWithAttitudeSkills(): Observable<GroupAttWithAttDto[]> {
@@ -61,20 +62,18 @@ export class GroupAttitudeSkillService {
     };
     return this.http
       .get<ApiResponse<GroupAttWithAttDto[]>>(`${this.apiUrl2}`, { headers })
-      .pipe(
-        map((data) => data.content)
-      );
+      .pipe(map((data) => data.content));
   }
 
   createGroupAttitudeSkill(
     data: Partial<GroupAttitudeSkillDto>
   ): Observable<GroupAttitudeSkillDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
-    return this.http.post<ApiResponse<GroupAttitudeSkillDto>>(`${this.apiUrl}`, data, {
-      headers,
-    }).pipe(
-      map((response) => response.content)
-    );
+    return this.http
+      .post<ApiResponse<GroupAttitudeSkillDto>>(`${this.apiUrl}`, data, {
+        headers,
+      })
+      .pipe(map((response) => response.content));
   }
 
   // Update an existing group attitude skill

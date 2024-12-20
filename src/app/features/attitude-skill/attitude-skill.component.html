@@ -50,15 +50,13 @@
       <br />
       <div class="p-field">
         <label for="enabled" class="form-label1">Enabled</label>
-
-        <select
-          id="enabled"
+        <p-toggleButton
           [(ngModel)]="newAttitudeSkill.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select>
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="newAttitudeSkill.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -115,14 +113,14 @@
       <br />
       <div class="p-field">
         <label for="editEnabled" class="form-label1">Enabled</label>
-        <select
-          id="editEnabled"
+
+        <p-toggleButton
           [(ngModel)]="editAttitudeSkill.enabled"
-          class="p-inputtext"
-        >
-          <option [value]="1">Enabled</option>
-          <option [value]="0">Disabled</option>
-        </select>
+          [onLabel]="'Enabled'"
+          [offLabel]="'Disabled'"
+          name="enabled"
+          (onChange)="editAttitudeSkill.enabled = $event.checked ? 1 : 0"
+        ></p-toggleButton>
       </div>
     </div>
     <p-footer>
@@ -164,7 +162,7 @@
         [rows]="10"
         [rowsPerPageOptions]="[10, 25, 50]"
         [loading]="isLoading"
-        [paginator]="true"
+        [paginator]="false"
         [globalFilterFields]="[
           'attitude_skill_name',
           'group_name',
@@ -178,14 +176,21 @@
           <tr>
             <th style="width: 10px">No.</th>
             <th class="division-column">Attitude Skill</th>
+            <th class="action-column" style="text-align: center">Status</th>
             <th class="action-column">Action</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-attitudeSkill let-i="rowIndex">
           <tr>
-            <td>{{ i + 1 }}</td>
+            <td>{{ resetGroupIndex(attitudeSkill) }}</td>
             <td>{{ attitudeSkill.attitude_skill_name }}</td>
+            <td style="text-align: center">
+              <p-tag
+                [severity]="attitudeSkill.enabled ? 'success' : 'danger'"
+                [value]="attitudeSkill.enabled ? 'Enabled' : 'Disabled'"
+              ></p-tag>
+            </td>
             <td>
               <div class="action-buttons">
                 <button

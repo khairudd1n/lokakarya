@@ -57,7 +57,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th>No.</th>
-        <th>
+        <th class="action-column">
           <div class="flex justify-content-between align-items-center">
             Full Name
             <p-columnFilter
@@ -99,8 +99,8 @@
             </p-dropdown>
           </div>
         </th>
-        <th>Join Date</th>
-        <th>Action</th>
+        <th class="action-column">Join Date</th>
+        <th class="action-column">Action</th>
       </tr>
     </ng-template>
 
@@ -108,12 +108,12 @@
     <ng-template pTemplate="body" let-user let-i="rowIndex">
       <tr [pSelectableRow]="user">
         <td>{{ i + 1 }}</td>
-        <td>{{ user.full_name }}</td>
+        <td class="action-column">{{ user.full_name }}</td>
         <td>{{ user.position }}</td>
         <td>{{ user.email_address }}</td>
         <td>{{ user.employee_status ? "Permanent" : "Contract" }}</td>
-        <td>{{ user.join_date | date }}</td>
-        <td>
+        <td class="action-column">{{ user.join_date | date }}</td>
+        <td class="action-column">
           <button
             pButton
             icon="pi pi-pencil"

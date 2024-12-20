@@ -1,94 +1,94 @@
 <app-nav-bar></app-nav-bar>
-
-
-<p-table
-  #dt1
-  [value]="filteredUsers"
-  selectionMode="single"
-  [(selection)]="selectedUser"
-  (onRowSelect)="onRowSelect($event)"
-  [globalFilterFields]="[
-    'full_name',
-    'position',
-    'email_address',
-    'employee_status'
-  ]"
-  [paginator]="true"
-  [rows]="10"
-  [rowsPerPageOptions]="[10, 25, 50]"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
->
-  
-  <ng-template pTemplate="caption">
-    <div class="flex">
-      <button
-        pButton
-        label="Clear"
-        class="p-button-outlined"
-        icon="pi pi-filter-slash"
-        (click)="clearFilters(dt1)"
-      ></button>
-      <span class="p-input-icon-left ml-auto">
-        <i class="pi pi-search"></i>
-        <input
-          pInputText
-          type="text"
-          (input)="onGlobalSearch($event)"
-          placeholder="Search keyword"
-        />
-      </span>
-    </div>
-  </ng-template>
-
-  
-  <ng-template pTemplate="header">
-    <tr>
-      <th>
-        <div class="flex justify-content-between align-items-center">
-          Full Name
-          <p-columnFilter
+<!-- user-table.component.html -->
+<div class="container" style="background-color: #f5f5f5">
+  <h2 class="title">USER</h2>
+  <p-table
+    #dt1
+    [value]="filteredUsers"
+    selectionMode="single"
+    [(selection)]="selectedUser"
+    (onRowSelect)="onRowSelect($event)"
+    [globalFilterFields]="[
+      'full_name',
+      'position',
+      'email_address',
+      'employee_status'
+    ]"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  >
+    <!-- Caption -->
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <button
+          pButton
+          label="Clear"
+          class="p-button-outlined"
+          icon="pi pi-filter-slash"
+          (click)="clearFilters(dt1)"
+        ></button>
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
             type="text"
-            field="full_name"
-            display="menu"
-          ></p-columnFilter>
-        </div>
-      </th>
-      <th>
-        <div class="flex justify-content-between align-items-center">
-          Position
-          <p-columnFilter
-            type="text"
-            field="position"
-            display="menu"
-          ></p-columnFilter>
-        </div>
-      </th>
-      <th>
-        <div class="flex justify-content-between align-items-center">
-          Email
-          <p-columnFilter
-            type="text"
-            field="email_address"
-            display="menu"
-          ></p-columnFilter>
-        </div>
-      </th>
-      <th>
-        <div class="flex justify-content-between align-items-center">
-          Status
-          <p-dropdown
-            [options]="statusOptions"
-            [(ngModel)]="selectedStatus"
-            placeholder=" "
-            (onChange)="applyStatusFilter()"
-          >
-          </p-dropdown>
-        </div>
-      </th>
-      <th>Join Date</th>
-    </tr>
-  </ng-template>
+            (input)="onGlobalSearch($event)"
+            placeholder="Search keyword"
+          />
+        </span>
+      </div>
+    </ng-template>
 
+    <!-- Header -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <div class="flex justify-content-between align-items-center">
+            Full Name
+            <p-columnFilter
+              type="text"
+              field="full_name"
+              display="menu"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex justify-content-between align-items-center">
+            Position
+            <p-columnFilter
+              type="text"
+              field="position"
+              display="menu"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex justify-content-between align-items-center">
+            Email
+            <p-columnFilter
+              type="text"
+              field="email_address"
+              display="menu"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex justify-content-between align-items-center">
+            Status
+            <p-dropdown
+              [options]="statusOptions"
+              [(ngModel)]="selectedStatus"
+              placeholder=" "
+              (onChange)="applyStatusFilter()"
+            >
+            </p-dropdown>
+          </div>
+        </th>
+        <th>Join Date</th>
+      </tr>
+    </ng-template>
   
   <ng-template pTemplate="body" let-user>
     <tr [pSelectableRow]="user">
@@ -121,119 +121,133 @@
     "
   >
     <div
+      *ngIf="selectedUser"
       style="
         display: flex;
-        align-items: center;
-        gap: 15px;
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 15px;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+        background-color: white;
+        color: #333;
       "
     >
       <div
         style="
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          background-color: #007bff;
           display: flex;
           align-items: center;
-          justify-content: center;
-          color: white;
-          font-size: 32px;
-          font-weight: bold;
+          gap: 15px;
+          border-bottom: 1px solid #e0e0e0;
+          padding-bottom: 15px;
         "
       >
-        {{ (selectedUser.full_name || "").charAt(0).toUpperCase() }}
-      </div>
-      <div>
-        <div style="font-size: 18px; font-weight: bold">
-          {{ selectedUser.full_name }}
-        </div>
-        <div style="color: #666">{{ selectedUser.username }}</div>
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
-      <div style="display: flex; flex-direction: column; gap: 8px">
-        <div style="color: #666; font-size: 14px">Position</div>
-        <div style="font-weight: 500">{{ selectedUser.position }}</div>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 8px">
-        <div style="color: #666; font-size: 14px">Division</div>
-        <div style="font-weight: 500">
-          {{ selectedUser.division?.division_name || "N/A" }}
-        </div>
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
-      <div style="display: flex; flex-direction: column; gap: 8px">
-        <div style="color: #666; font-size: 14px">Join Date</div>
-        <div style="font-weight: 500">
-          {{ selectedUser.join_date | date : "mediumDate" }}
-        </div>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 8px">
-        <div style="color: #666; font-size: 14px">Status</div>
         <div
-          [ngStyle]="{
-            'font-weight': '500',
-            color: selectedUser.employee_status ? '#28a745' : '#dc3545'
-          }"
-        >
-          {{ selectedUser.employee_status ? "Permanent" : "Contract" }}
-        </div>
-      </div>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 8px">
-      <div style="color: #666; font-size: 14px">Email</div>
-      <div style="font-weight: 500">{{ selectedUser.email_address }}</div>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 8px">
-      <div style="color: #666; font-size: 14px">Roles</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px">
-        <div
-          *ngFor="let role of selectedUser.role"
           style="
-            background-color: #f1f3f5;
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 14px;
-            color: #495057;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #007bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
           "
         >
-          {{ role.rolename }}
+          {{ (selectedUser.full_name || "").charAt(0).toUpperCase() }}
+        </div>
+        <div>
+          <div style="font-size: 18px; font-weight: bold">
+            {{ selectedUser.full_name }}
+          </div>
+          <div style="color: #666">{{ selectedUser.username }}</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="color: #666; font-size: 14px">Position</div>
+          <div style="font-weight: 500">{{ selectedUser.position }}</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="color: #666; font-size: 14px">Division</div>
+          <div style="font-weight: 500">
+            {{ selectedUser.division?.division_name || "N/A" }}
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="color: #666; font-size: 14px">Join Date</div>
+          <div style="font-weight: 500">
+            {{ selectedUser.join_date | date : "mediumDate" }}
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="color: #666; font-size: 14px">Status</div>
+          <div
+            [ngStyle]="{
+              'font-weight': '500',
+              color: selectedUser.employee_status ? '#28a745' : '#dc3545'
+            }"
+          >
+            {{ selectedUser.employee_status ? "Permanent" : "Contract" }}
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="color: #666; font-size: 14px">Email</div>
+        <div style="font-weight: 500">{{ selectedUser.email_address }}</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="color: #666; font-size: 14px">Roles</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <div
+            *ngFor="let role of selectedUser.role"
+            style="
+              background-color: #f1f3f5;
+              padding: 4px 10px;
+              border-radius: 16px;
+              font-size: 14px;
+              color: #495057;
+            "
+          >
+            {{ role.rolename }}
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px">
+        <div
+          [ngStyle]="{
+            padding: '8px 16px',
+            borderRadius: '4px',
+            backgroundColor: selectedUser.enabled ? '#28a745' : '#dc3545',
+            color: 'white',
+            fontSize: '14px'
+          }"
+        >
+          {{ selectedUser.enabled ? "Enabled" : "Disabled" }}
         </div>
       </div>
     </div>
-
-    <div style="display: flex; justify-content: flex-end; margin-top: 10px">
-      <div
-        [ngStyle]="{
-          padding: '8px 16px',
-          borderRadius: '4px',
-          backgroundColor: selectedUser.enabled ? '#28a745' : '#dc3545',
-          color: 'white',
-          fontSize: '14px'
-        }"
-      >
-        {{ selectedUser.enabled ? "Enabled" : "Disabled" }}
-      </div>
-    </div>
-  </div>
-</p-dialog>
-
-<p-dialog
-  [(visible)]="displaySummaryDialog"
-  [modal]="true"
-  header="Summary"
-  [style]="{ width: '80vw', 'max-width': '600px' }"
-  [draggable]="false"
-  [resizable]="false"
->
-  @if (displayDetailDialog) {
-  <app-user-summary [userId]="selectedUser.id" [isInDialog]="true"></app-user-summary>
-  }
-</p-dialog>
+  </p-dialog>
+  <p-dialog
+    [(visible)]="displaySummaryDialog"
+    [modal]="true"
+    header="Summary"
+    [style]="{ width: '80vw', 'max-width': '600px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    @if (displayDetailDialog) {
+    <app-user-summary
+      [userId]="selectedUser.id"
+      [isInDialog]="true"
+    ></app-user-summary>
+    }
+  </p-dialog>
+</div>

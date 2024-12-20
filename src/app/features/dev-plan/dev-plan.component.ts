@@ -20,6 +20,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-dev-plan',
@@ -40,6 +41,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
     DialogModule,
     MenubarModule,
     NavBarComponent,
+    ToggleButtonModule,
   ],
   templateUrl: './dev-plan.component.html',
   styleUrl: './dev-plan.component.css',

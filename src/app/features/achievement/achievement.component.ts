@@ -19,6 +19,7 @@ import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-achievement',
@@ -40,6 +41,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
     ReactiveFormsModule,
     DialogModule,
     NavBarComponent,
+    ToggleButtonModule,
   ],
 })
 export class AchievementComponent implements OnInit {
@@ -60,6 +62,8 @@ export class AchievementComponent implements OnInit {
     group_achievement_name: '',
     enabled: 1,
   };
+  currentGroup: string = ''; // Untuk melacak grup saat ini
+  groupIndex: number = 0;
 
   groupAchievementOptions: { label: string; value: string }[] = []; // Populate with your actual options
 
@@ -68,6 +72,16 @@ export class AchievementComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAchievements();
     this.fetchGroupAchievementOptions(); // Fetch options from the service
+  }
+
+  resetGroupIndex(achievement: any): number {
+    if (this.currentGroup !== achievement.group_achievement_name) {
+      this.currentGroup = achievement.group_achievement_name;
+      this.groupIndex = 1; // Reset nomor urut ke 1 untuk grup baru
+    } else {
+      this.groupIndex++; // Tambahkan nomor urut untuk grup yang sama
+    }
+    return this.groupIndex;
   }
 
   @ViewChild('dt2') dt2: Table | undefined;
