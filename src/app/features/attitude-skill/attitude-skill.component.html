@@ -20,19 +20,20 @@
     [(visible)]="displayCreateDialog"
     modal="true"
     [closable]="true"
-    [style]="{ width: '400px', height: '450px' }"
+    [style]="{ width: '400px', height: '490px' }"
   >
     <div class="p-fluid">
       <div class="p-field">
         <label for="attitudeSkillName" class="form-label1"
           >Attitude Skill</label
         >
-        <input
-          pInputText
+        <textarea
+          pInputTextarea
           id="attitudeSkillName"
           [(ngModel)]="newAttitudeSkill.attitude_skill_name"
-          placeholder="Enter Attitude Skill"
-        />
+          rows="5"
+          class="textarea-field"
+        ></textarea>
       </div>
       <br />
       <div class="p-field">
@@ -83,19 +84,20 @@
     [(visible)]="displayEditDialog"
     modal="true"
     [closable]="true"
-    [style]="{ width: '400px', height: '450px' }"
+    [style]="{ width: '400px', height: '490px' }"
   >
     <div class="p-fluid">
       <div class="p-field">
         <label for="editAchievementName" class="form-label1"
           >Attitude Skill</label
         >
-        <input
-          pInputText
+        <textarea
+          pInputTextarea
           id="editAchievementName"
           [(ngModel)]="editAttitudeSkill.attitude_skill_name"
-          placeholder="Enter Achievement Name"
-        />
+          rows="5"
+          class="textarea-field"
+        ></textarea>
       </div>
       <br />
       <div class="p-field">
