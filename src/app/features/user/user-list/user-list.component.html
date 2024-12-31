@@ -16,19 +16,16 @@
   <!-- user-table.component.html -->
   <p-table
     #dt1
-    [value]="filteredUsers"
+    [value]="users"
+    [lazy]="true"
+    [rows]="rows"
     selectionMode="single"
     [(selection)]="selectedUser"
     (onRowSelect)="onRowSelect($event)"
-    [globalFilterFields]="[
-      'full_name',
-      'position',
-      'email_address',
-      'employee_status'
-    ]"
     [paginator]="true"
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[5, 10, 25, 50]"
+    (onLazyLoad)="loadUsersLazy($event)"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
   >
     <!-- Caption -->
@@ -46,7 +43,7 @@
           <input
             pInputText
             type="text"
-            (input)="onGlobalSearch($event)"
+            (keydown.enter)="onGlobalSearch($event)"
             placeholder="Search keyword"
           />
         </span>
@@ -57,35 +54,17 @@
     <ng-template pTemplate="header">
       <tr>
         <th>No.</th>
-        <th class="action-column">
-          <div class="flex justify-content-between align-items-center">
-            Full Name
-            <p-columnFilter
-              type="text"
-              field="full_name"
-              display="menu"
-            ></p-columnFilter>
-          </div>
+        <th pSortableColumn="fullName" style="width: 15%; text-align: center">
+          Name
+          <p-sortIcon field="fullName"></p-sortIcon>
         </th>
-        <th>
-          <div class="flex justify-content-between align-items-center">
-            Position
-            <p-columnFilter
-              type="text"
-              field="position"
-              display="menu"
-            ></p-columnFilter>
-          </div>
+        <th pSortableColumn="position" style="width: 20%; text-align: center">
+          Position
+          <p-sortIcon field="position"></p-sortIcon>
         </th>
-        <th>
-          <div class="flex justify-content-between align-items-center">
-            Email
-            <p-columnFilter
-              type="text"
-              field="email_address"
-              display="menu"
-            ></p-columnFilter>
-          </div>
+        <th pSortableColumn="emailAddress" style="width: 20%; text-align: center">
+          Email
+          <p-sortIcon field="emailAddress"></p-sortIcon>
         </th>
         <th>
           <div class="flex justify-content-between align-items-center">
@@ -99,7 +78,10 @@
             </p-dropdown>
           </div>
         </th>
-        <th class="action-column">Join Date</th>
+        <th pSortableColumn="joinDate" style="width: 20%; text-align: center">
+          Join Date
+          <p-sortIcon field="joinDate"></p-sortIcon>
+        </th>
         <th class="action-column">Action</th>
       </tr>
     </ng-template>
@@ -108,7 +90,7 @@
     <ng-template pTemplate="body" let-user let-i="rowIndex">
       <tr [pSelectableRow]="user">
         <td>{{ i + 1 }}</td>
-        <td class="action-column">{{ user.full_name }}</td>
+        <td>{{ user.full_name }}</td>
         <td>{{ user.position }}</td>
         <td>{{ user.email_address }}</td>
         <td>{{ user.employee_status ? "Permanent" : "Contract" }}</td>

@@ -22,9 +22,12 @@
         name="username"
         required
         #username="ngModel"
+        (blur)="checkUsername(username.value.toLowerCase())"
       />
-      @if(isUsernameTaken(username.value.toLowerCase())){
-        <div class="p-error">Username already exists.</div>
+      @if(!usernameValid && username.touched){
+      <div class="p-error">Usernames can only use letters, numbers, underscores and periods.</div>
+      }@else if(usernameExists){
+      <div class="p-error">Username already exists.</div>
       }@else if(username.invalid && username.touched){
       <div class="p-error">Username is required.</div>
       }
@@ -40,11 +43,14 @@
         name="email"
         required
         #email="ngModel"
+        (blur)="checkEmail(email.value.toLowerCase())"
       />
-      @if(email.value){ @if(isEmailTaken(email.value.toLowerCase())){
-      <div class="p-error">Email already exists.</div>
-      } }@else if(email.invalid && email.touched){
-      <div class="p-error">Email is required.</div>
+      @if(!emailValid && email.touched){
+        <div class="p-error">Email is invalid.</div>
+      }@else if(emailExists){
+        <div class="p-error">Email already exists.</div>
+      }@else if(email.invalid && email.touched){
+        <div class="p-error">Email is required.</div>
       }
     </div>
 
@@ -231,6 +237,8 @@
           !user.division ||
           user.employee_status === null ||
           user.enabled === null ||
+          emailExists ||
+          usernameExists ||
           !emailValid ||
           !usernameValid
         "

@@ -181,103 +181,168 @@
   </p-dialog>
 
   <div class="card">
-    <div class="p-inputgroup" style="width: 250px">
-      <input
-        type="text"
-        pInputText
-        placeholder="Search..."
-        (input)="onGlobalSearch($event)"
-      />
-      <span class="p-inputgroup-addon">
-        <i class="pi pi-search"></i>
-      </span>
+    <div class="controls" style="display: flex; align-items: center; gap: 1rem">
+      <!-- Search Input -->
+      <div class="p-inputgroup" style="width: 250px">
+        <input
+          type="text"
+          pInputText
+          placeholder="Search..."
+          (keydown.enter)="onGlobalSearch($event)"
+        />
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-search"></i>
+        </span>
+      </div>
     </div>
 
     <div class="card">
       <p-table
         #dt2
-        [value]="empAchieveSkill"
-        rowGroupMode="rowspan"
-        groupRowsBy="username"
-        sortField="username"
-        sortMode="single"
+        [value]="users"
         dataKey="id"
-        [rows]="10"
-        [rowsPerPageOptions]="[10, 25, 50]"
+        [lazy]="true"
+        [rows]="rows"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[5, 10, 25, 50]"
         [loading]="isLoading"
         [paginator]="true"
-        [globalFilterFields]="[
-          'username',
-          'user_id',
-          'notes',
-          'achievement_id',
-          'achievement_name',
-          'score',
-          'assessment_year'
-        ]"
+        (onLazyLoad)="loadUsersLazy($event)"
         [tableStyle]="{ 'min-width': '45rem' }"
+        [expandedRowKeys]="expandedRows"
+        (onRowExpand)="onRowExpand($event)"
       >
         <ng-template pTemplate="header">
           <tr>
-            <th style="width: 10px">No.</th>
-            <th class="division-column">Username</th>
-            <th class="division-column">Notes</th>
-            <th class="division-column">Achievement Name</th>
-            <th class="division-column" pSortableColumn="score">
-              Score
-              <p-sortIcon field="score"></p-sortIcon>
+            <th>No.</th>
+            <th
+              pSortableColumn="fullName"
+              style="width: 15%; text-align: center"
+            >
+              Name
+              <p-sortIcon field="fullName"></p-sortIcon>
             </th>
-            <th class="year-column" pSortableColumn="assessment_year">
-              Assessment Year
-              <p-sortIcon field="assessment_year"></p-sortIcon>
+            <th
+              pSortableColumn="position"
+              style="width: 20%; text-align: center"
+            >
+              Position
+              <p-sortIcon field="position"></p-sortIcon>
             </th>
-            <th class="action-column">Action</th>
+            <th
+              pSortableColumn="emailAddress"
+              style="width: 20%; text-align: center"
+            >
+              Email
+              <p-sortIcon field="emailAddress"></p-sortIcon>
+            </th>
+            <th>Status</th>
+            <th
+              pSortableColumn="joinDate"
+              style="width: 20%; text-align: center"
+            >
+              Join Date
+              <p-sortIcon field="joinDate"></p-sortIcon>
+            </th>
           </tr>
         </ng-template>
 
+        <!-- Body -->
         <ng-template
           pTemplate="body"
-          let-achievement
+          let-user
           let-i="rowIndex"
-          let-rowgroup="rowgroup"
-          let-rowspan="rowspan"
+          let-expanded="expanded"
         >
-          <tr>
+          <tr [pRowToggler]="user">
             <td>{{ i + 1 }}</td>
-            <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
-              {{ achievement.username }}
-            </td>
-            <td class="division-column">{{ achievement.notes }}</td>
-            <td class="division-column">{{ achievement.achievement_name }}</td>
-            <td class="division-column">{{ achievement.score }}</td>
-            <td class="year-column">{{ achievement.assessment_year }}</td>
-            <td class="action-column">
-              <button
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-sm p-button-info"
-                style="margin-right: 8px"
-                (click)="showEditDialog(achievement)"
-              ></button>
-              <button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-sm p-button-danger"
-                (click)="
-                  deleteEmpAchieve(
-                    achievement.id,
-                    achievement.user_id,
-                    achievement.assessment_year
-                  )
-                "
-              ></button>
-            </td>
+            <td>{{ user.full_name }}</td>
+            <td>{{ user.position }}</td>
+            <td>{{ user.email_address }}</td>
+            <td>{{ user.employee_status ? "Permanent" : "Contract" }}</td>
+            <td class="action-column">{{ user.join_date | date }}</td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="7">No emp achieve found.</td>
+            <td colspan="6">No emp achieve found.</td>
           </tr>
+        </ng-template>
+        <ng-template let-user pTemplate="rowexpansion">
+          <tr>
+            <td colspan="6">
+              <div>
+                <h4>{{ user.full_name }} Achievements</h4>
+                <p-table [value]="user.achievements">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 20%; text-align: center">
+                        Achievement Name
+                      </th>
+                      <th style="width: 20%; text-align: center">Notes</th>
+                      <th style="width: 10%; text-align: center">Score</th>
+                      <th
+                        pSortableColumn="assessment_year"
+                        style="width: 10%; text-align: center"
+                      >
+                        Assessment Year
+                      </th>
+                      <th style="width: 15%; text-align: center">Action</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="body"
+                    let-achievement
+                    let-i="rowIndex"
+                  >
+                    <tr>
+                      <td style="text-align: center">
+                        {{ achievement.achievement.achievement_name }}
+                      </td>
+                      <td style="text-align: center">
+                        {{ achievement.notes }}
+                      </td>
+                      <td style="text-align: center">
+                        {{ achievement.score }}
+                      </td>
+                      <td style="text-align: center">
+                        {{ achievement.assessment_year }}
+                      </td>
+                      <td class="action-column" style="text-align: center">
+                        <button
+                          pButton
+                          icon="pi pi-pencil"
+                          class="p-button-sm p-button-info"
+                          style="margin-right: 8px"
+                          (click)="showEditDialog(achievement)"
+                        ></button>
+                        <button
+                          pButton
+                          icon="pi pi-trash"
+                          class="p-button-sm p-button-danger"
+                          (click)="
+                            deleteEmpAchieve(
+                              achievement.id,
+                              achievement.user_id,
+                              achievement.assessment_year
+                            )
+                          "
+                        ></button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="4">No achievements found.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </td>
+          </tr>
+          <ng-template #loading>
+            <p>Loading achievements...</p>
+          </ng-template>
         </ng-template>
       </p-table>
     </div>

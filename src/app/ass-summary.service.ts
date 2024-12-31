@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { forkJoin, Observable } from 'rxjs';
 import { UUID } from 'crypto';
 import { tap } from 'rxjs';
@@ -85,12 +85,52 @@ export class AssSummaryService {
       .pipe(map((response) => response));
   }
 
-  getAllAssSummary(): Observable<ApiResponse<any[]>> {
+  getAllAssSummary(): Observable<ApiResponse<any>> {
     return this.http
-      .get<ApiResponse<any[]>>(`${this.url}/all`, {
+      .get<ApiResponse<any>>(`${this.url}/all`, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
       .pipe(map((response) => response));
+  }
+
+  getPaginatedAssSummary(
+    searchTerm: string,
+    year: number,
+    division: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ): Observable<ApiResponse<any>> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.token}`
+    )
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortDirection', sortDirection);
+
+    if (searchTerm && searchTerm.trim() !== '') {
+      params = params.set('searchTerm', searchTerm);
+    }
+
+    if (year) {
+      params = params.set('year', year.toString());
+    }
+
+    if (division) {
+      params = params.set('divisionId', division);
+    }
+    return this.http
+      .get<ApiResponse<any>>(`${this.url}/all`, {
+        headers,
+        params,
+      })
+      .pipe(
+        map((response) => response)
+      );
   }
 
   getAllUserAssSummary(userId: string): Observable<ApiResponse<any[]>> {

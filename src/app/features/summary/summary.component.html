@@ -3,19 +3,16 @@
 <div class="container" style="background-color: #f5f5f5">
   <p-table
     #dt1
-    [value]="filteredUsers"
+    [value]="assSummary"
+    [lazy]="true"
     selectionMode="single"
     [(selection)]="selectedUser"
     (onRowSelect)="onRowSelect($event)"
-    [globalFilterFields]="[
-      'full_name',
-      'position',
-      'email_address',
-      'employee_status'
-    ]"
+    (onLazyLoad)="loadAssSumLazy($event)"
     [paginator]="true"
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="totalRecords"
+    [rows]="rows"
+    [rowsPerPageOptions]="[5, 10, 25, 50]"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
   >
     <ng-template pTemplate="caption">
@@ -32,7 +29,7 @@
           <input
             pInputText
             type="text"
-            (input)="onGlobalSearch($event)"
+            (keydown.enter)="onGlobalSearch($event)"
             placeholder="Search keyword"
           />
         </span>
@@ -56,55 +53,55 @@
         <th style="width: 20%; text-align: center">
           Division
           <p-columnFilter
-            field="division.division_name"
+            field="user.division.division_name"
             matchMode="in"
             display="menu"
             [showMatchModes]="false"
             [showOperator]="false"
             [showAddButton]="false"
+            [showMatchModes]="false"
+            [showApplyButton]="false"
+            [showClearButton]="false"
           >
             <ng-template pTemplate="header">
               <div class="px-3 pt-3 pb-0">
-                <span class="font-bold">Agent Picker</span>
+                <span class="font-bold">Division Filter</span>
               </div>
             </ng-template>
-            <ng-template
-              pTemplate="filter"
-              let-value
-              let-filter="filterCallback"
-            >
+            <ng-template pTemplate="filter" let-filter="filterCallback">
               <p-multiSelect
-                [ngModel]="value"
                 [options]="divisionOptions"
+                [(ngModel)]="selectedDivision"
                 placeholder="Any"
-                (onChange)="filter($event.value)"
+                optionLabel="label"
+                optionValue="value"
+                (onChange)="filterDivision($event.value)"
               >
-                <ng-template let-option pTemplate="item">
+                <!-- <ng-template let-option pTemplate="item">
                   <div class="inline-block vertical-align-middle">
-                    <span class="ml-1 mt-1">{{ option }}</span>
+                    <span class="ml-1 mt-1">{{ option.label }}</span>
                   </div>
-                </ng-template>
+                </ng-template> -->
               </p-multiSelect>
             </ng-template>
           </p-columnFilter>
         </th>
-        <th
-          pSortableColumn="assessmentScore"
-          style="width: 15%; text-align: center"
-        >
+        <th pSortableColumn="score" style="width: 15%; text-align: center">
           Score
-          <p-sortIcon field="assessmentScore"></p-sortIcon>
+          <p-sortIcon field="score"></p-sortIcon>
         </th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-user>
       <tr [pSelectableRow]="user">
-        <td>{{ user.full_name }}</td>
-        <td>{{ user.email_address }}</td>
-        <td>{{ user.position }}</td>
-        <td style="text-align: center">{{ user.division.division_name }}</td>
-        <td style="text-align: center">{{ user.assessmentScore }}</td>
+        <td>{{ user.user.full_name }}</td>
+        <td>{{ user.user.email_address }}</td>
+        <td>{{ user.user.position }}</td>
+        <td style="text-align: center">
+          {{ user.user.division.division_name }}
+        </td>
+        <td style="text-align: center">{{ user.score }}</td>
       </tr>
     </ng-template>
   </p-table>
@@ -120,7 +117,7 @@
   >
     @if (displaySummaryDialog) {
     <app-user-summary
-      [userId]="selectedUser.id"
+      [userId]="selectedUser.user.id"
       [year]="selectedYear.value"
       [isInDialog]="true"
     ></app-user-summary>
