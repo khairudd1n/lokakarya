@@ -16,6 +16,12 @@
       </option>
     </select>
   </div>
+  <br />
+  <label for="status">Status:</label>
+  <p-tag
+    [severity]="isDisabled ? 'success' : 'warning'"
+    [value]="isDisabled ? 'Sudah di Approve SPV' : 'Belum di Approve SPV'"
+  ></p-tag>
 
   <div *ngFor="let group of groupData" class="group-container">
     <h3 class="group-title">{{ group.group_name }}</h3>
@@ -53,9 +59,11 @@
               [ngModel]="skill.score"
               placeholder="Select score"
               [appendTo]="'body'"
-              (onChange)="logSkillId(skill.id, $event.value)"
-              [disabled]="isSkillDisabled(skill.id)"
+              (onChange)="
+                logSkillId(skill.id, $event.value, skill.empAttitudeSkillId)
+              "
               [style]="{ width: '180px' }"
+              [disabled]="isDisabled"
             ></p-dropdown>
           </td>
         </tr>
@@ -70,7 +78,7 @@
       label="Submit"
       icon="pi pi-save"
       (click)="saveSkills()"
-      [disabled]="getUnfilledScoresCount() > 0"
+      [disabled]="getUnfilledScoresCount() > 0 || isDisabled"
     ></button>
   </div>
 </div>

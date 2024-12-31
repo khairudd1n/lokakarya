@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import {
   EmpAttitudeSkillNewService,
   EmpAttitudeSkillCreateDto,
+  EmpAttitudeSkillUpdateRequest,
 } from '../emp-attitude-skill-new.service';
 import { FormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
@@ -22,12 +23,15 @@ import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { forkJoin } from 'rxjs';
 import { AssSummaryService } from '../ass-summary.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { concatMap } from 'rxjs/operators';
+import { TagModule } from 'primeng/tag';
 
 interface AttitudeSkill {
   attitude_skill_name: string;
   score: number;
   id: string;
   status: string;
+  empAttitudeSkillId: string;
 }
 
 @Component({
@@ -42,6 +46,7 @@ interface AttitudeSkill {
     DropdownModule,
     NavBarComponent,
     TooltipModule,
+    TagModule,
   ],
   templateUrl: './emp-attitude-skill-new.component.html',
   styleUrl: './emp-attitude-skill-new.component.css',
@@ -56,6 +61,10 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
   assessmentYears: number[] = []; // Array untuk menampung tahun
   selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+
+  editedSkills: Set<string> = new Set(); // Menyimpan ID skill yang telah diedit
+
+  isDisabled: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -76,20 +85,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     this.loadData();
     this.initializeAssessmentYears();
   }
-
-  // initializeAssessmentYears(): void {
-  //   this.empAttitudeSkillService.getAssessmentYears().subscribe(
-  //     (years) => {
-  //       this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
-  //       if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-  //         this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching assessment years:', error);
-  //     }
-  //   );
-  // }
 
   initializeAssessmentYears(): void {
     this.empAttitudeSkillService.getAssessmentYears().subscribe(
@@ -113,6 +108,50 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     this.loadData(); // Panggil ulang data ketika tahun berubah
   }
 
+  // loadData(): void {
+  //   forkJoin({
+  //     groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
+  //     userSkills: this.userId
+  //       ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(
+  //           this.userId,
+  //           this.selectedAssessmentYear
+  //         )
+  //       : [],
+  //   }).subscribe(({ groupData, userSkills }) => {
+  //     this.groupData = groupData;
+  //     console.log('Group Data:', this.groupData);
+  //     console.log('User Skills:', userSkills);
+  //     console.log('User Skills:', userSkills);
+  //     userSkills.forEach((skill) =>
+  //       console.log('EmpAttitudeSkill ID:', skill.id)
+  //     );
+
+  //     // Populate scores in groupData with userSkills
+  //     if (userSkills.length > 0) {
+  //       this.disabledSkills = new Set(
+  //         userSkills.map((skill) => skill.attitude_skill.id)
+  //       );
+  //       this.groupData.forEach((group) => {
+  //         group.attitude_skills.forEach((skill: AttitudeSkill) => {
+  //           const matchedSkill = userSkills.find(
+  //             (s) => s.attitude_skill.id === skill.id
+  //           );
+  //           if (matchedSkill) {
+  //             skill.score = matchedSkill.score;
+  //             skill.empAttitudeSkillId = matchedSkill.id;
+  //           }
+  //         });
+  //       });
+  //     }
+  //     this.assSummaryService
+  //       .generateAssSummary(this.userId, this.assessmentYear)
+  //       .subscribe((data) => {
+  //         console.log(data);
+  //       });
+  //     console.log('Synchronized Data:', this.groupData);
+  //   });
+  // }
+
   loadData(): void {
     forkJoin({
       groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
@@ -122,35 +161,93 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
             this.selectedAssessmentYear
           )
         : [],
-    }).subscribe(({ groupData, userSkills }) => {
-      this.groupData = groupData;
-      console.log('Group Data:', this.groupData);
-      console.log('User Skills:', userSkills);
+    })
+      .pipe(
+        // Setelah forkJoin selesai, kita melanjutkan dengan 'assessmentSummary' menggunakan concatMap
+        concatMap(({ groupData, userSkills }) => {
+          this.groupData = groupData;
+          console.log('Group Data:', this.groupData);
+          console.log('User Skills:', userSkills);
 
-      // Populate scores in groupData with userSkills
-      if (userSkills.length > 0) {
-        this.disabledSkills = new Set(
-          userSkills.map((skill) => skill.attitude_skill.id)
-        );
-        this.groupData.forEach((group) => {
-          group.attitude_skills.forEach((skill: AttitudeSkill) => {
-            const matchedSkill = userSkills.find(
-              (s) => s.attitude_skill.id === skill.id
+          // Populate scores in groupData with userSkills
+          if (userSkills.length > 0) {
+            this.disabledSkills = new Set(
+              userSkills.map((skill) => skill.attitude_skill.id)
             );
-            if (matchedSkill) {
-              skill.score = matchedSkill.score;
-            }
-          });
-        });
-      }
-      this.assSummaryService
-        .generateAssSummary(this.userId, this.assessmentYear)
-        .subscribe((data) => {
-          console.log(data);
-        });
-      console.log('Synchronized Data:', this.groupData);
-    });
+            this.groupData.forEach((group) => {
+              group.attitude_skills.forEach((skill: AttitudeSkill) => {
+                const matchedSkill = userSkills.find(
+                  (s) => s.attitude_skill.id === skill.id
+                );
+                if (matchedSkill) {
+                  skill.score = matchedSkill.score;
+                  skill.empAttitudeSkillId = matchedSkill.id;
+                }
+              });
+            });
+          }
+
+          console.log('Synchronized Data:', this.groupData);
+
+          // Lanjutkan dengan mengambil assessment summary setelah loadData selesai
+          return this.assSummaryService.getAssessmentSummary(
+            this.userId,
+            this.selectedAssessmentYear
+          );
+        })
+      )
+      .subscribe((assessmentSummary) => {
+        // Sekarang assessmentSummary bisa diproses setelah loadData selesai
+        this.isDisabled = assessmentSummary?.status === 1;
+        console.log('Updated isDisabled:', this.isDisabled);
+      });
   }
+
+  // loadData(): void {
+  //   forkJoin({
+  //     groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
+  //     userSkills: this.userId
+  //       ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(
+  //           this.userId,
+  //           this.selectedAssessmentYear
+  //         )
+  //       : [],
+  //     assessmentSummary: this.assSummaryService.getAssessmentSummary(
+  //       this.userId,
+  //       this.selectedAssessmentYear
+  //     ),
+  //   }).subscribe(({ groupData, userSkills, assessmentSummary }) => {
+  //     this.groupData = groupData;
+
+  //     // Periksa status assessment_summary
+  //     this.isDisabled = assessmentSummary?.status === 1;
+  //     console.log('Updated isDisabled:', this.isDisabled);
+
+  //     // Populasi skor di groupData dengan userSkills
+  //     if (userSkills.length > 0) {
+  //       this.disabledSkills = new Set(
+  //         userSkills.map((skill) => skill.attitude_skill.id)
+  //       );
+  //       this.groupData.forEach((group) => {
+  //         group.attitude_skills.forEach((skill: AttitudeSkill) => {
+  //           const matchedSkill = userSkills.find(
+  //             (s) => s.attitude_skill.id === skill.id
+  //           );
+  //           if (matchedSkill) {
+  //             skill.score = matchedSkill.score;
+  //           }
+  //         });
+  //       });
+  //     }
+  //     console.log(
+  //       'Assessment Summary Status Type:',
+  //       typeof assessmentSummary?.status
+  //     );
+  //     console.log('Assessment Summary Response:', assessmentSummary);
+  //     console.log('Assessment Summary Status:', assessmentSummary?.status);
+  //     console.log('isDisabled:', this.isDisabled);
+  //   });
+  // }
 
   getUserId(): void {
     const userToken = localStorage.getItem('token');
@@ -171,33 +268,39 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     }
   }
 
-  logSkillId(attitudeSkillId: string, score: number): void {
-    console.log(
-      'Selected Attitude Skill ID:',
-      attitudeSkillId,
-      'Score:',
-      score
-    );
+  logSkillId(
+    attitudeSkillId: string,
+    score: number,
+    empAttitudeSkillId: string
+  ): void {
+    console.log('Selected Emp Attitude Skill ID:', empAttitudeSkillId);
+    console.log('Selected Attitude Skill ID:', attitudeSkillId);
+    console.log('Selected Score:', score);
 
     const existingSkillIndex = this.selectedSkills.findIndex(
       (skill) => skill.attitude_skill_id === attitudeSkillId
     );
 
     if (existingSkillIndex !== -1) {
-      // Update the existing skill if it already exists
-      this.selectedSkills[existingSkillIndex].score = score;
+      // Update score jika nilai berbeda
+      if (this.selectedSkills[existingSkillIndex].score !== score) {
+        this.selectedSkills[existingSkillIndex].score = score;
+        this.editedSkills.add(attitudeSkillId); // Tandai sebagai diedit
+      }
     } else {
-      // Create a new skill object if it doesn't exist
+      // Tambahkan skill baru jika belum ada
       const skill: EmpAttitudeSkillCreateDto = {
         user_id: this.userId as UUID,
         attitude_skill_id: attitudeSkillId as UUID,
         score,
         assessment_year: this.assessmentYear,
+        id: empAttitudeSkillId as UUID, // Menambahkan ID EmpAttitudeSkill ke objek skill
       };
       this.selectedSkills.push(skill);
+      this.editedSkills.add(attitudeSkillId); // Tandai sebagai diedit
     }
 
-    // Update the groupData with the new score
+    // Update groupData
     this.groupData.forEach((group) => {
       group.attitude_skills.forEach((skill: AttitudeSkill) => {
         if (skill.id === attitudeSkillId) {
@@ -208,52 +311,79 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   saveSkills(): void {
-    const unfilledCount = this.getUnfilledScoresCount();
-
-    if (unfilledCount > 0) {
-      Swal.fire('Warning', 'Input nilai terlebih dahulu.', 'warning');
-      return; // Jangan lanjutkan proses simpan
-    }
-
-    const filledSkills = this.selectedSkills.filter(
-      (skill) =>
-        skill.score != null && !this.disabledSkills.has(skill.attitude_skill_id)
+    const updatedSkills = this.selectedSkills.filter((skill) =>
+      this.editedSkills.has(skill.attitude_skill_id)
     );
 
-    if (filledSkills.length > 0) {
-      Swal.fire({
-        title: 'Are you sure with your selected score?',
-        text: 'Scores that have been submitted cannot be change anymore',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, I am sure!',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.empAttitudeSkillService
-            .saveEmpAttitudeSkills(filledSkills)
-            .subscribe(
-              () => {
-                Swal.fire(
-                  'Success',
-                  'Scores have been successfully submitted!',
-                  'success'
-                );
-                this.loadData(); // Refresh data dari server
-              },
-              () => Swal.fire('Error', 'Failed to submit scores.', 'error')
-            );
-        } else {
-          Swal.fire('Cancelled', 'Submission cancelled.', 'info');
-        }
-      });
-    } else {
-      Swal.fire(
-        'Warning',
-        'You have already submitted your scores.',
-        'warning'
-      );
+    console.log('Updated skills:', updatedSkills);
+
+    if (updatedSkills.length === 0) {
+      console.log('No changes detected.');
+      Swal.fire('Info', 'No changes detected.', 'info');
+      return;
     }
+
+    Swal.fire({
+      title: 'Confirm Changes',
+      text: 'Are you sure you want to save the changes?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, save it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newSkills = updatedSkills.filter(
+          (skill) => !this.disabledSkills.has(skill.attitude_skill_id)
+        );
+        const existingSkills = updatedSkills.filter((skill) =>
+          this.disabledSkills.has(skill.attitude_skill_id)
+        );
+
+        console.log('New skills:', newSkills);
+        console.log('Existing skills:', existingSkills);
+
+        const saveNewSkills$ = newSkills.length
+          ? this.empAttitudeSkillService.saveEmpAttitudeSkills(newSkills)
+          : null;
+
+        // Membuat payload untuk update skills dalam snake_case
+        const updatePayload = existingSkills.map((skill) => ({
+          id: skill.id,
+          attitude_skill_id: skill.attitude_skill_id, // Tetap snake_case
+          user_id: skill.user_id, // Tetap snake_case
+          assessment_year: skill.assessment_year, // Tetap snake_case
+          score: skill.score,
+        }));
+
+        const updateSkills$ = existingSkills.length
+          ? this.empAttitudeSkillService.updateEmpAttitudeSkills(updatePayload)
+          : null;
+
+        console.log('Save new skills observable:', saveNewSkills$);
+        console.log('Update skills payload:', updatePayload);
+
+        forkJoin(
+          [saveNewSkills$, updateSkills$].filter((obs) => obs !== null)
+        ).subscribe(
+          () => {
+            console.log('Changes saved successfully.');
+            Swal.fire(
+              'Success',
+              'Changes have been successfully saved!',
+              'success'
+            );
+            this.loadData(); // Refresh data
+            this.editedSkills.clear(); // Reset edited skills
+          },
+          (error) => {
+            console.error('Failed to save changes:', error);
+            Swal.fire('Error', 'Failed to save changes.', 'error');
+          }
+        );
+      } else {
+        console.log('User cancelled the confirmation dialog.');
+      }
+    });
   }
 
   getUnfilledScoresCount(): number {
