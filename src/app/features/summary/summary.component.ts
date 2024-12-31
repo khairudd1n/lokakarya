@@ -7,6 +7,9 @@ import { UserSummaryComponent } from '../user-summary/user-summary.component';
 import { AssSummaryService } from '../../ass-summary.service';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { privateDecrypt, UUID } from 'crypto';
+import { Division } from '../../core/models/division.model';
+import { DivisionService } from '../../core/services/division.service';
 
 @Component({
   selector: 'app-summary',
@@ -24,7 +27,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 export class SummaryComponent {
   users: any[] = [];
   filteredUsers: any[] = [];
-  divisionOptions: any[] = [];
+  divisionOptions: { label: string; value: string }[] = [];
   displayDialog: boolean = false;
   displayDetailDialog: boolean = false;
   displaySummaryDialog: boolean = false;
@@ -37,87 +40,103 @@ export class SummaryComponent {
   assSummary: any[] = [];
   userSummaryList: any[] = [];
 
+  totalRecords: number = 0;
+  rows: number = 10;
+  sortField: string = 'id';
+  sortOrder: string = 'asc';
+
+  selectedDivision: any[] = [];
+
   constructor(
-    private userService: UserService,
-    private assSummaryService: AssSummaryService
+    private assSummaryService: AssSummaryService,
+    private divisionSummary: DivisionService
   ) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.divisionSummary.getDivisionList().subscribe((data) => {
+      this.divisionOptions = data.map((division) => {
+        return { label: division.division_name, value: division.id };
+      });
+    });
+    this.fetchAssessmentSummaries();
   }
 
   onYearChange($event: DropdownChangeEvent) {
-    this.loadUsers();
+    this.clearFilters(this.dt1);
+    this.getPaginatedAssessmentSummaries(
+      '',
+      $event.value.value,
+      '',
+      0,
+      this.rows,
+      this.sortField,
+      this.sortOrder
+    );
   }
 
-  prepareDivisionOptions() {
-    this.divisionOptions = this.filteredUsers
-      .map((user) => user.division.division_name);
-
-
-    this.divisionOptions = Array.from(new Set(this.divisionOptions));
-
-    console.log("divisi : ",this.divisionOptions);
+  loadAssSumLazy(event: any) {
+    const page = event.first / event.rows;
+    const searchTerm = event.globalFilter || '';
+    this.rows = event.rows;
+    this.sortField = event.sortField || 'id';
+    this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
+    this.getPaginatedAssessmentSummaries(
+      searchTerm,
+      this.selectedYear.value,
+      '',
+      page,
+      this.rows,
+      this.sortField,
+      this.sortOrder
+    );
   }
 
   openSummaryDialog() {
     this.displaySummaryDialog = true;
-    console.log(this.selectedUser.id);
+    console.log('Selected User ID:', this.selectedUser.id);
   }
 
-  loadUsers() {
-    this.userService.getAllUser().subscribe((data) => {
-      this.users = data.map((user) => ({
-        ...user,
-        employee_status: user.employee_status === 1,
-      }));
-      this.filteredUsers = [...this.users];
-      this.fetchAssessmentSummaries();
-    });
+  getPaginatedAssessmentSummaries(
+    searchTerm: string,
+    year: number,
+    division: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ) {
+    this.assSummaryService
+      .getPaginatedAssSummary(
+        searchTerm,
+        year,
+        division,
+        page,
+        size,
+        sortBy,
+        sortDirection
+      )
+      .subscribe((data) => {
+        this.assSummary = data.content.assess_sums;
+        console.log('Assessment Summary:', this.assSummary);
+
+        this.totalRecords = data.page_info.totalElements;
+
+        this.years = data.content.years.map((year: number) => ({
+          label: year.toString(),
+          value: year,
+        }));
+      });
   }
+
   fetchAssessmentSummaries() {
     this.assSummaryService.getAllAssSummary().subscribe((data) => {
-      console.log('Assessment Summary:', data);
+      this.assSummary = data.content.assess_sums;
+      console.log('Assessment Summary:', this.assSummary);
 
-      this.assSummary = data.content;
-
-      const uniqueYears = Array.from(
-        new Set(this.assSummary.map((assSummary) => assSummary.year))
-      ).sort((a, b) => b - a);
-
-      this.years = uniqueYears.map((year) => ({
+      this.years = data.content.years.map((year: number) => ({
         label: year.toString(),
         value: year,
       }));
-      console.log('Updated Years:', this.years);
-
-      const filteredContent = this.selectedYear
-        ? this.assSummary.filter(
-            (assSummary) => assSummary.year === this.selectedYear.value
-          )
-        : this.assSummary;
-
-      console.log('Filtered Assessment Summary:', filteredContent);
-
-      const userScoresMap = new Map(
-        filteredContent.map((assSummary) => [
-          assSummary.user.id,
-          assSummary.score,
-        ])
-      );
-
-      this.userSummaryList = this.users
-        .filter((user) => userScoresMap.has(user.id))
-        .map((user) => ({
-          ...user,
-          assessmentScore: userScoresMap.get(user.id),
-        }));
-
-      this.filteredUsers = this.userSummaryList;
-
-      console.log('Filtered Users:', this.userSummaryList);
-
-      this.prepareDivisionOptions();
     });
   }
 
@@ -131,7 +150,14 @@ export class SummaryComponent {
   }
 
   clearFilters(table: any): void {
-    table.clear();
+    table.reset();
+    this.selectedDivision = [];
+    const globalSearchInput = document.querySelector(
+      '.p-input-icon-left input'
+    ) as HTMLInputElement;
+    if (globalSearchInput) {
+      globalSearchInput.value = ''; // Clear the input field
+    }
   }
 
   @ViewChild('dt1') dt1: Table | undefined;
@@ -139,34 +165,31 @@ export class SummaryComponent {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt1) {
-      this.dt1.filterGlobal(input, 'contains');
+      this.getPaginatedAssessmentSummaries(
+        input,
+        this.selectedYear.value,
+        '',
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
     }
   }
 
   filterDivision(selectedValues: any[]) {
     console.log('Filter called with:', selectedValues);
-
-    if (!selectedValues || selectedValues.length === 0) {
-      this.filteredUsers = [...this.userSummaryList]; // Show all users if no division is selected
-      return;
+    if (this.dt1) {
+      this.getPaginatedAssessmentSummaries(
+        '',
+        this.selectedYear.value,
+        selectedValues[0],
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
     }
-
-    const selectedDivisionValues = selectedValues.map((selected) => selected);
-
-    this.filteredUsers = this.userSummaryList
-      .filter((user) =>
-        selectedDivisionValues.includes(
-          user.division?.division_name || 'Unknown'
-        )
-      )
-      .map((user) => {
-        const score = this.filteredUsers.find(
-          (u) => u.id === user.id
-        )?.assessmentScore;
-        return { ...user, assessmentScore: score };
-      });
-
-    console.log('Filtered Users:', this.filteredUsers);
   }
 
   onDialogClose(visible: boolean) {

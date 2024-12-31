@@ -75,6 +75,14 @@
             {{ Math.round(item.total_score * (item.percentage / 100)) }}
           </td>
         </tr>
+        <ng-container *ngFor="let subItem of item.items">
+          <tr>
+            <td style="padding: 8px">{{ subItem.notes }}</td>
+            <td class="center-column" style="padding: 8px">
+              {{ subItem.score }}
+            </td>
+          </tr>
+        </ng-container>
       </ng-template>
 
       <ng-template pTemplate="footer">
