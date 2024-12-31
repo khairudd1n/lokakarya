@@ -7,10 +7,19 @@ import { EmpTechSkillCreateDto } from './emp-technical-skill.service';
 import { ApiResponse } from './core/models/api-response.model';
 
 export interface EmpAttitudeSkillCreateDto {
+  id: string;
   user_id: UUID;
   attitude_skill_id: UUID;
   score: number;
   assessment_year: number;
+}
+
+export interface EmpAttitudeSkillUpdateRequest {
+  id: string; // UUID dari EmpAttitudeSkill yang ingin diperbarui
+  userId?: string; // UUID dari User yang terkait
+  attitudeSkillId: string; // UUID dari AttitudeSkill yang terkait
+  score?: number; // Nilai yang ingin diperbarui
+  assessmentYear?: number; // Tahun penilaian yang ingin diperbarui
 }
 
 @Injectable({
@@ -32,6 +41,89 @@ export class EmpAttitudeSkillNewService {
     return this.http.post(this.apiUrl, payload, { headers });
   }
 
+  updateEmpAttitudeSkill(
+    id: UUID,
+    payload: EmpAttitudeSkillCreateDto
+  ): Observable<EmpAttitudeSkillCreateDto> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('Payload untuk update:', payload);
+    return this.http
+      .put<EmpAttitudeSkillCreateDto>(`${this.apiUrl}/${id}`, payload, {
+        headers,
+      })
+      .pipe(
+        tap((updatedSkill) => {
+          console.log('Successfully updated skill:', updatedSkill);
+        })
+      );
+  }
+
+  // updateEmpAttitudeSkills(
+  //   payload: EmpAttitudeSkillUpdateRequest[]
+  // ): Observable<EmpAttitudeSkillCreateDto[]> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   console.log('Payload untuk update:', payload);
+
+  //   return this.http
+  //     .put<EmpAttitudeSkillCreateDto[]>(`${this.apiUrl}`, payload, {
+  //       headers,
+  //     })
+  //     .pipe(
+  //       tap((updatedSkills) => {
+  //         console.log('Successfully updated skills:', updatedSkills);
+  //       })
+  //     );
+  // }
+
+  updateEmpAttitudeSkills(
+    payload: {
+      id: string;
+      attitude_skill_id: string;
+      user_id: string;
+      assessment_year: number;
+      score: number;
+    }[]
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    console.log('Payload untuk update:', payload);
+
+    return this.http
+      .put(`${this.apiUrl}`, payload, {
+        headers,
+      })
+      .pipe(
+        tap((updatedSkills) => {
+          console.log('Successfully updated skills:', updatedSkills);
+        })
+      );
+  }
+
+  getAllEmpAttitudeSkills(): Observable<EmpAttitudeSkillCreateDto[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .get<EmpAttitudeSkillCreateDto[]>(this.apiUrl, { headers })
+      .pipe(
+        tap((data) => {
+          console.log('Fetched all Emp Attitude Skills:', data);
+        })
+      );
+  }
+
   getAllAttitudeSkillsByUserId(
     userId: string,
     year: number
@@ -50,9 +142,7 @@ export class EmpAttitudeSkillNewService {
     };
     return this.http
       .get<ApiResponse<any[]>>(`${this.apiUrl2}`, { headers })
-      .pipe(
-        map((response) => response.content)
-      );
+      .pipe(map((response) => response.content));
   }
 
   getEmpAttSkillByUserId(
@@ -87,5 +177,18 @@ export class EmpAttitudeSkillNewService {
           console.log('Retrieved assessment years:', years);
         })
       );
+  }
+
+  // Delete Emp Attitude Skill by ID
+  deleteEmpAttitudeSkill(id: UUID): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers }).pipe(
+      tap((response) => {
+        console.log('Successfully deleted Emp Attitude Skill:', response);
+      })
+    );
   }
 }

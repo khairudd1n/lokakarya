@@ -26,12 +26,14 @@
     <div class="p-fluid">
       <div class="p-field">
         <label for="groupName" class="form-label1">Dev Plan</label>
-        <input
+
+        <textarea
+          pInputTextarea
           id="groupName"
-          type="text"
-          pInputText
           [(ngModel)]="newDevPlan.plan"
-        />
+          rows="5"
+          class="textarea-field"
+        ></textarea>
         <div *ngIf="isDuplicate" style="color: red; font-size: 15px">
           Data sudah ada
         </div>
@@ -79,12 +81,14 @@
     <div class="p-fluid">
       <div class="p-field">
         <label for="editGroupName" class="form-label1">Dev Plan</label>
-        <input
+
+        <textarea
+          pInputTextarea
           id="editGroupName"
-          type="text"
-          pInputText
           [(ngModel)]="selectedDevPlan.plan"
-        />
+          rows="5"
+          class="textarea-field"
+        ></textarea>
       </div>
       <br />
       <div class="p-field">

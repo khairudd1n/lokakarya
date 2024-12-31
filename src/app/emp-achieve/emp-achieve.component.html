@@ -197,6 +197,10 @@
       <p-table
         #dt2
         [value]="empAchieveSkill"
+        rowGroupMode="rowspan"
+        groupRowsBy="username"
+        sortField="username"
+        sortMode="single"
         dataKey="id"
         [rows]="10"
         [rowsPerPageOptions]="[10, 25, 50]"
@@ -231,10 +235,18 @@
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-achievement let-i="rowIndex">
+        <ng-template
+          pTemplate="body"
+          let-achievement
+          let-i="rowIndex"
+          let-rowgroup="rowgroup"
+          let-rowspan="rowspan"
+        >
           <tr>
             <td>{{ i + 1 }}</td>
-            <td class="division-column">{{ achievement.username }}</td>
+            <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
+              {{ achievement.username }}
+            </td>
             <td class="division-column">{{ achievement.notes }}</td>
             <td class="division-column">{{ achievement.achievement_name }}</td>
             <td class="division-column">{{ achievement.score }}</td>
@@ -264,20 +276,9 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="4">No emp achieve found.</td>
+            <td colspan="7">No emp achieve found.</td>
           </tr>
         </ng-template>
-
-        <!-- <ng-template pTemplate="groupheader" let-group>
-          <tr>
-            <td
-              colspan="6"
-              style="font-weight: bold; background-color: #f0f0f0"
-            >
-              Username: {{ group.username }}
-            </td>
-          </tr>
-        </ng-template> -->
       </p-table>
     </div>
   </div>

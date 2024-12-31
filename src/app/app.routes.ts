@@ -21,7 +21,8 @@ import { ViewUserListComponent } from './features/user/view-user-list/view-user-
 import { UserSummaryComponent } from './features/user-summary/user-summary.component';
 import { SummaryComponent } from './features/summary/summary.component';
 import { EmpSuggestComponent } from './emp-suggest/emp-suggest.component';
-
+import { EvaluationStepperComponent } from './evaluation-stepper/evaluation-stepper.component';
+import { SumWithDetailComponent } from './sum-with-detail/sum-with-detail.component';
 
 export const routes: Routes = [
   {
@@ -141,5 +142,15 @@ export const routes: Routes = [
     path: '',
     component: HomePageComponent,
     canActivate: [authGuard],
+  },
+  {
+    path: 'assessment-form',
+    component: EvaluationStepperComponent,
+    // canActivate: [authGuard, roleMenuGuard],
+    // data: { permission: 'ALL_ASSESSMENT_FORM' },
+  },
+  {
+    path: 'sum-with-detail',
+    component: SumWithDetailComponent,
   },
 ];
