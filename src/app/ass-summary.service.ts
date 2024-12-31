@@ -72,7 +72,7 @@ export class AssSummaryService {
     return this.http
       .get(`${this.url}/summary`, {
         headers: { Authorization: `Bearer ${this.token}` },
-        params: { userId, year }, // Pass userId and year as query parameters
+        params: { userId, year },
       })
       .pipe(map((response) => response));
   }
@@ -107,6 +107,19 @@ export class AssSummaryService {
         headers: { Authorization: `Bearer ${this.token}` },
         params: { year: year },
       })
+      .pipe(map((response) => response));
+  }
+
+  updateAssessSumStatusToApprove(id: string): Observable<ApiResponse<any>> {
+    console.log(`Updating assessment summary status to active for ID: ${id}`);
+    return this.http
+      .patch<ApiResponse<any>>(
+        `${this.url}/update-status-to-approve/${id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${this.token}` },
+        }
+      )
       .pipe(map((response) => response));
   }
 }
