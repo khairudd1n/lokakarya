@@ -53,18 +53,28 @@ export class AssSummaryService {
       .post(`${this.url}/save`, data, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 
   generateAssSummary(userId: string, year: number): Observable<any> {
     console.log('generating ass summary');
     return this.http
       .post(
-        `${this.url}/generate/${userId}/${year}`,{},  
-         {headers: {Authorization: `Bearer ${this.token}`},} 
-      );
+        `${this.url}/generate/${userId}/${year}`,
+        {},
+        { headers: { Authorization: `Bearer ${this.token}` } }
+      )
+      .pipe(map((response) => response));
+  }
+
+  getAssessmentSummary(userId: string, year: number): Observable<any> {
+    console.log('Fetching assessment summary');
+    return this.http
+      .get(`${this.url}/summary`, {
+        headers: { Authorization: `Bearer ${this.token}` },
+        params: { userId, year }, // Pass userId and year as query parameters
+      })
+      .pipe(map((response) => response));
   }
 
   getAssSummaryDetail(userId: string, year: number): Observable<any> {
@@ -72,9 +82,7 @@ export class AssSummaryService {
       .get(`${this.url}/detail/${userId}/${year}`, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 
   getAllAssSummary(): Observable<ApiResponse<any>> {
@@ -82,9 +90,7 @@ export class AssSummaryService {
       .get<ApiResponse<any>>(`${this.url}/all`, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 
   getPaginatedAssSummary(
@@ -132,13 +138,8 @@ export class AssSummaryService {
       .get<ApiResponse<any[]>>(`${this.url}/detail-by-user/${userId}`, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
-
-
-
 
   getAllAssSummaryByYear(year: number): Observable<ApiResponse<any[]>> {
     return this.http
@@ -146,8 +147,6 @@ export class AssSummaryService {
         headers: { Authorization: `Bearer ${this.token}` },
         params: { year: year },
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 }

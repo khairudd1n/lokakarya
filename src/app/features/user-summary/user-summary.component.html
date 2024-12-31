@@ -11,6 +11,19 @@
     class="dropdown-container"
     style="margin-bottom: 10px; text-align: right"
   >
+    <div class="export-buttons" style="margin-bottom: 20px">
+      <button
+        (click)="exportToExcel()"
+        pButton
+        label="Export to Excel"
+      ></button>
+      <button
+        (click)="exportToPDF()"
+        pButton
+        label="Export to PDF"
+        style="margin-left: 10px"
+      ></button>
+    </div>
     <p-dropdown
       [options]="years"
       [(ngModel)]="selectedYear"
@@ -40,7 +53,7 @@
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 35%; text-align: left">Aspect</th>
-          <th class="center-column" style="width: 20%">Score</th>
+          <th class="center-column" style="width: 20%">Avg.Score</th>
           <th class="center-column" style="width: 20%">Weight</th>
           <th class="center-column" style="width: 25%">Final Score</th>
         </tr>
@@ -52,7 +65,7 @@
           class="section-header-row"
         >
           <td
-            colspan="4"
+            colspan="6"
             class="section-header"
             style="
               text-align: center;
@@ -64,23 +77,39 @@
           </td>
         </tr>
         <tr>
-          <td style="padding: 8px">{{ item.group_name }}</td>
-          <td class="center-column" style="padding: 8px">
+          <td style="padding: 8px; background-color: lightgray">
+            {{ item.group_name }}
+          </td>
+          <td
+            class="center-column"
+            style="padding: 8px; background-color: lightgray"
+          >
             {{ item.total_score }}
           </td>
-          <td class="center-column" style="padding: 8px">
+          <td
+            class="center-column"
+            style="padding: 8px; background-color: lightgray"
+          >
             {{ item.percentage }}%
           </td>
-          <td class="center-column" style="padding: 8px">
+          <td
+            class="center-column"
+            style="padding: 8px; background-color: lightgray"
+          >
             {{ Math.round(item.total_score * (item.percentage / 100)) }}
           </td>
         </tr>
-        <ng-container *ngFor="let subItem of item.items">
+        <ng-container *ngFor="let Item of item.items">
           <tr>
-            <td style="padding: 8px">{{ subItem.notes }}</td>
-            <td class="center-column" style="padding: 8px">
-              {{ subItem.score }}
+            <td>
+              {{ Item.achievement?.achievement_name }}
+              {{ Item.attitude_skill?.attitude_skill_name }}
             </td>
+            <td style="font-weight: bold; text-align: center">Score:</td>
+            <td style="text-align: center">
+              {{ Item?.score }}
+            </td>
+            <td></td>
           </tr>
         </ng-container>
       </ng-template>

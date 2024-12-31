@@ -1,0 +1,102 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="card flex justify-content-center">
+  <p-stepper>
+    <p-stepperPanel header="Attitude & Skill Form">
+      <ng-template
+        pTemplate="content"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div class="flex pt-1 justify-content-end">
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            (onClick)="nextCallback.emit()"
+          />
+        </div>
+        <div class="flex flex-column h-12rem">
+          <div>
+            <app-emp-attitude-skill-new></app-emp-attitude-skill-new>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Technical Skill Form">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div class="flex pt-1 justify-content-between">
+          <p-button
+            label="Back"
+            icon="pi pi-arrow-left"
+            (onClick)="prevCallback.emit()"
+          />
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            (onClick)="nextCallback.emit()"
+          />
+        </div>
+        <div class="flex flex-column h-12rem">
+          <div>
+            <app-emp-technical-skill></app-emp-technical-skill>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Development Plan Form">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div class="flex pt-1 justify-content-between">
+          <p-button
+            label="Back"
+            icon="pi pi-arrow-left"
+            (onClick)="prevCallback.emit()"
+          />
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            (onClick)="nextCallback.emit()"
+          />
+        </div>
+        <div class="flex flex-column h-12rem">
+          <div>
+            <app-emp-dev-plan></app-emp-dev-plan>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Suggestion Form">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div class="flex pt-1 justify-content-start">
+          <p-button
+            label="Back"
+            icon="pi pi-arrow-left"
+            (onClick)="prevCallback.emit()"
+          />
+        </div>
+        <div class="flex flex-column h-12rem">
+          <div>
+            <app-emp-suggest></app-emp-suggest>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+  </p-stepper>
+</div>

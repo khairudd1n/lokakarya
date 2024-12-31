@@ -41,4 +41,8 @@ export const MENU_MAP: {
   READ_SUMMARY: { label: 'Summary', routerLink: '/ass-summary' },
   READ_SELF_SUMMARY: { label: 'My Summary', routerLink: '/self-summary' },
   READ_USER: { label: 'View User', routerLink: '/view-user' },
+  ALL_ASSESSMENT_FORM: {
+    label: 'Assessment Form',
+    routerLink: '/assessment-form',
+  },
 };

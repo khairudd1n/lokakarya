@@ -130,11 +130,18 @@ export class NavBarComponent implements OnInit {
         '/self-summary',
       ].includes(item.routerLink!)
     );
-    
+
     if (assessmentItems.length > 0) {
       groupedMenus.push({ label: 'Assessment', items: assessmentItems });
     }
-    
+
+    const assessmentFormItems = menuItems.filter((item) =>
+      ['/assessment-form'].includes(item.routerLink!)
+    );
+    if (assessmentFormItems.length > 0) {
+      groupedMenus.push(assessmentFormItems[0]);
+    }
+
     return groupedMenus;
   }
 }

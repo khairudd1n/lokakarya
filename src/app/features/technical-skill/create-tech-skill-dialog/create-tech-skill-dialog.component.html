@@ -24,10 +24,9 @@
         #technicalSkill="ngModel"
       />
       @if(isNameValid(technicalSkill.value)){
-        <div class="p-error">Name already exists.</div>
-      }
-      @else if (technicalSkill.invalid && technicalSkill.touched) {
-        <div class="p-error">Technical Skill is required.</div>
+      <div class="p-error">Name already exists.</div>
+      } @else if (technicalSkill.invalid && technicalSkill.touched) {
+      <div class="p-error">Technical Skill is required.</div>
       }
     </div>
 
