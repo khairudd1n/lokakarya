@@ -41,7 +41,7 @@ export class CreateTechSkillDialogComponent {
       } else {
         this.resetForm();
       }
-    } else {
+    }else{
       this.resetForm();
       this.takenNames = this.nameList;
     }
@@ -62,6 +62,7 @@ export class CreateTechSkillDialogComponent {
 
   closeDialog() {
     this.visible = false;
+    this.resetForm();
     this.visibleChange.emit(this.visible);
   }
 
