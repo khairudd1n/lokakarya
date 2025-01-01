@@ -239,4 +239,46 @@ export class SummaryComponent {
       }
     });
   }
+
+  unapproveAssessmentSummary(id: string) {
+    if (this.isApproving[id]) return;
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to unapprove this assessment summary. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, unapprove it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isApproving[id] = true; // Mark as approving
+
+        this.assSummaryService.updateAssessSumStatusToUnapprove(id).subscribe(
+          (response) => {
+            console.log('Successfully updated status:', response);
+            Swal.fire({
+              icon: 'success',
+              title: 'Unapproved!',
+              text: 'The assessment summary has been unapproved successfully.',
+              confirmButtonText: 'OK',
+            });
+            this.fetchAssessmentSummaries();
+          },
+          (error) => {
+            console.error('Error updating status:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Failed to unapprove the assessment summary. Please try again.',
+              confirmButtonText: 'OK',
+            });
+          },
+          () => {
+            this.isApproving[id] = false; // Reset state after completion
+          }
+        );
+      }
+    });
+  }
 }

@@ -96,7 +96,7 @@
           <p-sortIcon field="assessmentScore"></p-sortIcon>
         </th>
         <th>status</th>
-        <th>Action</th>
+        <th>Approve</th>
       </tr>
     </ng-template>
 
@@ -117,18 +117,31 @@
             {{ getStatusLabel(user.assessmentStatus) }}
           </span>
         </td>
-        <td style="text-align: center">
-          <button
-            pButton
-            label="Approve"
-            icon="pi pi-check"
-            (click)="approveAssessmentSummary(user.assessmentSummaryId)"
-            [disabled]="
-              !user.assessmentScore ||
-              isApproving[user.assessmentSummaryId] ||
-              user.assessmentStatus === 1
-            "
-          ></button>
+        <td>
+          <div class="action-buttons">
+            <button
+              pButton
+              icon="pi pi-check"
+              class="p-button-sm p-button-info"
+              (click)="approveAssessmentSummary(user.assessmentSummaryId)"
+              [disabled]="
+                !user.assessmentScore ||
+                isApproving[user.assessmentSummaryId] ||
+                user.assessmentStatus === 1
+              "
+            ></button>
+            <button
+              pButton
+              icon="pi pi-times"
+              class="p-button-sm p-button-danger"
+              (click)="unapproveAssessmentSummary(user.assessmentSummaryId)"
+              [disabled]="
+                !user.assessmentScore ||
+                isApproving[user.assessmentSummaryId] ||
+                user.assessmentStatus === 0
+              "
+            ></button>
+          </div>
         </td>
       </tr>
     </ng-template>

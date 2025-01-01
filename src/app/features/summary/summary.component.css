@@ -28,3 +28,18 @@
   color: orange;
   font-weight: bold;
 }
+
+.action-buttons button {
+  margin-right: 8px; /* Jarak antar tombol */
+}
+
+.action-buttons button:last-child {
+  margin-right: 0; /* Hapus margin pada tombol terakhir */
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Posisi tombol di tengah */
+  align-items: center; /* Pusatkan tombol secara vertikal */
+  gap: 4px; /* Jarak antar tombol */
+}
