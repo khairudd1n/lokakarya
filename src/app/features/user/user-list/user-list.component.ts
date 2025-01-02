@@ -23,6 +23,11 @@ export class UserListComponent implements OnInit {
   emailList: string[] = [];
   usernameList: string[] = [];
 
+  totalRecords: number = 0;
+  rows: number = 10;
+  sortField: string = 'joinDate';
+  sortOrder: string = 'desc';
+
   displayDialog: boolean = false;
   displayDetailDialog: boolean = false;
   selectedUser: any = null; // Holds data for the user being edited
@@ -33,7 +38,32 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadPaginatedUsers("",0, 10, this.sortField, this.sortOrder);
+  }
+
+  loadUsersLazy(event: any): void {
+    const page = event.first / event.rows;
+    this.rows = event.rows;
+    this.sortField = event.sortField || 'joinDate';
+    this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
+    this.userService
+      .getPaginatedUser( "",page, this.rows, this.sortField, this.sortOrder)
+      .subscribe((data) => {
+        this.users = data.content;
+        console.log("Received Data: ", this.users);
+        this.totalRecords = data.page_info.totalElements;
+      });
+  }
+  
+
+  loadPaginatedUsers(searchTerm: string, page: number, size: number, sortBy: string, sortDirection: string) {
+    this.userService
+      .getPaginatedUser( searchTerm,page, size, sortBy, sortDirection)
+      .subscribe((data) => {
+        this.users = data.content;
+        console.log("Received Data: ", this.users);
+        this.totalRecords = data.page_info.totalElements;
+      });
   }
 
   loadUsers() {
@@ -47,7 +77,6 @@ export class UserListComponent implements OnInit {
       this.emailList = this.users.map((user) =>
         user.email_address.toLowerCase()
       );
-      console.log(this.users);
     });
   }
 
@@ -217,7 +246,7 @@ export class UserListComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt1) {
-      this.dt1.filterGlobal(input, 'contains');
+      this.loadPaginatedUsers(input, 0, this.rows, this.sortField, this.sortOrder);
     }
   }
 

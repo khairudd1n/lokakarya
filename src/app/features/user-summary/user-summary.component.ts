@@ -81,38 +81,46 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (!this.userId) {
-      this.id = this.authService.parseJwt(this.token).sub;
+    console.log('On init called');
+    if (!this.isInDialog) {
+      if (!this.userId) {
+        console.log('no user id');
+        this.id = this.authService.parseJwt(this.token).sub;
+      } else {
+        this.id = this.userId;
+      }
+      console.log('id : ', this.id);
+      this.summaryService.getAllUserAssSummary(this.id).subscribe({
+        next: (data) => {
+          this.years = data.content.map((item: any) => ({
+            label: item.year.toString(),
+            value: item.year,
+          }));
+          this.selectedYear = this.years[this.years.length - 1];
+          this.summaryService
+            .getAssSummaryDetail(this.id, this.selectedYear.value)
+            .subscribe({
+              next: (data) => {
+                this.assScore = data.content.assess_sum.score;
+                this.combinedData = [
+                  ...data.content.achieve_results,
+                  ...data.content.attitude_results,
+                ];
+                if (this.combinedData.length > 0) {
+                  this.totalPercentage = 100;
+                }
+                this.isLoading = false;
+                console.log('data : ', this.combinedData);
+                console.log('assScore : ', this.assScore);
+              },
+            });
+        },
+      });
     }
-    this.summaryService.getAllUserAssSummary(this.id).subscribe({
-      next: (data) => {
-        this.years = data.content.map((item: any) => ({
-          label: item.year.toString(),
-          value: item.year,
-        }));
-        this.selectedYear = this.years[this.years.length - 1];
-        this.summaryService
-          .getAssSummaryDetail(this.id, this.selectedYear.value)
-          .subscribe({
-            next: (data) => {
-              this.assScore = data.content.assess_sum.score;
-              this.combinedData = [
-                ...data.content.achieve_results,
-                ...data.content.attitude_results,
-              ];
-              if (this.combinedData.length > 0) {
-                this.totalPercentage = 100;
-              }
-              this.isLoading = false;
-              console.log('data : ', this.combinedData);
-              console.log('assScore : ', this.assScore);
-            },
-          });
-      },
-    });
   }
 
   ngOnChanges(): void {
+    console.log('userId changed : ', this.userId);
     if (this.userId) {
       this.empSuggestService
         .getEmpSuggestByUserIdAndYear(this.userId, this.year!)
