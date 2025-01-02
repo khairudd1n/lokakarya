@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { ApiResponse } from '../models/api-response.model';
 
 export interface DivisionDto {
   id: UUID;
@@ -26,6 +27,15 @@ export class DivisionService {
     return this.http
       .get<DivisionDto[]>(`${this.apiUrl}`, { headers })
       .pipe(tap((data) => console.log('Fetched Divisions:', data)));
+  }
+
+  getDivisionList(): Observable<DivisionDto[]> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .get<ApiResponse<DivisionDto[]>>(`${this.apiUrl}/list-name`, { headers })
+      .pipe(map((response) => response.content));
   }
 
   createDivision(data: Partial<DivisionDto>): Observable<DivisionDto> {

@@ -53,8 +53,10 @@ export class CreateUserDialogComponent implements OnChanges {
   divisions: any[] = [];
   takenEmails: string[] = [];
   takenUsernames: string[] = [];
-  emailValid: boolean = false;
-  usernameValid: boolean = false;
+  emailValid: boolean = true;
+  usernameValid: boolean = true;
+  emailExists: boolean = false;
+  usernameExists: boolean = false;
 
   isFormValid: boolean = false;
 
@@ -131,15 +133,43 @@ export class CreateUserDialogComponent implements OnChanges {
     this.closeDialog();
   }
 
-  isUsernameTaken(username: string): boolean {
-    this.usernameValid = !this.takenUsernames.includes(username.toLowerCase());
-    return !this.usernameValid; // return true if username is taken, false if not
+  checkUsername(username: string): void {
+    const usernameRegex = /^[a-zA-Z0-9_.]+$/;
+  
+    if (username.trim() === '') {
+      this.usernameValid = false;
+      this.usernameExists = false;
+      return;
+    }
+  
+    this.usernameValid = usernameRegex.test(username);
+  
+    if (!this.usernameValid) {
+      return; 
+    }
+  
+    this.userService.checkUsernameExists(username).subscribe((response) => {
+      this.usernameExists = response;
+    });
   }
+  
 
-  isEmailTaken(email: string): boolean {
-    this.emailValid = !this.takenEmails.includes(email.toLowerCase());
-    return !this.emailValid;
+  checkEmail(email: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  
+    if (email.trim() === '') {
+      this.emailExists = false;
+      this.emailValid = true;
+      return;
+    }  
+    this.emailValid = emailRegex.test(email);  
+    if (!this.emailValid) {
+      return; 
+    }  
+    this.userService.checkEmailExists(email).subscribe((response) => {
+      this.emailExists = response;
+    });
   }
+  
 
   closeDialog() {
     this.visibleChange.emit(false);

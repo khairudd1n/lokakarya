@@ -9,7 +9,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
+import { TableModule, TableRowExpandEvent } from 'primeng/table';
 import { Table } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
@@ -18,6 +18,8 @@ import Swal from 'sweetalert2';
 
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { AssSummaryService } from '../ass-summary.service';
+import { UserService } from '../core/services/user.service';
+import { SharedModule } from '../shared/primeng/shared/shared.module';
 
 @Component({
   selector: 'app-emp-achieve',
@@ -37,11 +39,13 @@ import { AssSummaryService } from '../ass-summary.service';
     ReactiveFormsModule,
     DialogModule,
     NavBarComponent,
+    SharedModule
   ],
   templateUrl: './emp-achieve.component.html',
   styleUrl: './emp-achieve.component.css',
 })
 export class EmpAchieveComponent implements OnInit {
+  users: any[] = [];
   empAchieveSkill: EmpAchieveSkillDto[] = [];
   isLoading: boolean = true;
   error: string | null = null;
@@ -67,15 +71,78 @@ export class EmpAchieveComponent implements OnInit {
   userOptions: { label: string; value: string }[] = [];
   achievementOptions: { label: string; value: string }[] = [];
 
+  rows = 10;
+  sortField = 'joinDate';
+  sortOrder = 'asc';
+  totalRecords = 0;
+
+  expandedRows: { [key: string]: boolean } = {};
+
   constructor(
     private empAchieveService: EmpAchieveService,
-    private assSummaryService: AssSummaryService
+    private assSummaryService: AssSummaryService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.loadPaginatedUsers('', 0, 10, this.sortField, this.sortOrder);
     this.fetchEmpAchieve();
     this.fetchUserOptions();
     this.fetchAchievementOptions();
+  }
+
+  loadUsersLazy(event: any): void {
+    const page = event.first / event.rows;
+    this.rows = event.rows;
+    this.sortField = event.sortField || 'joinDate';
+    this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
+    this.userService
+      .getPaginatedUser('', page, this.rows, this.sortField, this.sortOrder)
+      .subscribe((data) => {
+        this.users = data.content;
+        console.log('Received Data: ', this.users);
+        this.totalRecords = data.page_info.totalElements;
+      });
+  }
+
+  onRowExpand(event: TableRowExpandEvent): void {
+    console.log('Row expanded:', event.data);
+    console.log('ExpandedRows:', this.expandedRows);
+    console.log(
+      'Users:',
+      this.users.map((user) => user.id)
+    );
+    const userId: string = event.data.id;
+    event.data.loading = true;
+    this.expandedRows[userId] = true;
+
+    this.empAchieveService
+      .getAllEmpAchieveByUserId(userId)
+      .subscribe((achievements) => {
+        const user = this.users.find((user) => user.id === userId);
+        console.log('Received Achi:', achievements);
+        if (user) {
+          user.achievements = achievements;
+        }
+        // Update the loading state
+        event.data.loading = false;
+      });
+  }
+
+  loadPaginatedUsers(
+    searchTerm: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ) {
+    this.userService
+      .getPaginatedUser(searchTerm, page, size, sortBy, sortDirection)
+      .subscribe((data) => {
+        this.users = data.content;
+        console.log('Received Data: ', this.users);
+        this.totalRecords = data.page_info.totalElements;
+      });
   }
 
   fetchEmpAchieve(): void {
@@ -96,9 +163,15 @@ export class EmpAchieveComponent implements OnInit {
     this.displayCreateDialog = true;
   }
 
-  showEditDialog(empAchieve: EmpAchieveSkillDto): void {
+  showEditDialog(empAchieve:any): void {
     // Populate the editAchievement object with selected achievement data
-    this.editEmpAchieve = { ...empAchieve };
+    this.editEmpAchieve.achievement_id = empAchieve.achievement.id;
+    this.editEmpAchieve.user_id = empAchieve.user.id;
+    this.editEmpAchieve.notes = empAchieve.notes;
+    this.editEmpAchieve.score = empAchieve.score;
+    this.editEmpAchieve.assessment_year = empAchieve.assessment_year;
+    this.editEmpAchieve.achievement_name = empAchieve.achievement.achievement_name;
+    this.editEmpAchieve.id = empAchieve.id;
     this.displayEditDialog = true;
   }
 
@@ -107,7 +180,7 @@ export class EmpAchieveComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt2) {
-      this.dt2.filterGlobal(input, 'contains'); // Pass the input value and match mode
+      this.loadPaginatedUsers(input, 0, this.rows, this.sortField, this.sortOrder);
     }
   }
 
@@ -189,7 +262,6 @@ export class EmpAchieveComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Emp Achieve updated successfully:', response);
-          this.fetchEmpAchieve(); // Refresh the data table
           this.displayEditDialog = false; // Close the dialog
           Swal.fire({
             icon: 'success',
@@ -197,9 +269,21 @@ export class EmpAchieveComponent implements OnInit {
             text: 'Emp Achieve updated successfully.',
             confirmButtonText: 'OK',
           });
+          console.log('Userss : ', this.users);
+          const user_id = this.editEmpAchieve.user_id;
+          const user = this.users.find((user) => user.id === user_id);          
+          if (user) {
+            const event = {
+              data: user,
+            } as TableRowExpandEvent;
+    
+            // Call onRowExpand to reload the data
+            this.onRowExpand(event);
+          }
         },
         error: (err) => {
           console.error('Error updating Emp Achieve:', err);
+          this.displayEditDialog = false;
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
