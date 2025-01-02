@@ -108,50 +108,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     this.loadData(); // Panggil ulang data ketika tahun berubah
   }
 
-  // loadData(): void {
-  //   forkJoin({
-  //     groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
-  //     userSkills: this.userId
-  //       ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(
-  //           this.userId,
-  //           this.selectedAssessmentYear
-  //         )
-  //       : [],
-  //   }).subscribe(({ groupData, userSkills }) => {
-  //     this.groupData = groupData;
-  //     console.log('Group Data:', this.groupData);
-  //     console.log('User Skills:', userSkills);
-  //     console.log('User Skills:', userSkills);
-  //     userSkills.forEach((skill) =>
-  //       console.log('EmpAttitudeSkill ID:', skill.id)
-  //     );
-
-  //     // Populate scores in groupData with userSkills
-  //     if (userSkills.length > 0) {
-  //       this.disabledSkills = new Set(
-  //         userSkills.map((skill) => skill.attitude_skill.id)
-  //       );
-  //       this.groupData.forEach((group) => {
-  //         group.attitude_skills.forEach((skill: AttitudeSkill) => {
-  //           const matchedSkill = userSkills.find(
-  //             (s) => s.attitude_skill.id === skill.id
-  //           );
-  //           if (matchedSkill) {
-  //             skill.score = matchedSkill.score;
-  //             skill.empAttitudeSkillId = matchedSkill.id;
-  //           }
-  //         });
-  //       });
-  //     }
-  //     this.assSummaryService
-  //       .generateAssSummary(this.userId, this.assessmentYear)
-  //       .subscribe((data) => {
-  //         console.log(data);
-  //       });
-  //     console.log('Synchronized Data:', this.groupData);
-  //   });
-  // }
-
   loadData(): void {
     forkJoin({
       groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
@@ -202,52 +158,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         console.log('Updated isDisabled:', this.isDisabled);
       });
   }
-
-  // loadData(): void {
-  //   forkJoin({
-  //     groupData: this.empAttitudeSkillService.getAllGroupWithAttitudeSkills(),
-  //     userSkills: this.userId
-  //       ? this.empAttitudeSkillService.getAllAttitudeSkillsByUserId(
-  //           this.userId,
-  //           this.selectedAssessmentYear
-  //         )
-  //       : [],
-  //     assessmentSummary: this.assSummaryService.getAssessmentSummary(
-  //       this.userId,
-  //       this.selectedAssessmentYear
-  //     ),
-  //   }).subscribe(({ groupData, userSkills, assessmentSummary }) => {
-  //     this.groupData = groupData;
-
-  //     // Periksa status assessment_summary
-  //     this.isDisabled = assessmentSummary?.status === 1;
-  //     console.log('Updated isDisabled:', this.isDisabled);
-
-  //     // Populasi skor di groupData dengan userSkills
-  //     if (userSkills.length > 0) {
-  //       this.disabledSkills = new Set(
-  //         userSkills.map((skill) => skill.attitude_skill.id)
-  //       );
-  //       this.groupData.forEach((group) => {
-  //         group.attitude_skills.forEach((skill: AttitudeSkill) => {
-  //           const matchedSkill = userSkills.find(
-  //             (s) => s.attitude_skill.id === skill.id
-  //           );
-  //           if (matchedSkill) {
-  //             skill.score = matchedSkill.score;
-  //           }
-  //         });
-  //       });
-  //     }
-  //     console.log(
-  //       'Assessment Summary Status Type:',
-  //       typeof assessmentSummary?.status
-  //     );
-  //     console.log('Assessment Summary Response:', assessmentSummary);
-  //     console.log('Assessment Summary Status:', assessmentSummary?.status);
-  //     console.log('isDisabled:', this.isDisabled);
-  //   });
-  // }
 
   getUserId(): void {
     const userToken = localStorage.getItem('token');

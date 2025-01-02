@@ -179,6 +179,19 @@ export class EmpAttitudeSkillNewService {
       );
   }
 
+  getAllUsers(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any[]>(`${this.apiUrl}/user-only`, { headers }).pipe(
+      tap((users) => {
+        console.log('Retrieved users:', users);
+      })
+    );
+  }
+
   // Delete Emp Attitude Skill by ID
   deleteEmpAttitudeSkill(id: UUID): Observable<any> {
     const headers = new HttpHeaders({

@@ -11,19 +11,6 @@
     class="dropdown-container"
     style="margin-bottom: 10px; text-align: right"
   >
-    <div class="export-buttons" style="margin-bottom: 20px">
-      <button
-        (click)="exportToExcel()"
-        pButton
-        label="Export to Excel"
-      ></button>
-      <button
-        (click)="exportToPDF()"
-        pButton
-        label="Export to PDF"
-        style="margin-left: 10px"
-      ></button>
-    </div>
     <p-dropdown
       [options]="years"
       [(ngModel)]="selectedYear"
@@ -44,6 +31,19 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     "
   >
+    <div class="export-buttons" style="margin-bottom: 20px">
+      <button
+        (click)="exportToExcel()"
+        pButton
+        label="Export to Excel"
+      ></button>
+      <button
+        (click)="exportToPDF()"
+        pButton
+        label="Export to PDF"
+        style="margin-left: 10px"
+      ></button>
+    </div>
     <h3 style="margin-bottom: 20px; color: #333">Assessment Summary</h3>
     <p-table
       [value]="combinedData"
