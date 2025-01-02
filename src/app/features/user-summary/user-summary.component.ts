@@ -354,6 +354,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       margin: { top: 10 },
     });
 
-    doc.save('my_summary.pdf');
+    const fileName = `Assessment_Summary_${this.combinedData[0]?.items[0]?.user?.full_name}_${this.selectedYear.label}.pdf`;
+    doc.save(fileName);
   }
 }
