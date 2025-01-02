@@ -26,7 +26,10 @@ import {
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
 import { EmpAttitudeSkillDto } from '../../sum-with-detail.service';
-import { EmpAttitudeSkillNewService, EmpAttitudeSkillUpdateRequest } from '../../emp-attitude-skill-new.service';
+import {
+  EmpAttitudeSkillNewService,
+  EmpAttitudeSkillUpdateRequest,
+} from '../../emp-attitude-skill-new.service';
 
 @Component({
   selector: 'app-user-summary',
@@ -132,7 +135,8 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     this.editEmpAttitude.score = empAttitude.score;
     this.editEmpAttitude.assessmentYear = empAttitude.assessment_year;
     this.editEmpAttitude.id = empAttitude.id;
-    this.editEmpAttitude.attitudeSkillName = empAttitude.attitude_skill.attitude_skill_name;
+    this.editEmpAttitude.attitudeSkillName =
+      empAttitude.attitude_skill.attitude_skill_name;
     this.displayEditAttitudeDialog = true;
   }
 
@@ -147,7 +151,8 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     };
 
     this.empAttitudeService
-      .updateEmpAttitudeSkill(this.editEmpAttitude.id, updatedData).subscribe({
+      .updateEmpAttitudeSkill(this.editEmpAttitude.id, updatedData)
+      .subscribe({
         next: (response) => {
           console.log('Emp Attitude updated successfully:', response);
 
@@ -157,7 +162,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             title: 'Updated!',
             text: 'Emp Attitude updated successfully.',
             confirmButtonText: 'OK',
-          })
+          });
         },
         error: (err) => {
           console.error('Error updating Emp Attitude:', err);
@@ -167,9 +172,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             title: 'Error',
             text: 'Error updating Emp Attitude.',
             confirmButtonText: 'OK',
-          })
-        }
-      })
+          });
+        },
+      });
   }
 
   updateEmpAchieve(): void {
@@ -222,7 +227,24 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     if (this.userId) {
       this.ngOnChanges();
     } else {
-      this.ngOnInit();
+      this.id = this.authService.parseJwt(this.token).sub;
+      this.summaryService
+            .getAssSummaryDetail(this.id, this.selectedYear.value)
+            .subscribe({
+              next: (data) => {
+                this.assScore = data.content.assess_sum.score;
+                this.combinedData = [
+                  ...data.content.achieve_results,
+                  ...data.content.attitude_results,
+                ];
+                if (this.combinedData.length > 0) {
+                  this.totalPercentage = 100;
+                }
+                this.isLoading = false;
+                console.log('data : ', this.combinedData);
+                console.log('assScore : ', this.assScore);
+              },
+            });
     }
   }
 
@@ -242,7 +264,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             label: item.year.toString(),
             value: item.year,
           }));
+          console.log('years : ', this.years);
           this.selectedYear = this.years[this.years.length - 1];
+          console.log('selectedYear : ', this.selectedYear);
           this.summaryService
             .getAssSummaryDetail(this.id, this.selectedYear.value)
             .subscribe({
