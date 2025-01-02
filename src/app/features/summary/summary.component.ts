@@ -14,7 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { privateDecrypt, UUID } from 'crypto';
 import { Division } from '../../core/models/division.model';
 import { DivisionService } from '../../core/services/division.service';
-
+import { EmpAchieveSkillDto } from '../../emp-achieve.service';
 
 @Component({
   selector: 'app-summary',
@@ -47,6 +47,8 @@ export class SummaryComponent {
   userSummaryList: any[] = [];
   isApproving: { [key: string]: boolean } = {};
 
+
+
   getStatusLabel(status: number): string {
     switch (status) {
       case 0:
@@ -76,7 +78,15 @@ export class SummaryComponent {
         return { label: division.division_name, value: division.id };
       });
     });
-    this.fetchAssessmentSummaries();
+    this.getPaginatedAssessmentSummaries(
+      '',
+      this.selectedYear.value,
+      '',
+      0,
+      this.rows,
+      this.sortField,
+      this.sortOrder
+    );
   }
 
   onYearChange($event: DropdownChangeEvent) {
@@ -90,16 +100,6 @@ export class SummaryComponent {
       this.sortField,
       this.sortOrder
     );
-  }
-
-  prepareDivisionOptions() {
-    this.divisionOptions = this.filteredUsers.map(
-      (user) => user.division.division_name
-    );
-
-    this.divisionOptions = Array.from(new Set(this.divisionOptions));
-
-    console.log('divisi : ', this.divisionOptions);
   }
 
   loadAssSumLazy(event: any) {
@@ -154,53 +154,6 @@ export class SummaryComponent {
           value: year,
         }));
       });
-  }
-
-  fetchAssessmentSummaries() {
-    this.assSummaryService.getAllAssSummary().subscribe((data) => {
-      this.assSummary = data.content.assess_sums;
-      console.log('Assessment Summary:', this.assSummary);
-
-      this.years = data.content.years.map((year: number) => ({
-        label: year.toString(),
-        value: year,
-      }));
-      console.log('Updated Years:', this.years);
-
-      const filteredContent = this.selectedYear
-        ? this.assSummary.filter(
-            (assSummary) => assSummary.year === this.selectedYear.value
-          )
-        : this.assSummary;
-
-      console.log('Filtered Assessment Summary:', filteredContent);
-
-      const userScoresMap = new Map(
-        filteredContent.map((assSummary) => [
-          assSummary.user.id,
-          assSummary.score,
-        ])
-      );
-
-      this.userSummaryList = this.users
-        .filter((user) => userScoresMap.has(user.id))
-        .map((user) => ({
-          ...user,
-          assessmentScore: userScoresMap.get(user.id),
-          assessmentSummaryId: this.assSummary.find(
-            (ass) => ass.user.id === user.id
-          )?.id,
-          assessmentStatus: this.assSummary.find(
-            (ass) => ass.user.id === user.id
-          )?.status,
-        }));
-
-      this.filteredUsers = this.userSummaryList;
-
-      console.log('Filtered Users:', this.userSummaryList);
-
-      this.prepareDivisionOptions();
-    });
   }
 
   onRowSelect(event: any) {
@@ -286,7 +239,15 @@ export class SummaryComponent {
               text: 'The assessment summary has been approved successfully.',
               confirmButtonText: 'OK',
             });
-            this.fetchAssessmentSummaries();
+            this.getPaginatedAssessmentSummaries(
+              '',
+              this.selectedYear.value,
+              '',
+              0,
+              this.rows,
+              this.sortField,
+              this.sortOrder
+            );
           },
           (error) => {
             console.error('Error updating status:', error);
@@ -328,7 +289,15 @@ export class SummaryComponent {
               text: 'The assessment summary has been unapproved successfully.',
               confirmButtonText: 'OK',
             });
-            this.fetchAssessmentSummaries();
+            this.getPaginatedAssessmentSummaries(
+              '',
+              this.selectedYear.value,
+              '',
+              0,
+              this.rows,
+              this.sortField,
+              this.sortOrder
+            );
           },
           (error) => {
             console.error('Error updating status:', error);

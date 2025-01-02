@@ -19,6 +19,14 @@ import { EmpSuggestService } from '../../emp-suggest.service';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import {
+  EmpAchieveService,
+  EmpAchieveSkillDto,
+} from '../../emp-achieve.service';
+import { UUID } from 'crypto';
+import Swal from 'sweetalert2';
+import { EmpAttitudeSkillDto } from '../../sum-with-detail.service';
+import { EmpAttitudeSkillNewService, EmpAttitudeSkillUpdateRequest } from '../../emp-attitude-skill-new.service';
 
 @Component({
   selector: 'app-user-summary',
@@ -64,11 +72,149 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   };
   years: { label: string; value: number }[] = [];
   full_name: string = '';
+  displayEditAchieveDialog: boolean = false;
+  editEmpAchieve: EmpAchieveSkillDto = {
+    id: '' as UUID,
+    user_id: '' as UUID,
+    username: '',
+    notes: '',
+    achievement_id: '' as UUID,
+    achievement_name: '',
+    score: 0,
+    assessment_year: 0,
+  };
+  displayEditAttitudeDialog: boolean = false;
+  editEmpAttitude: any = {
+    id: '',
+    userId: '',
+    attitudeSkillId: '',
+    score: 0,
+    assessmentYear: 0,
+    attitudeSkillName: '',
+  };
+
+  scoreOptions = [
+    { label: '100', value: 100 },
+    { label: '80', value: 80 },
+    { label: '60', value: 60 },
+    { label: '40', value: 40 },
+    { label: '20', value: 20 },
+  ];
+
+  showEditDialog(emp: any): void {
+    console.log('Editing Emp:', emp);
+    if ('achievement' in emp) {
+      console.log('Achievement exists:', emp.achievement);
+      this.showEditAchieveDialog(emp);
+    } else {
+      console.log('Attitude Skills exists:', emp.attitude_skill);
+      this.showEditAttitudeDialog(emp);
+    }
+  }
+
+  showEditAchieveDialog(empAchieve: any): void {
+    console.log('Editing Emp Achieve:', empAchieve);
+    this.editEmpAchieve.achievement_id = empAchieve.achievement.id;
+    this.editEmpAchieve.user_id = empAchieve.user.id;
+    this.editEmpAchieve.notes = empAchieve.notes;
+    this.editEmpAchieve.score = empAchieve.score;
+    this.editEmpAchieve.assessment_year = empAchieve.assessment_year;
+    this.editEmpAchieve.achievement_name =
+      empAchieve.achievement.achievement_name;
+    this.editEmpAchieve.id = empAchieve.id;
+    this.displayEditAchieveDialog = true;
+  }
+
+  showEditAttitudeDialog(empAttitude: any): void {
+    console.log('Editing Emp Attitude:', empAttitude);
+    this.editEmpAttitude.attitudeSkillId = empAttitude.attitude_skill.id;
+    this.editEmpAttitude.userId = empAttitude.user.id;
+    this.editEmpAttitude.score = empAttitude.score;
+    this.editEmpAttitude.assessmentYear = empAttitude.assessment_year;
+    this.editEmpAttitude.id = empAttitude.id;
+    this.editEmpAttitude.attitudeSkillName = empAttitude.attitude_skill.attitude_skill_name;
+    this.displayEditAttitudeDialog = true;
+  }
+
+  updateEmpAttitude(): void {
+    console.log('Updating Emp Attitude with ID:', this.editEmpAttitude.id);
+    const updatedData = {
+      id: this.editEmpAttitude.id,
+      user_id: this.editEmpAttitude.userId,
+      attitude_skill_id: this.editEmpAttitude.attitudeSkillId,
+      score: this.editEmpAttitude.score,
+      assessment_year: this.editEmpAttitude.assessmentYear,
+    };
+
+    this.empAttitudeService
+      .updateEmpAttitudeSkill(this.editEmpAttitude.id, updatedData).subscribe({
+        next: (response) => {
+          console.log('Emp Attitude updated successfully:', response);
+
+          this.displayEditAttitudeDialog = false; // Close the dialog
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Emp Attitude updated successfully.',
+            confirmButtonText: 'OK',
+          })
+        },
+        error: (err) => {
+          console.error('Error updating Emp Attitude:', err);
+          this.displayEditAttitudeDialog = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error updating Emp Attitude.',
+            confirmButtonText: 'OK',
+          })
+        }
+      })
+  }
+
+  updateEmpAchieve(): void {
+    console.log('Updating Emp Achieve with ID:', this.editEmpAchieve.id);
+    const updatedData = {
+      user_id: this.editEmpAchieve.user_id,
+      notes: this.editEmpAchieve.notes,
+      achievement_id: this.editEmpAchieve.achievement_id,
+      score: this.editEmpAchieve.score,
+      assessment_year: this.editEmpAchieve.assessment_year,
+    };
+
+    this.empAchieveService
+      .updateEmpAchieveAndGenerateSummary(this.editEmpAchieve.id, updatedData)
+      .subscribe({
+        next: (response) => {
+          console.log('Emp Achieve updated successfully:', response);
+
+          this.displayEditAchieveDialog = false; // Close the dialog
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Emp Achieve updated successfully.',
+            confirmButtonText: 'OK',
+          });
+        },
+        error: (err) => {
+          console.error('Error updating Emp Achieve:', err);
+          this.displayEditAchieveDialog = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to update Emp Achieve. Please try again.',
+            confirmButtonText: 'Try Again',
+          });
+        },
+      });
+  }
 
   constructor(
     private authService: AuthService,
     private summaryService: AssSummaryService,
-    private empSuggestService: EmpSuggestService
+    private empSuggestService: EmpSuggestService,
+    private empAchieveService: EmpAchieveService,
+    private empAttitudeService: EmpAttitudeSkillNewService
   ) {}
 
   onYearChange(event: any): void {

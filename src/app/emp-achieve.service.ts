@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UUID } from 'crypto';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { ApiResponse } from './core/models/api-response.model';
@@ -21,6 +21,7 @@ export interface EmpAchieveSkillDto {
 })
 export class EmpAchieveService {
   private apiUrl = 'http://localhost:8080/emp-achievements-skill';
+  private assessSumUrl = 'http://localhost:8080/assess-sum';
   token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -53,14 +54,32 @@ export class EmpAchieveService {
     achievement_id: UUID;
     score: number;
     assessment_year: number;
-  }): Observable<EmpAchieveSkillDto> {
+  }): Observable<any> {
     const headers = {
       Authorization: `Bearer ${this.token}`, // Replace `this.token` with your actual token variable
     };
 
-    return this.http.post<EmpAchieveSkillDto>(`${this.apiUrl}`, empAchieve, {
-      headers,
-    });
+    // First POST request to create EmpAchieveSkill
+    return this.http
+      .post<EmpAchieveSkillDto>(`${this.apiUrl}`, empAchieve, {
+        headers,
+      })
+      .pipe(
+        // Log the response of the first request
+        tap((response) => console.log('Created Emp Achieve:', response)),
+
+        // Once the first request is successful, call the second POST request to generate the assessment summary
+        switchMap(() =>
+          this.http.post<void>(
+            `${this.assessSumUrl}/generate/${empAchieve.user_id}/${empAchieve.assessment_year}`,
+            {},
+            { headers: { Authorization: `Bearer ${this.token}` } }
+          )
+        ),
+        tap(() =>
+          console.log('Generated Assessment Summary (no response needed)')
+        )
+      );
   }
 
   updateEmpAchieve(
@@ -80,6 +99,39 @@ export class EmpAchieveService {
     return this.http
       .put<EmpAchieveSkillDto>(`${this.apiUrl}/${id}`, empAchieve, { headers })
       .pipe(tap((response) => console.log('Updated Emp Achieve:', response)));
+  }
+
+  updateEmpAchieveAndGenerateSummary(
+    id: UUID,
+    empAchieve: {
+      user_id: UUID;
+      notes: string;
+      achievement_id: UUID;
+      score: number;
+      assessment_year: number;
+    }
+  ): Observable<any> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+
+    return this.http
+      .put<EmpAchieveSkillDto>(`${this.apiUrl}/${id}`, empAchieve, { headers })
+      .pipe(
+        tap((updateResponse) =>
+          console.log('Updated Emp Achieve:', updateResponse)
+        ),
+        switchMap(() =>
+          this.http.post(
+            `${this.assessSumUrl}/generate/${empAchieve.user_id}/${empAchieve.assessment_year}`,
+            {},
+            { headers: { Authorization: `Bearer ${this.token}` } }
+          )
+        ),
+        tap(() =>
+          console.log('Generated Assessment Summary (no response needed)')
+        )
+      );
   }
 
   getUsers(): Observable<{ label: string; value: string }[]> {
