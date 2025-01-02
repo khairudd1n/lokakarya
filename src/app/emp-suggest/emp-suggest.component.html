@@ -18,6 +18,12 @@
       </option>
     </select>
   </div>
+  <br />
+  <label for="status">Status:</label>
+  <p-tag
+    [severity]="isDisabled ? 'success' : 'warning'"
+    [value]="isDisabled ? 'Sudah di Approve SPV' : 'Belum di Approve SPV'"
+  ></p-tag>
 
   <div *ngFor="let group of groupData" class="group-container">
     <p-table [value]="group.rows" [paginator]="false" class="data-table">
@@ -37,16 +43,25 @@
               [(ngModel)]="row.suggestion"
               class="textarea-field"
               rows="3"
-              [disabled]="row.saved"
+              [disabled]="isDisabled"
             ></textarea>
           </td>
           <td>
             <button
               pButton
-              icon="pi pi-trash"
+              icon="pi pi-times"
               class="p-button-sm p-button-danger"
               (click)="deleteRow(group, i)"
-              [disabled]="row.saved"
+              *ngIf="!row.saved"
+              [disabled]="isDisabled"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-times"
+              class="p-button-sm p-button-danger"
+              (click)="deleteSuggestion(row.id)"
+              *ngIf="row.saved"
+              [disabled]="isDisabled"
             ></button>
           </td>
         </tr>
@@ -58,7 +73,7 @@
       icon="pi pi-plus"
       class="btn btn-primary"
       (click)="addRow(group)"
-      [disabled]="isPreviousYearSelected"
+      [disabled]="isPreviousYearSelected || isDisabled"
     >
     </p-button>
   </div>
@@ -66,11 +81,11 @@
   <br />
   <div class="button-container">
     <p-button
-      label="Submit"
+      label="Save"
       icon="pi pi-save"
       (click)="saveSuggestions()"
       class="btn btn-success"
-      [disabled]="isPreviousYearSelected"
+      [disabled]="isPreviousYearSelected || isDisabled"
     >
     </p-button>
   </div>
