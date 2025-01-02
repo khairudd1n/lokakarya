@@ -6,7 +6,7 @@
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1050px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -18,4 +18,28 @@
   text-align: center;
   color: #333;
   margin-bottom: 20px;
+}
+
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.action-buttons button {
+  margin-right: 8px; /* Jarak antar tombol */
+}
+
+.action-buttons button:last-child {
+  margin-right: 0; /* Hapus margin pada tombol terakhir */
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Posisi tombol di tengah */
+  align-items: center; /* Pusatkan tombol secara vertikal */
+  gap: 4px; /* Jarak antar tombol */
 }

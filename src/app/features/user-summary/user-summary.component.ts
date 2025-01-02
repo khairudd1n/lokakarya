@@ -59,8 +59,8 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   assScore: number = 0;
   totalPercentage: number = 0;
   selectedYear: { label: string; value: number } = {
-    label: '2024',
-    value: 2024,
+    label: '2025',
+    value: 2025,
   };
   years: { label: string; value: number }[] = [];
   full_name: string = '';

@@ -90,18 +90,54 @@
           Score
           <p-sortIcon field="score"></p-sortIcon>
         </th>
+        <th>status</th>
+        <th>Approve</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-user>
       <tr [pSelectableRow]="user">
-        <td>{{ user.user.full_name }}</td>
-        <td>{{ user.user.email_address }}</td>
-        <td>{{ user.user.position }}</td>
+        <td>{{ user.full_name }}</td>
+        <td>{{ user.email_address }}</td>
+        <td>{{ user.position }}</td>
+        <td style="text-align: center">{{ user.division.division_name }}</td>
+        <td style="text-align: center">{{ user.assessmentScore }}</td>
         <td style="text-align: center">
-          {{ user.user.division.division_name }}
+          <span
+            [ngClass]="{
+              'status-approved': user.assessmentStatus === 1,
+              'status-pending': user.assessmentStatus === 0
+            }"
+          >
+            {{ getStatusLabel(user.assessmentStatus) }}
+          </span>
         </td>
-        <td style="text-align: center">{{ user.score }}</td>
+        <td>
+          <div class="action-buttons">
+            <button
+              pButton
+              icon="pi pi-check"
+              class="p-button-sm p-button-info"
+              (click)="approveAssessmentSummary(user.assessmentSummaryId)"
+              [disabled]="
+                !user.assessmentScore ||
+                isApproving[user.assessmentSummaryId] ||
+                user.assessmentStatus === 1
+              "
+            ></button>
+            <button
+              pButton
+              icon="pi pi-times"
+              class="p-button-sm p-button-danger"
+              (click)="unapproveAssessmentSummary(user.assessmentSummaryId)"
+              [disabled]="
+                !user.assessmentScore ||
+                isApproving[user.assessmentSummaryId] ||
+                user.assessmentStatus === 0
+              "
+            ></button>
+          </div>
+        </td>
       </tr>
     </ng-template>
   </p-table>

@@ -7,9 +7,14 @@ import { UserSummaryComponent } from '../user-summary/user-summary.component';
 import { AssSummaryService } from '../../ass-summary.service';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+
+import Swal from 'sweetalert2';
+import { TagModule } from 'primeng/tag';
+
 import { privateDecrypt, UUID } from 'crypto';
 import { Division } from '../../core/models/division.model';
 import { DivisionService } from '../../core/services/division.service';
+
 
 @Component({
   selector: 'app-summary',
@@ -20,6 +25,7 @@ import { DivisionService } from '../../core/services/division.service';
     ButtonModule,
     UserSummaryComponent,
     MultiSelectModule,
+    TagModule,
   ],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.css',
@@ -39,6 +45,18 @@ export class SummaryComponent {
   years: { label: string; value: number }[] = [];
   assSummary: any[] = [];
   userSummaryList: any[] = [];
+  isApproving: { [key: string]: boolean } = {};
+
+  getStatusLabel(status: number): string {
+    switch (status) {
+      case 0:
+        return 'Pending';
+      case 1:
+        return 'Approved';
+      default:
+        return 'Unknown';
+    }
+  }
 
   totalRecords: number = 0;
   rows: number = 10;
@@ -72,6 +90,16 @@ export class SummaryComponent {
       this.sortField,
       this.sortOrder
     );
+  }
+
+  prepareDivisionOptions() {
+    this.divisionOptions = this.filteredUsers.map(
+      (user) => user.division.division_name
+    );
+
+    this.divisionOptions = Array.from(new Set(this.divisionOptions));
+
+    console.log('divisi : ', this.divisionOptions);
   }
 
   loadAssSumLazy(event: any) {
@@ -137,6 +165,41 @@ export class SummaryComponent {
         label: year.toString(),
         value: year,
       }));
+      console.log('Updated Years:', this.years);
+
+      const filteredContent = this.selectedYear
+        ? this.assSummary.filter(
+            (assSummary) => assSummary.year === this.selectedYear.value
+          )
+        : this.assSummary;
+
+      console.log('Filtered Assessment Summary:', filteredContent);
+
+      const userScoresMap = new Map(
+        filteredContent.map((assSummary) => [
+          assSummary.user.id,
+          assSummary.score,
+        ])
+      );
+
+      this.userSummaryList = this.users
+        .filter((user) => userScoresMap.has(user.id))
+        .map((user) => ({
+          ...user,
+          assessmentScore: userScoresMap.get(user.id),
+          assessmentSummaryId: this.assSummary.find(
+            (ass) => ass.user.id === user.id
+          )?.id,
+          assessmentStatus: this.assSummary.find(
+            (ass) => ass.user.id === user.id
+          )?.status,
+        }));
+
+      this.filteredUsers = this.userSummaryList;
+
+      console.log('Filtered Users:', this.userSummaryList);
+
+      this.prepareDivisionOptions();
     });
   }
 
@@ -198,5 +261,89 @@ export class SummaryComponent {
       console.log('Dialog closed');
       this.clearSelectedUser();
     }
+  }
+
+  approveAssessmentSummary(id: string) {
+    if (this.isApproving[id]) return;
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to approve this assessment summary. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, approve it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isApproving[id] = true; // Mark as approving
+
+        this.assSummaryService.updateAssessSumStatusToApprove(id).subscribe(
+          (response) => {
+            console.log('Successfully updated status:', response);
+            Swal.fire({
+              icon: 'success',
+              title: 'Approved!',
+              text: 'The assessment summary has been approved successfully.',
+              confirmButtonText: 'OK',
+            });
+            this.fetchAssessmentSummaries();
+          },
+          (error) => {
+            console.error('Error updating status:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Failed to approve the assessment summary. Please try again.',
+              confirmButtonText: 'OK',
+            });
+          },
+          () => {
+            this.isApproving[id] = false; // Reset state after completion
+          }
+        );
+      }
+    });
+  }
+
+  unapproveAssessmentSummary(id: string) {
+    if (this.isApproving[id]) return;
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to unapprove this assessment summary. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, unapprove it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isApproving[id] = true; // Mark as approving
+
+        this.assSummaryService.updateAssessSumStatusToUnapprove(id).subscribe(
+          (response) => {
+            console.log('Successfully updated status:', response);
+            Swal.fire({
+              icon: 'success',
+              title: 'Unapproved!',
+              text: 'The assessment summary has been unapproved successfully.',
+              confirmButtonText: 'OK',
+            });
+            this.fetchAssessmentSummaries();
+          },
+          (error) => {
+            console.error('Error updating status:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Failed to unapprove the assessment summary. Please try again.',
+              confirmButtonText: 'OK',
+            });
+          },
+          () => {
+            this.isApproving[id] = false; // Reset state after completion
+          }
+        );
+      }
+    });
   }
 }
