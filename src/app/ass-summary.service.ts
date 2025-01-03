@@ -96,7 +96,7 @@ export class AssSummaryService {
   getPaginatedAssSummary(
     searchTerm: string,
     year: number,
-    division: string,
+    division: string[],
     page: number,
     size: number,
     sortBy: string,
@@ -120,9 +120,12 @@ export class AssSummaryService {
       params = params.set('year', year.toString());
     }
 
-    if (division) {
-      params = params.set('divisionId', division);
+    if (division && division.length > 0) {
+      division.forEach((id) => {
+        params = params.append('divisionIds', id);
+      });
     }
+    
     return this.http
       .get<ApiResponse<any>>(`${this.url}/all`, {
         headers,
