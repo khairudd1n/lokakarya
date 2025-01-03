@@ -59,7 +59,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   assessmentYear: number = new Date().getFullYear();
   disabledSkills: Set<string> = new Set();
 
-  assessmentYears: number[] = []; // Array untuk menampung tahun
+  assessmentYears: Set<number>= new Set(); // Array untuk menampung tahun
   selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
 
   editedSkills: Set<string> = new Set(); // Menyimpan ID skill yang telah diedit
@@ -90,13 +90,14 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     this.empAttitudeSkillService.getAssessmentYears().subscribe(
       (years) => {
         if (years.length > 0) {
-          this.assessmentYears = years;
+          this.assessmentYears.add(new Date().getFullYear());
+          years.forEach(year => this.assessmentYears.add(year));
         } else {
-          this.assessmentYears = [new Date().getFullYear()];
+          this.assessmentYears.add(new Date().getFullYear());
         }
-        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-          this.selectedAssessmentYear = this.assessmentYears[0];
-        }
+        // if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
+        //   this.selectedAssessmentYear = this.assessmentYears[0];
+        // }
       },
       (error) => {
         console.error('Error fetching assessment years:', error);
@@ -140,7 +141,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
                   skill.empAttitudeSkillId = matchedSkill.id;
                 }
               });
-            });
+            });          
           }
 
           console.log('Synchronized Data:', this.groupData);

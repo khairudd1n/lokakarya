@@ -109,7 +109,14 @@
             <td style="text-align: center">
               {{ Item?.score }}
             </td>
-            <td></td>
+            <td>
+              <p-button
+                label="Edit"
+                icon="pi pi-pencil"
+                class="p-button-sm p-button-info"
+                (click)="showEditDialog(Item)"
+              ></p-button>
+            </td>
           </tr>
         </ng-container>
       </ng-template>
@@ -131,6 +138,135 @@
       </ng-template>
     </p-table>
   </div>
+
+  <p-dialog
+    header="Edit Emp Attitude"
+    [(visible)]="displayEditAttitudeDialog"
+    modal="true"
+    [closable]="true"
+    [style]="{ width: '400px', height: '450px' }"
+  >
+    <div class="p-fluid">
+      <br />
+      <div class="p-field">
+        <label for="editAttitudeName" class="form-label1">Attitude Skill</label>
+        <input
+          pInputText
+          id="editAttitudeName"
+          type="text"
+          [(ngModel)]="editEmpAttitude.attitudeSkillName"
+          readonly
+        />
+        
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editAttitudeScore" class="form-label1">Score</label>
+        <p-dropdown
+          [options]="scoreOptions"
+          [(ngModel)]="editEmpAttitude.score"
+          placeholder="Select score"
+          [appendTo]="'body'"
+          [style]="{ width: '100%' }"
+        ></p-dropdown>
+      </div>
+      <br />
+    </div>
+
+    <p-footer>
+      <button
+        type="button"
+        pButton
+        label="Save"
+        icon="pi pi-check"
+        class="p-button-sm p-button-info"
+        (click)="updateEmpAttitude()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-sm p-button-danger"
+        (click)="displayEditAttitudeDialog = false"
+      ></button>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog
+    header="Edit Emp Achieve"
+    [(visible)]="displayEditAchieveDialog"
+    modal="true"
+    [closable]="true"
+    [style]="{ width: '400px', height: '450px' }"
+  >
+    <div class="p-fluid">
+      <br />
+      <div class="p-field">
+        <label for="editAchievementName" class="form-label1">Notes</label>
+        <input
+          pInputText
+          id="editAchievementName"
+          [(ngModel)]="editEmpAchieve.notes"
+          placeholder="Enter Notes"
+          readonly
+        />
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editGroupAchievement" class="form-label1"
+          >Achievement</label
+        >
+        <input
+          pInputText
+          id="editGroupAchievement"
+          [(ngModel)]="editEmpAchieve.achievement_name"
+          readonly
+        />
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editGroupAchievement" class="form-label1">Score</label>
+        <input
+          pInputText
+          id="editGroupAchievement"
+          [(ngModel)]="editEmpAchieve.score"
+          placeholder="Enter Score"
+        />
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="editGroupAchievement" class="form-label1"
+          >Assessment Year</label
+        >
+        <input
+          pInputText
+          id="editGroupAchievement"
+          [(ngModel)]="editEmpAchieve.assessment_year"
+          placeholder="Enter Assessment Year"
+          readonly
+        />
+      </div>
+    </div>
+    <p-footer>
+      <button
+        type="button"
+        pButton
+        label="Save"
+        icon="pi pi-check"
+        class="p-button-sm p-button-info"
+        (click)="updateEmpAchieve()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-sm p-button-danger"
+        (click)="displayEditAchieveDialog = false"
+      ></button>
+    </p-footer>
+  </p-dialog>
 
   @if (userId){
   <div

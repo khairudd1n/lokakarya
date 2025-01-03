@@ -97,19 +97,19 @@
 
     <ng-template pTemplate="body" let-user>
       <tr [pSelectableRow]="user">
-        <td>{{ user.full_name }}</td>
-        <td>{{ user.email_address }}</td>
-        <td>{{ user.position }}</td>
-        <td style="text-align: center">{{ user.division.division_name }}</td>
-        <td style="text-align: center">{{ user.assessmentScore }}</td>
+        <td>{{ user.user.full_name }}</td>
+        <td>{{ user.user.email_address }}</td>
+        <td>{{ user.user.position }}</td>
+        <td style="text-align: center">{{ user.user.division.division_name }}</td>
+        <td style="text-align: center">{{ user.score }}</td>
         <td style="text-align: center">
           <span
             [ngClass]="{
-              'status-approved': user.assessmentStatus === 1,
-              'status-pending': user.assessmentStatus === 0
+              'status-approved': user.status === 1,
+              'status-pending': user.status === 0
             }"
           >
-            {{ getStatusLabel(user.assessmentStatus) }}
+            {{ getStatusLabel(user.status) }}
           </span>
         </td>
         <td>
@@ -118,22 +118,22 @@
               pButton
               icon="pi pi-check"
               class="p-button-sm p-button-info"
-              (click)="approveAssessmentSummary(user.assessmentSummaryId)"
+              (click)="approveAssessmentSummary(user.id)"
               [disabled]="
-                !user.assessmentScore ||
-                isApproving[user.assessmentSummaryId] ||
-                user.assessmentStatus === 1
+                !user.score ||
+                isApproving[user.id] ||
+                user.status === 1
               "
             ></button>
             <button
               pButton
               icon="pi pi-times"
               class="p-button-sm p-button-danger"
-              (click)="unapproveAssessmentSummary(user.assessmentSummaryId)"
+              (click)="unapproveAssessmentSummary(user.id)"
               [disabled]="
-                !user.assessmentScore ||
-                isApproving[user.assessmentSummaryId] ||
-                user.assessmentStatus === 0
+                !user.score ||
+                isApproving[user.id] ||
+                user.status === 0
               "
             ></button>
           </div>
@@ -159,4 +159,6 @@
     ></app-user-summary>
     }
   </p-dialog>
+
+  
 </div>

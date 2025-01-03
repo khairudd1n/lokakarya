@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, tap, switchMap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
 import { EmpTechSkillCreateDto } from './emp-technical-skill.service';
@@ -28,6 +28,7 @@ export interface EmpAttitudeSkillUpdateRequest {
 export class EmpAttitudeSkillNewService {
   private apiUrl = 'http://localhost:8080/emp-attitude-skill';
   private apiUrl2 = 'http://localhost:8080/group-attitude-skill/all-with-att';
+  private assessSumUrl = 'http://localhost:8080/assess-sum';
   private token = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -38,13 +39,23 @@ export class EmpAttitudeSkillNewService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.post(this.apiUrl, payload, { headers });
+    return this.http.post(this.apiUrl, payload, { headers }).pipe(
+      map((response) => response),
+      switchMap(() =>
+        this.http.post<void>(
+          `${this.assessSumUrl}/generate/${payload[0].user_id}/${payload[0].assessment_year}`,
+          {},
+          { headers: { Authorization: `Bearer ${this.token}` } }
+        )
+        
+      )
+    );
   }
 
   updateEmpAttitudeSkill(
     id: UUID,
     payload: EmpAttitudeSkillCreateDto
-  ): Observable<EmpAttitudeSkillCreateDto> {
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -57,7 +68,14 @@ export class EmpAttitudeSkillNewService {
       .pipe(
         tap((updatedSkill) => {
           console.log('Successfully updated skill:', updatedSkill);
-        })
+        }),
+        switchMap(() =>
+          this.http.post<void>(
+            `${this.assessSumUrl}/generate/${payload.user_id}/${payload.assessment_year}`,
+            {},
+            { headers: { Authorization: `Bearer ${this.token}` } }
+          )
+        )
       );
   }
 
@@ -105,7 +123,14 @@ export class EmpAttitudeSkillNewService {
       .pipe(
         tap((updatedSkills) => {
           console.log('Successfully updated skills:', updatedSkills);
-        })
+        }),
+        switchMap(() =>
+          this.http.post<void>(
+            `${this.assessSumUrl}/generate/${payload[0].user_id}/${payload[0].assessment_year}`,
+            {},
+            { headers: { Authorization: `Bearer ${this.token}` } }
+          )
+        )
       );
   }
 
