@@ -200,6 +200,16 @@ export class SummaryComponent {
 
   clearSelectedUser() {
     this.selectedUser = null;
+    this.getPaginatedAssessmentSummaries(
+      '',
+      this.selectedYear.value,
+      this.selectedDivision,
+      this.selectedStatus,
+      0,
+      this.rows,
+      this.sortField,
+      this.sortOrder
+    );
   }
 
   clearFilters(table: any): void {
