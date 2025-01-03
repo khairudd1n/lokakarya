@@ -63,7 +63,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   @Input() isInDialog: boolean = false;
 
   Math = Math;
-
+  roles: string[] = [];
   token: string = localStorage.getItem('token') || '';
   combinedData: any[] = [];
   suggestions: any[] = [];
@@ -255,6 +255,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const jwtPayload = this.authService.parseJwt(token);
+      this.roles = jwtPayload.roles!;
+      console.log('Roles : ', this.roles);
+    }
     console.log('On init called');
     if (!this.isInDialog) {
       if (!this.userId) {

@@ -39,9 +39,10 @@ export class SummaryComponent {
   displayDetailDialog: boolean = false;
   displaySummaryDialog: boolean = false;
   selectedUser: any = null;
+  currentYear: number = new Date().getFullYear();
   selectedYear: { label: string; value: number } = {
-    label: '2024',
-    value: 2024,
+    label: this.currentYear.toString(),
+    value: this.currentYear,
   };
   years: { label: string; value: number }[] = [];
   assSummary: any[] = [];
@@ -88,7 +89,7 @@ export class SummaryComponent {
         return { label: division.division_name, value: division.id };
       });
     });
-    if (this.roles.includes('HR')){
+    if (this.roles.includes('HR')) {
       this.getPaginatedAssessmentSummaries(
         '',
         this.selectedYear.value,
@@ -98,9 +99,9 @@ export class SummaryComponent {
         this.sortField,
         this.sortOrder
       );
-    }else{
+    } else {
       this.selectedDivision = [this.loginUser.division.id];
-      console.log("DIVISION_ID : ",this.selectedDivision);
+      console.log('DIVISION_ID : ', this.selectedDivision);
       this.getPaginatedAssessmentSummaries(
         '',
         this.selectedYear.value,
@@ -111,7 +112,6 @@ export class SummaryComponent {
         this.sortOrder
       );
     }
-    
   }
 
   onYearChange($event: DropdownChangeEvent) {
@@ -133,7 +133,7 @@ export class SummaryComponent {
     this.rows = event.rows;
     this.sortField = event.sortField || 'id';
     this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
-    if(this.roles.includes('HR')){
+    if (this.roles.includes('HR')) {
       this.getPaginatedAssessmentSummaries(
         searchTerm,
         this.selectedYear.value,
@@ -154,7 +154,6 @@ export class SummaryComponent {
         this.sortOrder
       );
     }
-    
   }
 
   openSummaryDialog() {
