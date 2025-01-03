@@ -31,6 +31,9 @@ import {
   EmpAttitudeSkillUpdateRequest,
 } from '../../emp-attitude-skill-new.service';
 
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-user-summary',
   standalone: true,
@@ -324,78 +327,88 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   exportToExcel(): void {
-    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
-    const tableRows: any[] = [];
-    const merges: any[] = [];
-    const columnWidths: number[] = []; // Array to hold the maximum widths for each column
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Assessment Summary');
 
-    // Add table headers
-    tableRows.push(['Aspect', 'Average Score', 'Weight%', 'Final Score']);
+    const borderStyle: Partial<ExcelJS.Borders> = {
+      top: { style: 'thin' as ExcelJS.BorderStyle },
+      left: { style: 'thin' as ExcelJS.BorderStyle },
+      bottom: { style: 'thin' as ExcelJS.BorderStyle },
+      right: { style: 'thin' as ExcelJS.BorderStyle },
+    };
 
-    // Initialize column widths
-    columnWidths.push(5); // Initial width for 'Aspect'
-    columnWidths.push(15); // Initial width for 'Average Score'
-    columnWidths.push(10); // Initial width for 'Weight%'
-    columnWidths.push(15); // Initial width for 'Final Score'
+    // Add title and year
+    worksheet.addRow(['ASSESSMENT SUMMARY REPORT']);
+    worksheet.addRow(['Year:', this.selectedYear.label]);
+    worksheet.mergeCells('A1:D1');
+    worksheet.getCell('A1').alignment = { horizontal: 'center' };
+    worksheet.getCell('A1').font = { bold: true, size: 14 };
 
-    // Add full_name and assessment_year at the top
-    let name: string = '';
-    this.combinedData.forEach((item) => {
-      item.items.forEach((subItem: any) => {
-        name = subItem.user?.full_name || '';
-        return;
-      });
-    });
+    // Define columns
+    worksheet.columns = [
+      { header: 'Aspect', key: 'aspect', width: 40 },
+      { header: 'Average Score', key: 'average_score', width: 20 },
+      { header: 'Weight%', key: 'weight', width: 10 },
+      { header: 'Final Score', key: 'final_score', width: 15 },
+    ];
 
-    // Add employee name and assessment year
-    tableRows.push(['Employee Name:', name || '', '', '']);
-    tableRows.push(['Assessment Year:', this.selectedYear.label, '', '']);
+    // Add employee name
+    worksheet.addRow([
+      'Employee Name:',
+      this.combinedData[0]?.items[0]?.user?.full_name || '',
+    ]);
 
+    // Add section and data
     this.combinedData.forEach((item, index) => {
       // Check if it's a new section
       if (this.isNewSection(index, item.section)) {
-        const sectionRowIndex = tableRows.length; // Get the current row index
-        tableRows.push([item.section, '', '', '']); // Add section header
-        merges.push({
-          s: { r: sectionRowIndex, c: 0 },
-          e: { r: sectionRowIndex, c: 3 },
-        }); // Merge cells
+        worksheet.addRow([item.section, '', '', '']).font = { bold: true };
       }
 
       // Add group name row
-      tableRows.push([
-        item.group_name,
-        item.total_score,
-        item.percentage,
-        Math.round(item.total_score * (item.percentage / 100)),
-      ]);
+      const finalScore = Math.round(item.total_score * (item.percentage / 100));
+      worksheet
+        .addRow([
+          item.group_name,
+          item.total_score,
+          item.percentage,
+          finalScore,
+        ])
+        .eachCell((cell) => {
+          cell.border = borderStyle;
+        });
 
       // Add achievements and attitude skills
       item.items.forEach((subItem: any) => {
         const aspect = `${subItem.achievement?.achievement_name || ''} ${
           subItem.attitude_skill?.attitude_skill_name || ''
         }`;
-        tableRows.push([aspect, 'Score:', subItem.score, '']);
-
-        // Update the maximum width for the 'Aspect' column
-        const aspectWidth =
-          aspect.length > columnWidths[0] ? aspect.length : columnWidths[0];
-        columnWidths[0] = aspectWidth; // Update the width for the 'Aspect' column
+        const dataRow = worksheet.addRow([aspect, 'Score:', subItem.score, '']);
+        dataRow.eachCell((cell) => {
+          cell.border = borderStyle;
+        });
       });
     });
 
     // Add total score row at the bottom
-    tableRows.push(['Total Score:', '', '', this.assScore]);
+    const totalScoreRow = worksheet.addRow([
+      'Total Score:',
+      '',
+      '',
+      this.assScore,
+    ]);
+    totalScoreRow.eachCell((cell) => {
+      cell.border = borderStyle;
+    });
 
-    // Create a worksheet and add the data
-    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableRows);
-    worksheet['!merges'] = merges; // Set the merges
-
-    // Set the column widths
-    worksheet['!cols'] = columnWidths.map((width) => ({ wch: width }));
-
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary');
-    XLSX.writeFile(workbook, 'summary.xlsx');
+    // Save the workbook
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      const fileName = `Assessment_Summary_${this.combinedData[0]?.items[0]?.user?.full_name}_${this.selectedYear.label}.xlsx`;
+      saveAs(blob, fileName);
+    });
   }
 
   exportToPDF(): void {
@@ -512,6 +525,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       margin: { top: 10 },
     });
 
-    doc.save('my_summary.pdf');
+    const fileName = `Assessment_Summary_${this.combinedData[0]?.items[0]?.user?.full_name}_${this.selectedYear.label}.pdf`;
+    doc.save(fileName);
   }
 }

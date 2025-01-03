@@ -8,6 +8,7 @@ import { ApiResponse } from './core/models/api-response.model';
 import { map } from 'rxjs/operators';
 
 export interface EmpSuggestDto {
+  id: UUID;
   user_id: UUID;
   suggestion: string;
   assessment_year: number;
@@ -33,6 +34,32 @@ export class EmpSuggestService {
       .pipe(
         tap((data) => {
           console.log('Data stored successfully:', data);
+        })
+      );
+  }
+
+  updateEmpSuggest(
+    payload: {
+      id: string;
+      user_id: string;
+      suggestion: string;
+      assessment_year: number;
+    }[]
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    console.log('Payload untuk update:', payload);
+
+    return this.http
+      .put(`${this.apiUrl}`, payload, {
+        headers,
+      })
+      .pipe(
+        tap((updatedSuggests) => {
+          console.log('Successfully updated suggests:', updatedSuggests);
         })
       );
   }
@@ -76,5 +103,14 @@ export class EmpSuggestService {
           console.log('Retrieved assessment years:', years);
         })
       );
+  }
+
+  deleteEmpSuggest(id: UUID): Observable<void> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
+    return this.http
+      .delete<void>(`${this.apiUrl}/delete/${id}`, { headers })
+      .pipe(tap(() => console.log(`Deleted Emp suggest with ID: ${id}`)));
   }
 }
