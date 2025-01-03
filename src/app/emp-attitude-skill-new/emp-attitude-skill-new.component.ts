@@ -107,6 +107,9 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
   onAssessmentYearChange(): void {
     this.loadData(); // Panggil ulang data ketika tahun berubah
+    if(this.selectedAssessmentYear < this.assessmentYear) {
+      this.isDisabled = true;
+    }
   }
 
   loadData(): void {
@@ -204,7 +207,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         user_id: this.userId as UUID,
         attitude_skill_id: attitudeSkillId as UUID,
         score,
-        assessment_year: this.assessmentYear,
+        assessment_year: this.selectedAssessmentYear,
         id: empAttitudeSkillId as UUID, // Menambahkan ID EmpAttitudeSkill ke objek skill
       };
       this.selectedSkills.push(skill);
