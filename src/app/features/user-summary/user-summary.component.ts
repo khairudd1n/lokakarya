@@ -100,11 +100,11 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   };
 
   scoreOptions = [
-    { label: '100', value: 100 },
-    { label: '80', value: 80 },
-    { label: '60', value: 60 },
-    { label: '40', value: 40 },
-    { label: '20', value: 20 },
+    { label: '100 (Sangat Baik)', value: 100 },
+    { label: '80 (Baik)', value: 80 },
+    { label: '60 (Cukup)', value: 60 },
+    { label: '40 (Kurang)', value: 40 },
+    { label: '20 (Sangat Kurang)', value: 20 },
   ];
 
   showEditDialog(emp: any): void {
@@ -165,6 +165,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             title: 'Updated!',
             text: 'Emp Attitude updated successfully.',
             confirmButtonText: 'OK',
+            customClass: {
+              container: 'z-9999',
+            },
           });
         },
         error: (err) => {
@@ -232,22 +235,22 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     } else {
       this.id = this.authService.parseJwt(this.token).sub;
       this.summaryService
-            .getAssSummaryDetail(this.id, this.selectedYear.value)
-            .subscribe({
-              next: (data) => {
-                this.assScore = data.content.assess_sum.score;
-                this.combinedData = [
-                  ...data.content.achieve_results,
-                  ...data.content.attitude_results,
-                ];
-                if (this.combinedData.length > 0) {
-                  this.totalPercentage = 100;
-                }
-                this.isLoading = false;
-                console.log('data : ', this.combinedData);
-                console.log('assScore : ', this.assScore);
-              },
-            });
+        .getAssSummaryDetail(this.id, this.selectedYear.value)
+        .subscribe({
+          next: (data) => {
+            this.assScore = data.content.assess_sum.score;
+            this.combinedData = [
+              ...data.content.achieve_results,
+              ...data.content.attitude_results,
+            ];
+            if (this.combinedData.length > 0) {
+              this.totalPercentage = 100;
+            }
+            this.isLoading = false;
+            console.log('data : ', this.combinedData);
+            console.log('assScore : ', this.assScore);
+          },
+        });
     }
   }
 

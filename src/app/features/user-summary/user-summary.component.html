@@ -110,12 +110,14 @@
               {{ Item?.score }}
             </td>
             <td>
+              @if (userId){
               <p-button
                 label="Edit"
                 icon="pi pi-pencil"
                 class="p-button-sm p-button-info"
                 (click)="showEditDialog(Item)"
               ></p-button>
+              }
             </td>
           </tr>
         </ng-container>
@@ -140,7 +142,7 @@
   </div>
 
   <p-dialog
-    header="Edit Emp Attitude"
+    header="Edit Emp Attitude & Skill Score"
     [(visible)]="displayEditAttitudeDialog"
     modal="true"
     [closable]="true"
@@ -150,14 +152,15 @@
       <br />
       <div class="p-field">
         <label for="editAttitudeName" class="form-label1">Attitude Skill</label>
-        <input
-          pInputText
+        <textarea
+          pInputTextArea
           id="editAttitudeName"
-          type="text"
           [(ngModel)]="editEmpAttitude.attitudeSkillName"
+          rows="5"
+          class="textarea-field"
           readonly
-        />
-        
+        >
+        </textarea>
       </div>
       <br />
       <div class="p-field">
@@ -194,24 +197,13 @@
   </p-dialog>
 
   <p-dialog
-    header="Edit Emp Achieve"
+    header="Edit Emp Achieve Score"
     [(visible)]="displayEditAchieveDialog"
     modal="true"
     [closable]="true"
     [style]="{ width: '400px', height: '450px' }"
   >
     <div class="p-fluid">
-      <br />
-      <div class="p-field">
-        <label for="editAchievementName" class="form-label1">Notes</label>
-        <input
-          pInputText
-          id="editAchievementName"
-          [(ngModel)]="editEmpAchieve.notes"
-          placeholder="Enter Notes"
-          readonly
-        />
-      </div>
       <br />
       <div class="p-field">
         <label for="editGroupAchievement" class="form-label1"
@@ -232,19 +224,6 @@
           id="editGroupAchievement"
           [(ngModel)]="editEmpAchieve.score"
           placeholder="Enter Score"
-        />
-      </div>
-      <br />
-      <div class="p-field">
-        <label for="editGroupAchievement" class="form-label1"
-          >Assessment Year</label
-        >
-        <input
-          pInputText
-          id="editGroupAchievement"
-          [(ngModel)]="editEmpAchieve.assessment_year"
-          placeholder="Enter Assessment Year"
-          readonly
         />
       </div>
     </div>
