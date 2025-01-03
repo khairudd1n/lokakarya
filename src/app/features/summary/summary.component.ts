@@ -15,6 +15,7 @@ import { privateDecrypt, UUID } from 'crypto';
 import { Division } from '../../core/models/division.model';
 import { DivisionService } from '../../core/services/division.service';
 import { EmpAchieveSkillDto } from '../../emp-achieve.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-summary',
@@ -46,8 +47,8 @@ export class SummaryComponent {
   assSummary: any[] = [];
   userSummaryList: any[] = [];
   isApproving: { [key: string]: boolean } = {};
-
-
+  roles: any[] = [];
+  loginUser: any;
 
   getStatusLabel(status: number): string {
     switch (status) {
@@ -69,24 +70,48 @@ export class SummaryComponent {
 
   constructor(
     private assSummaryService: AssSummaryService,
-    private divisionSummary: DivisionService
+    private divisionSummary: DivisionService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const jwtPayload = this.authService.parseJwt(token);
+      this.roles = jwtPayload.roles!;
+      console.log('Roles : ', this.roles);
+    }
+    this.loginUser = JSON.parse(localStorage.getItem('user')!);
+    console.log(this.loginUser);
     this.divisionSummary.getDivisionList().subscribe((data) => {
       this.divisionOptions = data.map((division) => {
         return { label: division.division_name, value: division.id };
       });
     });
-    this.getPaginatedAssessmentSummaries(
-      '',
-      this.selectedYear.value,
-      '',
-      0,
-      this.rows,
-      this.sortField,
-      this.sortOrder
-    );
+    if (this.roles.includes('HR')){
+      this.getPaginatedAssessmentSummaries(
+        '',
+        this.selectedYear.value,
+        [],
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
+    }else{
+      this.selectedDivision = [this.loginUser.division.id];
+      console.log("DIVISION_ID : ",this.selectedDivision);
+      this.getPaginatedAssessmentSummaries(
+        '',
+        this.selectedYear.value,
+        this.selectedDivision,
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
+    }
+    
   }
 
   onYearChange($event: DropdownChangeEvent) {
@@ -94,7 +119,7 @@ export class SummaryComponent {
     this.getPaginatedAssessmentSummaries(
       '',
       $event.value.value,
-      '',
+      [],
       0,
       this.rows,
       this.sortField,
@@ -108,15 +133,28 @@ export class SummaryComponent {
     this.rows = event.rows;
     this.sortField = event.sortField || 'id';
     this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
-    this.getPaginatedAssessmentSummaries(
-      searchTerm,
-      this.selectedYear.value,
-      '',
-      page,
-      this.rows,
-      this.sortField,
-      this.sortOrder
-    );
+    if(this.roles.includes('HR')){
+      this.getPaginatedAssessmentSummaries(
+        searchTerm,
+        this.selectedYear.value,
+        [],
+        page,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
+    } else {
+      this.getPaginatedAssessmentSummaries(
+        searchTerm,
+        this.selectedYear.value,
+        this.selectedDivision,
+        page,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
+    }
+    
   }
 
   openSummaryDialog() {
@@ -127,7 +165,7 @@ export class SummaryComponent {
   getPaginatedAssessmentSummaries(
     searchTerm: string,
     year: number,
-    division: string,
+    division: string[],
     page: number,
     size: number,
     sortBy: string,
@@ -184,7 +222,7 @@ export class SummaryComponent {
       this.getPaginatedAssessmentSummaries(
         input,
         this.selectedYear.value,
-        '',
+        this.selectedDivision,
         0,
         this.rows,
         this.sortField,
@@ -199,7 +237,7 @@ export class SummaryComponent {
       this.getPaginatedAssessmentSummaries(
         '',
         this.selectedYear.value,
-        selectedValues[0],
+        selectedValues,
         0,
         this.rows,
         this.sortField,
@@ -242,7 +280,7 @@ export class SummaryComponent {
             this.getPaginatedAssessmentSummaries(
               '',
               this.selectedYear.value,
-              '',
+              [],
               0,
               this.rows,
               this.sortField,
@@ -292,7 +330,7 @@ export class SummaryComponent {
             this.getPaginatedAssessmentSummaries(
               '',
               this.selectedYear.value,
-              '',
+              [],
               0,
               this.rows,
               this.sortField,
