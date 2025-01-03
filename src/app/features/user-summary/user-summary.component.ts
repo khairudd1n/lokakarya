@@ -34,6 +34,12 @@ import {
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
+interface SubItem {
+  id: string; // atau UUID, tergantung pada tipe yang Anda gunakan
+  score: number;
+  // tambahkan properti lain yang relevan
+}
+
 @Component({
   selector: 'app-user-summary',
   standalone: true,
@@ -62,6 +68,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   @Input() year: number | null = null;
   @Input() isInDialog: boolean = false;
 
+  statusAssessment: number = 0;
   Math = Math;
   roles: string[] = [];
   token: string = localStorage.getItem('token') || '';
@@ -159,6 +166,23 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         next: (response) => {
           console.log('Emp Attitude updated successfully:', response);
 
+          const index = this.combinedData.findIndex(
+            (item) =>
+              item.items.some(
+                (subItem: SubItem) => subItem.id === this.editEmpAttitude.id
+              ) // Menentukan tipe subItem
+          );
+
+          if (index !== -1) {
+            const subItemIndex = this.combinedData[index].items.findIndex(
+              (subItem: SubItem) => subItem.id === this.editEmpAttitude.id
+            );
+            if (subItemIndex !== -1) {
+              this.combinedData[index].items[subItemIndex].score =
+                this.editEmpAttitude.score; // Update the score
+            }
+          }
+
           this.displayEditAttitudeDialog = false; // Close the dialog
           Swal.fire({
             icon: 'success',
@@ -239,6 +263,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         .subscribe({
           next: (data) => {
             this.assScore = data.content.assess_sum.score;
+            this.statusAssessment = data.content.assess_sum.status;
             this.combinedData = [
               ...data.content.achieve_results,
               ...data.content.attitude_results,
@@ -249,6 +274,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             this.isLoading = false;
             console.log('data : ', this.combinedData);
             console.log('assScore : ', this.assScore);
+            console.log('statusAssessment : ', this.statusAssessment);
           },
         });
     }
@@ -284,6 +310,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             .subscribe({
               next: (data) => {
                 this.assScore = data.content.assess_sum.score;
+                this.statusAssessment = data.content.assess_sum.status;
                 this.combinedData = [
                   ...data.content.achieve_results,
                   ...data.content.attitude_results,
@@ -294,6 +321,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
                 this.isLoading = false;
                 console.log('data : ', this.combinedData);
                 console.log('assScore : ', this.assScore);
+                console.log('statusAssessment : ', this.statusAssessment);
               },
             });
         },
@@ -315,6 +343,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         .subscribe({
           next: (data) => {
             this.assScore = data.content.assess_sum.score;
+            this.statusAssessment = data.content.assess_sum.status;
             this.combinedData = [
               ...data.content.achieve_results,
               ...data.content.attitude_results,
@@ -325,6 +354,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             this.isLoading = false;
             console.log('data : ', this.combinedData);
             console.log('assScore : ', this.assScore);
+            console.log('statusAssessment : ', this.statusAssessment);
           },
         });
     }
