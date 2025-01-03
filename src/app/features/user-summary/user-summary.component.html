@@ -109,16 +109,17 @@
             <td style="text-align: center">
               {{ Item?.score }}
             </td>
+
+            @if (roles.includes('SVP')) { @if (userId){
             <td>
-              @if (userId){
               <p-button
                 label="Edit"
                 icon="pi pi-pencil"
                 class="p-button-sm p-button-info"
                 (click)="showEditDialog(Item)"
               ></p-button>
-              }
             </td>
+            } }
           </tr>
         </ng-container>
       </ng-template>

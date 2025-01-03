@@ -51,35 +51,34 @@
         <th style="width: 20%; text-align: center">Email</th>
         <th style="width: 20%; text-align: center">Position</th>
         <th style="width: 20%; text-align: center">
-          Division 
-          @if(roles.includes('HR')){
-            <p-columnFilter
-              field="user.division.division_name"
-              matchMode="in"
-              display="menu"
-              [showMatchModes]="false"
-              [showOperator]="false"
-              [showAddButton]="false"
-              [showMatchModes]="false"
-              [showApplyButton]="false"
-              [showClearButton]="false"
-            >
-              <ng-template pTemplate="header">
-                <div class="px-3 pt-3 pb-0">
-                  <span class="font-bold">Division Filter</span>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="filter" let-filter="filterCallback">
-                <p-multiSelect
-                  [options]="divisionOptions"
-                  [(ngModel)]="selectedDivision"
-                  placeholder="Any"
-                  optionLabel="label"
-                  optionValue="value"
-                  (onChange)="filterDivision($event.value)"
-                ></p-multiSelect>
-              </ng-template>
-            </p-columnFilter>
+          Division @if(roles.includes('HR')){
+          <p-columnFilter
+            field="user.division.division_name"
+            matchMode="in"
+            display="menu"
+            [showMatchModes]="false"
+            [showOperator]="false"
+            [showAddButton]="false"
+            [showMatchModes]="false"
+            [showApplyButton]="false"
+            [showClearButton]="false"
+          >
+            <ng-template pTemplate="header">
+              <div class="px-3 pt-3 pb-0">
+                <span class="font-bold">Division Filter</span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="filter" let-filter="filterCallback">
+              <p-multiSelect
+                [options]="divisionOptions"
+                [(ngModel)]="selectedDivision"
+                placeholder="Any"
+                optionLabel="label"
+                optionValue="value"
+                (onChange)="filterDivision($event.value)"
+              ></p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
           }
         </th>
         <th pSortableColumn="score" style="width: 15%; text-align: center">
@@ -87,7 +86,9 @@
           <p-sortIcon field="score"></p-sortIcon>
         </th>
         <th>status</th>
+        @if (roles.includes('SVP')) {
         <th>Approve</th>
+        }
       </tr>
     </ng-template>
 
@@ -110,6 +111,8 @@
             {{ getStatusLabel(user.status) }}
           </span>
         </td>
+
+        @if (roles.includes('SVP')) {
         <td>
           <div class="action-buttons">
             <button
@@ -132,6 +135,7 @@
             ></button>
           </div>
         </td>
+        }
       </tr>
     </ng-template>
   </p-table>
