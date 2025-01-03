@@ -77,3 +77,11 @@ table {
   padding: 8px;
   text-align: center;
 }
+
+.textarea-field {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
