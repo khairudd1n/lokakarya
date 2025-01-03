@@ -35,9 +35,8 @@ import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
 interface SubItem {
-  id: string; // atau UUID, tergantung pada tipe yang Anda gunakan
+  id: string;
   score: number;
-  // tambahkan properti lain yang relevan
 }
 
 @Component({
@@ -223,12 +222,32 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         next: (response) => {
           console.log('Emp Achieve updated successfully:', response);
 
+          const index = this.combinedData.findIndex(
+            (item) =>
+              item.items.some(
+                (subItem: SubItem) => subItem.id === this.editEmpAchieve.id
+              ) // Menentukan tipe subItem
+          );
+
+          if (index !== -1) {
+            const subItemIndex = this.combinedData[index].items.findIndex(
+              (subItem: SubItem) => subItem.id === this.editEmpAchieve.id
+            );
+            if (subItemIndex !== -1) {
+              this.combinedData[index].items[subItemIndex].score =
+                this.editEmpAchieve.score; // Update the score
+            }
+          }
+
           this.displayEditAchieveDialog = false; // Close the dialog
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
             text: 'Emp Achieve updated successfully.',
             confirmButtonText: 'OK',
+            customClass: {
+              container: 'z-9999',
+            },
           });
         },
         error: (err) => {
