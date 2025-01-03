@@ -404,26 +404,41 @@ export class UserSummaryComponent implements OnInit, OnChanges {
 
     // Define columns
     worksheet.columns = [
-      { header: 'Aspect', key: 'aspect', width: 40 },
-      { header: 'Average Score', key: 'average_score', width: 20 },
+      { header: 'Aspect', key: 'aspect', width: 100 },
+      { header: 'Avg. Score', key: 'average_score', width: 20 },
       { header: 'Weight%', key: 'weight', width: 10 },
-      { header: 'Final Score', key: 'final_score', width: 15 },
+      { header: 'ASSESSMENT SUMMARY REPORT', key: 'final_score', width: 15 },
     ];
+
+    // Add explicit headers
+    worksheet
+      .addRow(['Aspect', 'Average Score', 'Percentage', 'Final Score'])
+      .eachCell((cell) => {
+        cell.font = { bold: true };
+        cell.alignment = { horizontal: 'center' };
+        cell.border = borderStyle;
+      });
 
     // Add employee name
     worksheet.addRow([
       'Employee Name:',
       this.combinedData[0]?.items[0]?.user?.full_name || '',
+      '',
+      '',
     ]);
 
-    // Add section and data
     this.combinedData.forEach((item, index) => {
       // Check if it's a new section
       if (this.isNewSection(index, item.section)) {
-        worksheet.addRow([item.section, '', '', '']).font = { bold: true };
+        const sectionRow = worksheet.addRow([item.section, '', '', '']);
+        sectionRow.font = { bold: true };
+        sectionRow.getCell(1).alignment = { horizontal: 'center' }; // Center align the section text
+        sectionRow.getCell(2).alignment = { horizontal: 'center' };
+        sectionRow.getCell(3).alignment = { horizontal: 'center' };
+        sectionRow.getCell(4).alignment = { horizontal: 'center' };
       }
 
-      // Add group name row
+      // Add group name row with light gray background
       const finalScore = Math.round(item.total_score * (item.percentage / 100));
       worksheet
         .addRow([
@@ -434,6 +449,11 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         ])
         .eachCell((cell) => {
           cell.border = borderStyle;
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'D3D3D3' },
+          }; // Light gray background
         });
 
       // Add achievements and attitude skills
@@ -441,23 +461,19 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         const aspect = `${subItem.achievement?.achievement_name || ''} ${
           subItem.attitude_skill?.attitude_skill_name || ''
         }`;
-        const dataRow = worksheet.addRow([aspect, 'Score:', subItem.score, '']);
-        dataRow.eachCell((cell) => {
+        worksheet.addRow([aspect, subItem.score, '', '']).eachCell((cell) => {
           cell.border = borderStyle;
         });
       });
     });
 
     // Add total score row at the bottom
-    const totalScoreRow = worksheet.addRow([
-      'Total Score:',
-      '',
-      '',
-      this.assScore,
-    ]);
-    totalScoreRow.eachCell((cell) => {
-      cell.border = borderStyle;
-    });
+    worksheet
+      .addRow(['Total Score:', '', '', this.assScore])
+      .eachCell((cell) => {
+        cell.border = borderStyle;
+        cell.font = { bold: true };
+      });
 
     // Save the workbook
     workbook.xlsx.writeBuffer().then((buffer) => {
