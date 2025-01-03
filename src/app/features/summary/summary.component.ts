@@ -50,6 +50,12 @@ export class SummaryComponent {
   isApproving: { [key: string]: boolean } = {};
   roles: any[] = [];
   loginUser: any;
+  statusOptions: { label: string; value: number }[] = [
+    { label: 'Pending', value: 0 },
+    { label: 'Approved', value: 1 },
+  ];
+  status: number[] = [];
+  selectedStatus: boolean | null = null;
 
   getStatusLabel(status: number): string {
     switch (status) {
@@ -94,6 +100,7 @@ export class SummaryComponent {
         '',
         this.selectedYear.value,
         [],
+        null,
         0,
         this.rows,
         this.sortField,
@@ -106,6 +113,7 @@ export class SummaryComponent {
         '',
         this.selectedYear.value,
         this.selectedDivision,
+        null,
         0,
         this.rows,
         this.sortField,
@@ -120,6 +128,7 @@ export class SummaryComponent {
       '',
       $event.value.value,
       [],
+      null,
       0,
       this.rows,
       this.sortField,
@@ -133,27 +142,16 @@ export class SummaryComponent {
     this.rows = event.rows;
     this.sortField = event.sortField || 'id';
     this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
-    if (this.roles.includes('HR')) {
-      this.getPaginatedAssessmentSummaries(
-        searchTerm,
-        this.selectedYear.value,
-        [],
-        page,
-        this.rows,
-        this.sortField,
-        this.sortOrder
-      );
-    } else {
-      this.getPaginatedAssessmentSummaries(
-        searchTerm,
-        this.selectedYear.value,
-        this.selectedDivision,
-        page,
-        this.rows,
-        this.sortField,
-        this.sortOrder
-      );
-    }
+    this.getPaginatedAssessmentSummaries(
+      searchTerm,
+      this.selectedYear.value,
+      this.selectedDivision,
+      this.selectedStatus,
+      page,
+      this.rows,
+      this.sortField,
+      this.sortOrder
+    );
   }
 
   openSummaryDialog() {
@@ -165,6 +163,7 @@ export class SummaryComponent {
     searchTerm: string,
     year: number,
     division: string[],
+    approved: boolean | null,
     page: number,
     size: number,
     sortBy: string,
@@ -175,6 +174,7 @@ export class SummaryComponent {
         searchTerm,
         year,
         division,
+        approved,
         page,
         size,
         sortBy,
@@ -205,6 +205,8 @@ export class SummaryComponent {
   clearFilters(table: any): void {
     table.reset();
     this.selectedDivision = [];
+    this.selectedStatus = null;
+    this.status = [];
     const globalSearchInput = document.querySelector(
       '.p-input-icon-left input'
     ) as HTMLInputElement;
@@ -222,6 +224,7 @@ export class SummaryComponent {
         input,
         this.selectedYear.value,
         this.selectedDivision,
+        this.selectedStatus,
         0,
         this.rows,
         this.sortField,
@@ -237,6 +240,24 @@ export class SummaryComponent {
         '',
         this.selectedYear.value,
         selectedValues,
+        this.selectedStatus,
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
+    }
+  }
+  filterStatus(selectedStatus: any) {
+    console.log('Filter called with:', selectedStatus);
+    if (this.dt1) {
+      if(selectedStatus.length > 1) selectedStatus = null
+      this.selectedStatus = this.status.length > 1 ? null : selectedStatus;
+      this.getPaginatedAssessmentSummaries(
+        '',
+        this.selectedYear.value,
+        this.selectedDivision,
+        selectedStatus,
         0,
         this.rows,
         this.sortField,
@@ -279,7 +300,8 @@ export class SummaryComponent {
             this.getPaginatedAssessmentSummaries(
               '',
               this.selectedYear.value,
-              [],
+              this.selectedDivision,
+              this.selectedStatus,
               0,
               this.rows,
               this.sortField,
@@ -329,7 +351,8 @@ export class SummaryComponent {
             this.getPaginatedAssessmentSummaries(
               '',
               this.selectedYear.value,
-              [],
+              this.selectedDivision,
+              this.selectedStatus,
               0,
               this.rows,
               this.sortField,

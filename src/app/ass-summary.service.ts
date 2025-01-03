@@ -97,6 +97,7 @@ export class AssSummaryService {
     searchTerm: string,
     year: number,
     division: string[],
+    approved: boolean|null,
     page: number,
     size: number,
     sortBy: string,
@@ -125,7 +126,11 @@ export class AssSummaryService {
         params = params.append('divisionIds', id);
       });
     }
-    
+
+    if(approved) {
+      params = params.set('approved', approved.toString());
+    }
+
     return this.http
       .get<ApiResponse<any>>(`${this.url}/all`, {
         headers,
