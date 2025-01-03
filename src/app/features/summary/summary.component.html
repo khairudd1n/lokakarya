@@ -77,11 +77,6 @@
                 optionValue="value"
                 (onChange)="filterDivision($event.value)"
               >
-                <!-- <ng-template let-option pTemplate="item">
-                  <div class="inline-block vertical-align-middle">
-                    <span class="ml-1 mt-1">{{ option.label }}</span>
-                  </div>
-                </ng-template> -->
               </p-multiSelect>
             </ng-template>
           </p-columnFilter>
@@ -100,7 +95,9 @@
         <td>{{ user.user.full_name }}</td>
         <td>{{ user.user.email_address }}</td>
         <td>{{ user.user.position }}</td>
-        <td style="text-align: center">{{ user.user.division.division_name }}</td>
+        <td style="text-align: center">
+          {{ user.user.division.division_name }}
+        </td>
         <td style="text-align: center">{{ user.score }}</td>
         <td style="text-align: center">
           <span
@@ -120,9 +117,7 @@
               class="p-button-sm p-button-info"
               (click)="approveAssessmentSummary(user.id)"
               [disabled]="
-                !user.score ||
-                isApproving[user.id] ||
-                user.status === 1
+                !user.score || isApproving[user.id] || user.status === 1
               "
             ></button>
             <button
@@ -131,9 +126,7 @@
               class="p-button-sm p-button-danger"
               (click)="unapproveAssessmentSummary(user.id)"
               [disabled]="
-                !user.score ||
-                isApproving[user.id] ||
-                user.status === 0
+                !user.score || isApproving[user.id] || user.status === 0
               "
             ></button>
           </div>
@@ -147,7 +140,7 @@
     [modal]="true"
     (onHide)="clearSelectedUser()"
     header="Summary"
-    [style]="{ width: '80vw', 'max-width': '600px' }"
+    [style]="{ width: '80vw', 'max-width': '700px' }"
     [draggable]="false"
     [resizable]="false"
   >
@@ -159,6 +152,4 @@
     ></app-user-summary>
     }
   </p-dialog>
-
-  
 </div>
