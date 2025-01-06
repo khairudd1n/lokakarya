@@ -10,6 +10,14 @@ import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { AssSummaryService } from '../ass-summary.service';
 import { TagModule } from 'primeng/tag';
+import { forkJoin } from 'rxjs';
+
+interface Row {
+  id?: string;
+  suggestion: string;
+  saved: boolean;
+  edited: boolean;
+}
 
 @Component({
   selector: 'app-emp-suggest',
@@ -117,12 +125,19 @@ export class EmpSuggestComponent implements OnInit {
   }
 
   saveSuggestions(): void {
-    const newRows = this.groupData[0].rows.filter((row: any) => !row.saved);
-    const updatedRows = this.groupData[0].rows.filter((row: any) => row.saved);
+    const newRows = this.groupData[0].rows.filter((row: Row) => !row.saved);
+    const updatedRows = this.groupData[0].rows.filter(
+      (row: Row) => row.saved && row.edited
+    );
 
-    const hasEmptyNewRows = newRows.some((row: any) => !row.suggestion.trim());
+    if (newRows.length === 0 && updatedRows.length === 0) {
+      Swal.fire('Info', 'No changes detected.', 'info');
+      return;
+    }
+
+    const hasEmptyNewRows = newRows.some((row: Row) => !row.suggestion.trim());
     const hasEmptyUpdatedRows = updatedRows.some(
-      (row: any) => !row.suggestion.trim()
+      (row: Row) => !row.suggestion.trim()
     );
 
     if (hasEmptyNewRows || hasEmptyUpdatedRows) {
@@ -131,11 +146,6 @@ export class EmpSuggestComponent implements OnInit {
         'Please fill in all suggestion fields before submitting.',
         'warning'
       );
-      return;
-    }
-
-    if (newRows.length === 0 && updatedRows.length === 0) {
-      Swal.fire('Warning', 'No new row has been made or updated.', 'warning');
       return;
     }
 
@@ -148,54 +158,49 @@ export class EmpSuggestComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        const payload: EmpSuggestDto[] = newRows.map((row: any) => ({
+        const newPayload: EmpSuggestDto[] = newRows.map((row: Row) => ({
           user_id: this.userId as UUID,
           suggestion: row.suggestion,
           assessment_year: this.assessmentYear,
         }));
 
-        this.empSuggestService.saveEmpSuggest(payload).subscribe(
-          (response) => {
-            
-            newRows.forEach((row: any) => (row.saved = true));
-            Swal.fire(
-              'Success',
-              'New data has been submitted successfully!',
-              'success'
-            );
-          },
-          (error) => {
-            console.error('Error saving new data:', error);
-            Swal.fire('Error', 'Failed to submit new data.', 'error');
-          }
-        );
+        const saveNewRows$ = newPayload.length
+          ? this.empSuggestService.saveEmpSuggest(newPayload)
+          : null;
 
-        const updatePayload = updatedRows.map((row: any) => ({
+        const updatePayload = updatedRows.map((row: Row) => ({
           id: row.id,
           user_id: this.userId as UUID,
           suggestion: row.suggestion,
           assessment_year: this.assessmentYear,
         }));
 
-        if (updatePayload.length > 0) {
-          this.empSuggestService.updateEmpSuggest(updatePayload).subscribe(
-            (response) => {
-              
-              Swal.fire(
-                'Success',
-                'Updated data has been submitted successfully!',
-                'success'
-              );
-            },
-            (error) => {
-              console.error('Error updating data:', error);
-              Swal.fire('Error', 'Failed to update data.', 'error');
-            }
-          );
-        }
+        const updateRows$ = updatePayload.length
+          ? this.empSuggestService.updateEmpSuggest(updatePayload)
+          : null;
+
+        forkJoin(
+          [saveNewRows$, updateRows$].filter((obs) => obs !== null)
+        ).subscribe(
+          () => {
+            newRows.forEach((row: Row) => (row.saved = true));
+            updatedRows.forEach((row: Row) => (row.edited = false));
+            this.loadSavedSuggestions();
+            Swal.fire(
+              'Success',
+              'Suggestion has been saved successfully!',
+              'success'
+            );
+          },
+          (error) => {
+            console.error('Error saving data:', error);
+            Swal.fire('Error', 'Failed to saved data.', 'error');
+          }
+        );
       }
     });
   }
+
 
   deleteSuggestion(id: UUID): void {
     Swal.fire({
@@ -243,4 +248,8 @@ export class EmpSuggestComponent implements OnInit {
   deleteRow(group: any, rowIndex: number): void {
     group.rows.splice(rowIndex, 1);
   }
+
+  onSuggestionChange(row: Row): void {
+    row.edited = true;
+  }
 }
