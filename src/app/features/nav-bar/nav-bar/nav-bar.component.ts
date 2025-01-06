@@ -50,13 +50,12 @@ export class NavBarComponent implements OnInit {
     }
     this.menuService.getMenuByUserId(this.userId).subscribe((data) => {
       this.userMenu = data;
-      console.log(this.userMenu);
+
       this.userMenuItems = this.userMenu
         .map((menu) => MENU_MAP[menu.menu_name])
         .filter((menu) => menu !== undefined);
 
       this.menuItems = this.groupMenus(this.userMenuItems);
-      console.log(this.menuItems);
     });
   }
 

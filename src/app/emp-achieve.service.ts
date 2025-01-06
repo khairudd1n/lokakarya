@@ -41,11 +41,12 @@ export class EmpAchieveService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<EmpAchieveSkillDto[]>(`${this.apiUrl}/with-group-names`, {
+    return this.http.get<EmpAchieveSkillDto[]>(
+      `${this.apiUrl}/with-group-names`,
+      {
         headers,
-      })
-      .pipe(tap((data) => console.log('Fetched Emp Achieve Skill:', data)));
+      }
+    );
   }
 
   createEmpAchieve(empAchieve: {
@@ -64,17 +65,12 @@ export class EmpAchieveService {
         headers,
       })
       .pipe(
-        tap((response) => console.log('Created Emp Achieve:', response)),
-
         switchMap(() =>
           this.http.post<void>(
             `${this.assessSumUrl}/generate/${empAchieve.user_id}/${empAchieve.assessment_year}`,
             {},
             { headers: { Authorization: `Bearer ${this.token}` } }
           )
-        ),
-        tap(() =>
-          console.log('Generated Assessment Summary (no response needed)')
         )
       );
   }
@@ -93,9 +89,11 @@ export class EmpAchieveService {
       Authorization: `Bearer ${this.token}`,
     };
 
-    return this.http
-      .put<EmpAchieveSkillDto>(`${this.apiUrl}/${id}`, empAchieve, { headers })
-      .pipe(tap((response) => console.log('Updated Emp Achieve:', response)));
+    return this.http.put<EmpAchieveSkillDto>(
+      `${this.apiUrl}/${id}`,
+      empAchieve,
+      { headers }
+    );
   }
 
   updateEmpAchieveAndGenerateSummary(
@@ -115,18 +113,12 @@ export class EmpAchieveService {
     return this.http
       .put<EmpAchieveSkillDto>(`${this.apiUrl}/${id}`, empAchieve, { headers })
       .pipe(
-        tap((updateResponse) =>
-          console.log('Updated Emp Achieve:', updateResponse)
-        ),
         switchMap(() =>
           this.http.post(
             `${this.assessSumUrl}/generate/${empAchieve.user_id}/${empAchieve.assessment_year}`,
             {},
             { headers: { Authorization: `Bearer ${this.token}` } }
           )
-        ),
-        tap(() =>
-          console.log('Generated Assessment Summary (no response needed)')
         )
       );
   }
@@ -142,7 +134,6 @@ export class EmpAchieveService {
         { headers }
       )
       .pipe(
-        tap((data) => console.log('Fetched users:', data)),
         map((response) =>
           response.content.map((item) => ({
             label: item.username,
@@ -161,8 +152,6 @@ export class EmpAchieveService {
         headers,
       })
       .pipe(
-        tap((data) => console.log('Fetched achievements:', data)),
-
         map((data) =>
           data.map((item) => ({
             label: item.achievement_name,
@@ -176,8 +165,6 @@ export class EmpAchieveService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .delete<void>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(tap(() => console.log(`Deleted Emp Achieve with ID: ${id}`)));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

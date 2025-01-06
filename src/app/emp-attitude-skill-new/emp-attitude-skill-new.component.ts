@@ -113,8 +113,8 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       .pipe(
         concatMap(({ groupData, userSkills }) => {
           this.groupData = groupData;
-          console.log('Group Data:', this.groupData);
-          console.log('User Skills:', userSkills);
+          
+          
 
           if (userSkills.length > 0) {
             this.disabledSkills = new Set(
@@ -133,7 +133,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
             });
           }
 
-          console.log('Synchronized Data:', this.groupData);
+          
 
           return this.assSummaryService.getAssessmentSummary(
             this.userId,
@@ -143,7 +143,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       )
       .subscribe((assessmentSummary) => {
         this.isDisabled = assessmentSummary?.status === 1;
-        console.log('Updated isDisabled:', this.isDisabled);
+        
       });
   }
 
@@ -153,10 +153,10 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     if (userToken) {
       try {
         const payload = JSON.parse(atob(userToken.split('.')[1]));
-        console.log('Full Token Payload:', payload);
+        
 
         this.userId = payload.sub;
-        console.log('Logged-in User ID:', this.userId);
+        
       } catch (error) {
         console.error('Error decoding token:', error);
       }
@@ -170,9 +170,9 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     score: number,
     empAttitudeSkillId: string
   ): void {
-    console.log('Selected Emp Attitude Skill ID:', empAttitudeSkillId);
-    console.log('Selected Attitude Skill ID:', attitudeSkillId);
-    console.log('Selected Score:', score);
+    
+    
+    
 
     const existingSkillIndex = this.selectedSkills.findIndex(
       (skill) => skill.attitude_skill_id === attitudeSkillId
@@ -209,10 +209,10 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       this.editedSkills.has(skill.attitude_skill_id)
     );
 
-    console.log('Updated skills:', updatedSkills);
+    
 
     if (updatedSkills.length === 0) {
-      console.log('No changes detected.');
+      
       Swal.fire('Info', 'No changes detected.', 'info');
       return;
     }
@@ -233,8 +233,8 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           this.disabledSkills.has(skill.attitude_skill_id)
         );
 
-        console.log('New skills:', newSkills);
-        console.log('Existing skills:', existingSkills);
+        
+        
 
         const saveNewSkills$ = newSkills.length
           ? this.empAttitudeSkillService.saveEmpAttitudeSkills(newSkills)
@@ -252,14 +252,14 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           ? this.empAttitudeSkillService.updateEmpAttitudeSkills(updatePayload)
           : null;
 
-        console.log('Save new skills observable:', saveNewSkills$);
-        console.log('Update skills payload:', updatePayload);
+        
+        
 
         forkJoin(
           [saveNewSkills$, updateSkills$].filter((obs) => obs !== null)
         ).subscribe(
           () => {
-            console.log('Changes saved successfully.');
+            
             Swal.fire(
               'Success',
               'Changes have been successfully saved!',
@@ -274,7 +274,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           }
         );
       } else {
-        console.log('User cancelled the confirmation dialog.');
+        
       }
     });
   }

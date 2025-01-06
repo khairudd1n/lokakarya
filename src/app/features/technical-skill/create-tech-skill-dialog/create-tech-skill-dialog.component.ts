@@ -53,8 +53,6 @@ export class CreateTechSkillDialogComponent {
   }
 
   isNameValid(name: string) {
-    console.log('Taken Names: ', this.takenNames);
-    console.log('Name: ', name);
     this.nameValid = this.takenNames.includes(name.toLowerCase());
     return this.nameValid;
   }

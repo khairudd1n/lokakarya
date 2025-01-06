@@ -28,11 +28,12 @@ export class AttitudeSkillService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/with-group-names`, {
+    return this.http.get<AttitudeWithGroupNameDto[]>(
+      `${this.apiUrl}/with-group-names`,
+      {
         headers,
-      })
-      .pipe(tap((data) => console.log('Fetched Attitude Skills:', data)));
+      }
+    );
   }
 
   createAttitudeSkill(attitudeSkill: {
@@ -93,9 +94,7 @@ export class AttitudeSkillService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .delete<void>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(tap(() => console.log(`Deleted Attitude Skill with ID: ${id}`)));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 
   getAttitudesByGroupName(
@@ -104,14 +103,8 @@ export class AttitudeSkillService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/all`, {
-        headers,
-      })
-      .pipe(
-        tap((data) =>
-          console.log(`Fetched attitude skills for group: ${groupName}`, data)
-        )
-      );
+    return this.http.get<AttitudeWithGroupNameDto[]>(`${this.apiUrl}/all`, {
+      headers,
+    });
   }
 }

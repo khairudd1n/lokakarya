@@ -23,18 +23,14 @@ export class DevPlanService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<DevPlanDto[]>(`${this.apiUrl}`, { headers })
-      .pipe(tap((data) => console.log('Fetched Dev Plan:', data)));
+    return this.http.get<DevPlanDto[]>(`${this.apiUrl}`, { headers });
   }
 
   getAllEmpDevPlan(): Observable<DevPlanDto[]> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<DevPlanDto[]>(`${this.apiUrl}`, { headers })
-      .pipe(tap((data) => console.log('Fetched Emp Dev Plan:', data)));
+    return this.http.get<DevPlanDto[]>(`${this.apiUrl}`, { headers });
   }
 
   createDevPlan(data: Partial<DevPlanDto>): Observable<DevPlanDto> {
@@ -46,19 +42,13 @@ export class DevPlanService {
 
   updateDevPlan(id: UUID, data: Partial<DevPlanDto>): Observable<DevPlanDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
-    return this.http
-      .put<DevPlanDto>(`${this.apiUrl}/${id}`, data, { headers })
-      .pipe(
-        tap((updatedData) => console.log('Updated Dev Plan:', updatedData))
-      );
+    return this.http.put<DevPlanDto>(`${this.apiUrl}/${id}`, data, { headers });
   }
 
   deleteDevPlan(id: UUID): Observable<void> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .delete<void>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(tap(() => console.log(`Deleted Dev Plan with ID: ${id}`)));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

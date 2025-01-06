@@ -139,7 +139,7 @@ export class EmpTechnicalSkillComponent {
         }));
 
         const empTechSkillGroups = this.organizeDataIntoGroups(empTechSkills);
-        console.log('empTechSkillGroups:', empTechSkillGroups);
+        
 
         empTechSkillGroups.forEach((empGroup) => {
           const existingGroup = this.groupData.find(
@@ -151,8 +151,8 @@ export class EmpTechnicalSkillComponent {
             this.groupData.push(empGroup);
           }
         });
-        console.log('Fetched EmpTechSkills:', this.empTechSkills);
-        console.log('Fetched All Tech Skills:', this.groupData);
+        
+        
       },
       error: (err) => {
         console.error('Error fetching data', err);
@@ -205,9 +205,9 @@ export class EmpTechnicalSkillComponent {
 
       if (existingPlanIndex !== -1) {
         this.selectedTechs[existingPlanIndex] = technical_skill;
-        console.log('Updated Plan in Selection:', technical_skill);
+        
       } else {
-        console.log('Adding Plan to Selection:', technical_skill);
+        
         this.selectedTechs.push(technical_skill);
       }
     }
@@ -262,12 +262,12 @@ export class EmpTechnicalSkillComponent {
         cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log('Final data to be saved:', this.selectedTechs);
+          
           this.empTechSkillService
             .saveEmpTechSkill(this.selectedTechs)
             .subscribe(
               (response) => {
-                console.log('Save successful:', response);
+                
 
                 this.selectedTechs.forEach((technical_skill) => {
                   const group = this.groupData.find(
@@ -319,7 +319,7 @@ export class EmpTechnicalSkillComponent {
       tech_skill_id: group.id,
       status: 'unsaved',
     };
-    console.log('Adding new row:', newRow);
+    
     group.rows.push(newRow);
   }
 

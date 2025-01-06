@@ -99,18 +99,12 @@ export class EmpAchieveComponent implements OnInit {
       .getPaginatedUser('', page, this.rows, this.sortField, this.sortOrder)
       .subscribe((data) => {
         this.users = data.content;
-        console.log('Received Data: ', this.users);
+
         this.totalRecords = data.page_info.totalElements;
       });
   }
 
   onRowExpand(event: TableRowExpandEvent): void {
-    console.log('Row expanded:', event.data);
-    console.log('ExpandedRows:', this.expandedRows);
-    console.log(
-      'Users:',
-      this.users.map((user) => user.id)
-    );
     const userId: string = event.data.id;
     event.data.loading = true;
     this.expandedRows[userId] = true;
@@ -119,7 +113,7 @@ export class EmpAchieveComponent implements OnInit {
       .getAllEmpAchieveByUserId(userId)
       .subscribe((achievements) => {
         const user = this.users.find((user) => user.id === userId);
-        console.log('Received Achi:', achievements);
+
         if (user) {
           user.achievements = achievements;
         }
@@ -138,7 +132,7 @@ export class EmpAchieveComponent implements OnInit {
       .getPaginatedUser(searchTerm, page, size, sortBy, sortDirection)
       .subscribe((data) => {
         this.users = data.content;
-        console.log('Received Data: ', this.users);
+
         this.totalRecords = data.page_info.totalElements;
       });
   }
@@ -204,11 +198,8 @@ export class EmpAchieveComponent implements OnInit {
         assessment_year: this.newEmpAchieve.assessment_year,
       };
 
-      console.log('Sending payload for emp achieve creation:', empAchieveData);
-
       this.empAchieveService.createEmpAchieve(empAchieveData).subscribe({
         next: (response) => {
-          console.log('Emp achieve created successfully:', response);
           this.assSummaryService
             .generateAssSummary(
               this.newEmpAchieve.user_id as UUID,
@@ -260,7 +251,6 @@ export class EmpAchieveComponent implements OnInit {
       .updateEmpAchieve(this.editEmpAchieve.id, updatedData)
       .subscribe({
         next: (response) => {
-          console.log('Emp Achieve updated successfully:', response);
           this.displayEditDialog = false;
           Swal.fire({
             icon: 'success',
@@ -268,7 +258,7 @@ export class EmpAchieveComponent implements OnInit {
             text: 'Emp Achieve updated successfully.',
             confirmButtonText: 'OK',
           });
-          console.log('Userss : ', this.users);
+
           const user_id = this.editEmpAchieve.user_id;
           const user = this.users.find((user) => user.id === user_id);
           if (user) {
@@ -300,7 +290,6 @@ export class EmpAchieveComponent implements OnInit {
     this.empAchieveService.getUsers().subscribe({
       next: (data) => {
         this.userOptions = data;
-        console.log('User options:', this.userOptions);
       },
       error: (err) => {
         console.error('Error fetching user options:', err);
@@ -319,15 +308,9 @@ export class EmpAchieveComponent implements OnInit {
     });
   }
 
-  onUserChange(event: any): void {
-    console.log('Selected user_id:', this.newEmpAchieve.user_id);
-    console.log('Selected user_id:', this.editEmpAchieve.user_id);
-  }
+  onUserChange(event: any): void {}
 
-  onAchievementChange(event: any): void {
-    console.log('Selected achievement_id:', this.newEmpAchieve.achievement_id);
-    console.log('Selected achievement_id:', this.editEmpAchieve.achievement_id);
-  }
+  onAchievementChange(event: any): void {}
 
   deleteEmpAchieve(id: UUID, user_id: UUID, assessment_year: number): void {
     Swal.fire({

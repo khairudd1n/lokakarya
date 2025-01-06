@@ -76,7 +76,6 @@ export class CreateUserDialogComponent implements OnChanges {
     if (!this.user.selectedRoles) {
       this.user.selectedRoles = [];
     }
-    console.log(this.divisions);
   }
 
   user: any = {
@@ -95,7 +94,6 @@ export class CreateUserDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['userData']) {
       if (this.userData) {
-        console.log('user data : ', this.userData);
         this.user = { ...this.userData };
         this.user.selectedRoles =
           this.userData.role?.map((role: any) => role.id) || [];
@@ -127,7 +125,7 @@ export class CreateUserDialogComponent implements OnChanges {
 
   saveUser() {
     this.userSaved.emit(this.user);
-    console.log(this.user);
+
     this.closeDialog();
   }
 
@@ -196,7 +194,6 @@ export class CreateUserDialogComponent implements OnChanges {
 
   resetPassword() {
     this.userService.resetPassword(this.user.id).subscribe((response) => {
-      console.log(response);
       Swal.fire({
         title: 'Success',
         text: 'New Password : ' + response,

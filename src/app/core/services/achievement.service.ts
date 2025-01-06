@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
-import { tap } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 
 export interface AchieveWithGroupNameDto {
@@ -29,11 +28,12 @@ export class AchievementService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<AchieveWithGroupNameDto[]>(`${this.apiUrl}/with-group-names`, {
+    return this.http.get<AchieveWithGroupNameDto[]>(
+      `${this.apiUrl}/with-group-names`,
+      {
         headers,
-      })
-      .pipe(tap((data) => console.log('Fetched Achievements:', data)));
+      }
+    );
   }
 
   createAchievement(achievement: {
@@ -73,7 +73,6 @@ export class AchievementService {
         { headers }
       )
       .pipe(
-        tap((data) => console.log('Fetched group achievements:', data)),
         map((data) =>
           data.map((item) => ({
             label: item.group_achievement_name,
@@ -87,8 +86,6 @@ export class AchievementService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .delete<void>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(tap(() => console.log(`Deleted Achievement with ID: ${id}`)));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

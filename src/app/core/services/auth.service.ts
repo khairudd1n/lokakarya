@@ -48,15 +48,12 @@ export class AuthService {
   checkTokenExpiration(): string | null {
     const token = this.getToken();
 
-    console.log('Token:', token);
-
     if (token) {
       const decodedToken = this.parseJwt(token);
       const expirationTime = decodedToken.exp * 1000;
       const currentTime = Date.now();
 
       if (currentTime > expirationTime) {
-        console.log('Token is expired');
         this.logout();
         return null;
       }

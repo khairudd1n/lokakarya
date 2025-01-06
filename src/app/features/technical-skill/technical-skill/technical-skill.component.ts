@@ -38,12 +38,8 @@ export class TechnicalSkillComponent {
         if (technical_skills.length > 0) {
           this.nameList = technical_skills;
         }
-
-        console.log(this.technicalSkills);
       },
-      error: (err) => {
-        console.log(err);
-      },
+      error: (err) => {},
     });
   }
 
@@ -70,7 +66,6 @@ export class TechnicalSkillComponent {
       }
       this.techSkillService.update(techSkill).subscribe({
         next: (data) => {
-          console.log(data);
           Swal.fire({
             title: 'Success!',
             text: 'Technical Skill updated successfully.',
@@ -81,7 +76,6 @@ export class TechnicalSkillComponent {
           this.loadData();
         },
         error: (err) => {
-          console.log(err);
           Swal.fire({
             title: 'Failed!',
             text: 'Failed to update Technical Skill. Please try again.',
@@ -93,7 +87,6 @@ export class TechnicalSkillComponent {
     } else {
       this.techSkillService.save(techSkill).subscribe({
         next: (data) => {
-          console.log(data);
           Swal.fire({
             title: 'Success!',
             text: 'Technical Skill created successfully.',
@@ -104,7 +97,6 @@ export class TechnicalSkillComponent {
           this.loadData();
         },
         error: (err) => {
-          console.log(err);
           Swal.fire({
             title: 'Failed!',
             text: 'Failed to create Technical Skill. Please try again.',
@@ -148,7 +140,6 @@ export class TechnicalSkillComponent {
       if (result.isConfirmed) {
         this.techSkillService.delete(techSkill.id).subscribe({
           next: (data) => {
-            console.log(data);
             Swal.fire({
               title: 'Success!',
               text: 'Technical Skill deleted successfully.',
@@ -158,7 +149,6 @@ export class TechnicalSkillComponent {
             this.loadData();
           },
           error: (err) => {
-            console.log(err);
             Swal.fire({
               title: 'Failed!',
               text: 'Failed to delete Technical Skill. Please try again.',

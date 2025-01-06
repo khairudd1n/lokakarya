@@ -47,7 +47,7 @@ export class EmpDevPlanService {
       })
       .pipe(
         tap((data) => {
-          console.log('Data fetched successfully:', data);
+          
         })
       );
   }
@@ -83,7 +83,7 @@ export class EmpDevPlanService {
       .get<number[]>(`${this.apiUrl}/assessment-years`, { headers })
       .pipe(
         tap((years) => {
-          console.log('Retrieved assessment years:', years);
+          
         })
       );
   }

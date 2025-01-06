@@ -35,14 +35,14 @@ export class ViewUserListComponent implements OnInit {
         employee_status: user.employee_status === 1,
       }));
       this.filteredUsers = [...this.users];
-      console.log(this.users);
+      
     });
   }
 
   onRowSelect(event: any) {
     this.displayDetailDialog = true;
     this.selectedUser = event.data;
-    console.log('Selected user:', this.selectedUser);
+    
   }
 
   clearSelectedUser() {
@@ -80,9 +80,9 @@ export class ViewUserListComponent implements OnInit {
   }
 
   onDialogClose(visible: boolean) {
-    console.log('On Dialog closed is called', visible);
+    
     if (!visible) {
-      console.log('Dialog closed');
+      
       this.clearSelectedUser();
     }
   }

@@ -38,7 +38,7 @@ export class AssSummaryService {
   ) {}
 
   saveAssSummary(userId: string, score: number, year: number): Observable<any> {
-    console.log('saving ass summary');
+    
     const currentYear = new Date().getFullYear();
     const data = {
       user_id: userId,
@@ -54,7 +54,7 @@ export class AssSummaryService {
   }
 
   generateAssSummary(userId: string, year: number): Observable<any> {
-    console.log('generating ass summary');
+    
     return this.http
       .post(
         `${this.url}/generate/${userId}/${year}`,
@@ -65,7 +65,7 @@ export class AssSummaryService {
   }
 
   getAssessmentSummary(userId: string, year: number): Observable<any> {
-    console.log('Fetching assessment summary');
+    
     return this.http
       .get(`${this.url}/summary`, {
         headers: { Authorization: `Bearer ${this.token}` },
@@ -149,7 +149,7 @@ export class AssSummaryService {
   }
 
   updateAssessSumStatusToApprove(id: string): Observable<ApiResponse<any>> {
-    console.log(`Updating assessment summary status to approve for ID: ${id}`);
+    
     return this.http
       .patch<ApiResponse<any>>(
         `${this.url}/update-status-to-approve/${id}`,
@@ -162,9 +162,7 @@ export class AssSummaryService {
   }
 
   updateAssessSumStatusToUnapprove(id: string): Observable<ApiResponse<any>> {
-    console.log(
-      `Updating assessment summary status to unapprove for ID: ${id}`
-    );
+    
     return this.http
       .patch<ApiResponse<any>>(
         `${this.url}/update-status-to-unapprove/${id}`,

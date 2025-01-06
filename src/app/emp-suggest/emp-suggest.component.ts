@@ -107,7 +107,7 @@ export class EmpSuggestComponent implements OnInit {
             .getAssessmentSummary(this.userId, this.selectedAssessmentYear)
             .subscribe((assessmentSummary) => {
               this.isDisabled = assessmentSummary?.status === 1;
-              console.log('Updated isDisabled:', this.isDisabled);
+              
             });
         },
         (error) => {
@@ -156,7 +156,7 @@ export class EmpSuggestComponent implements OnInit {
 
         this.empSuggestService.saveEmpSuggest(payload).subscribe(
           (response) => {
-            console.log('New data saved successfully:', response);
+            
             newRows.forEach((row: any) => (row.saved = true));
             Swal.fire(
               'Success',
@@ -180,7 +180,7 @@ export class EmpSuggestComponent implements OnInit {
         if (updatePayload.length > 0) {
           this.empSuggestService.updateEmpSuggest(updatePayload).subscribe(
             (response) => {
-              console.log('Updated data successfully:', response);
+              
               Swal.fire(
                 'Success',
                 'Updated data has been submitted successfully!',
@@ -209,7 +209,7 @@ export class EmpSuggestComponent implements OnInit {
       if (result.isConfirmed) {
         this.empSuggestService.deleteEmpSuggest(id).subscribe(
           (response) => {
-            console.log('Suggestion deleted successfully:', response);
+            
             this.loadSavedSuggestions();
             Swal.fire(
               'Deleted!',

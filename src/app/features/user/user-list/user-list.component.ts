@@ -48,7 +48,7 @@ export class UserListComponent implements OnInit {
       .getPaginatedUser('', page, this.rows, this.sortField, this.sortOrder)
       .subscribe((data) => {
         this.users = data.content;
-        console.log('Received Data: ', this.users);
+        
         this.totalRecords = data.page_info.totalElements;
       });
   }
@@ -64,7 +64,7 @@ export class UserListComponent implements OnInit {
       .getPaginatedUser(searchTerm, page, size, sortBy, sortDirection)
       .subscribe((data) => {
         this.users = data.content;
-        console.log('Received Data: ', this.users);
+        
         this.totalRecords = data.page_info.totalElements;
       });
   }
@@ -84,7 +84,7 @@ export class UserListComponent implements OnInit {
   }
 
   openCreateDialog() {
-    console.log('Opening create dialog');
+    
     this.selectedUser = null;
     this.displayDialog = true;
   }
@@ -130,10 +130,10 @@ export class UserListComponent implements OnInit {
       if (areRoleEqual(user, this.selectedUser)) {
         user.selectedRoles = null;
       }
-      console.log('Updated user data:', user);
+      
       this.userService.updateUser(user).subscribe({
         next: (data) => {
-          console.log('Updated : ', data);
+          
           Swal.fire({
             title: 'Success!',
             text: 'User updated successfully.',
@@ -153,10 +153,10 @@ export class UserListComponent implements OnInit {
         },
       });
     } else {
-      console.log('User created : ', user);
+      
       this.userService.saveUser(user).subscribe({
         next: (data) => {
-          console.log('Saved : ', data);
+          
           this.assSummaryService
             .generateAssSummary(data.id, new Date().getFullYear())
             .subscribe();
@@ -224,7 +224,7 @@ export class UserListComponent implements OnInit {
   onRowSelect(event: any) {
     this.displayDetailDialog = true;
     this.selectedUser = event.data;
-    console.log('Selected user:', this.selectedUser);
+    
   }
 
   clearSelectedUser() {
@@ -274,9 +274,9 @@ export class UserListComponent implements OnInit {
   }
 
   onDialogClose(visible: boolean) {
-    console.log('On Dialog closed is called', visible);
+    
     if (!visible) {
-      console.log('Dialog closed');
+      
       this.clearSelectedUser();
     }
   }

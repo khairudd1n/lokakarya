@@ -131,8 +131,8 @@ export class EmpDevPlanComponent implements OnInit {
           }
         });
 
-        console.log('Fetched EmpDevPlans:', this.empDevPlans);
-        console.log('Fetched All Dev Plans:', this.groupData);
+        
+        
       },
       error: (err) => {
         console.error('Error fetching data', err);
@@ -147,7 +147,7 @@ export class EmpDevPlanComponent implements OnInit {
       dev_plan_id: group.id,
       status: 'unsaved',
     };
-    console.log('Adding new row:', newRow);
+    
     group.rows.push(newRow);
   }
 
@@ -161,10 +161,10 @@ export class EmpDevPlanComponent implements OnInit {
     if (userToken) {
       try {
         const payload = JSON.parse(atob(userToken.split('.')[1]));
-        console.log('Full Token Payload:', payload);
+        
 
         this.userId = payload.sub;
-        console.log('Logged-in User ID:', this.userId);
+        
       } catch (error) {
         console.error('Error decoding token:', error);
       }
@@ -193,9 +193,9 @@ export class EmpDevPlanComponent implements OnInit {
 
       if (existingPlanIndex !== -1) {
         this.selectedPlans[existingPlanIndex] = plan;
-        console.log('Updated plan in Selection:', plan);
+        
       } else {
-        console.log('Add plan added to Selection:', plan);
+        
         this.selectedPlans.push(plan);
       }
     }
@@ -231,11 +231,11 @@ export class EmpDevPlanComponent implements OnInit {
         cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log('Final data to be saved:', this.selectedPlans);
+          
 
           this.empDevPlanService.saveEmpDevPlan(this.selectedPlans).subscribe(
             (response) => {
-              console.log('Save successful:', response);
+              
 
               this.selectedPlans.forEach((plan) => {
                 const group = this.groupData.find(

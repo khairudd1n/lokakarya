@@ -109,18 +109,18 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   ];
 
   showEditDialog(emp: any): void {
-    console.log('Editing Emp:', emp);
+    
     if ('achievement' in emp) {
-      console.log('Achievement exists:', emp.achievement);
+      
       this.showEditAchieveDialog(emp);
     } else {
-      console.log('Attitude Skills exists:', emp.attitude_skill);
+      
       this.showEditAttitudeDialog(emp);
     }
   }
 
   showEditAchieveDialog(empAchieve: any): void {
-    console.log('Editing Emp Achieve:', empAchieve);
+    
     this.editEmpAchieve.achievement_id = empAchieve.achievement.id;
     this.editEmpAchieve.user_id = empAchieve.user.id;
     this.editEmpAchieve.notes = empAchieve.notes;
@@ -133,7 +133,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   showEditAttitudeDialog(empAttitude: any): void {
-    console.log('Editing Emp Attitude:', empAttitude);
+    
     this.editEmpAttitude.attitudeSkillId = empAttitude.attitude_skill.id;
     this.editEmpAttitude.userId = empAttitude.user.id;
     this.editEmpAttitude.score = empAttitude.score;
@@ -145,7 +145,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   updateEmpAttitude(): void {
-    console.log('Updating Emp Attitude with ID:', this.editEmpAttitude.id);
+    
     const updatedData = {
       id: this.editEmpAttitude.id,
       user_id: this.editEmpAttitude.userId,
@@ -158,7 +158,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       .updateEmpAttitudeSkill(this.editEmpAttitude.id, updatedData)
       .subscribe({
         next: (response) => {
-          console.log('Emp Attitude updated successfully:', response);
+          
 
           const index = this.combinedData.findIndex((item) =>
             item.items.some(
@@ -201,7 +201,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   updateEmpAchieve(): void {
-    console.log('Updating Emp Achieve with ID:', this.editEmpAchieve.id);
+    
     const updatedData = {
       user_id: this.editEmpAchieve.user_id,
       notes: this.editEmpAchieve.notes,
@@ -214,7 +214,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       .updateEmpAchieveAndGenerateSummary(this.editEmpAchieve.id, updatedData)
       .subscribe({
         next: (response) => {
-          console.log('Emp Achieve updated successfully:', response);
+          
 
           const index = this.combinedData.findIndex((item) =>
             item.items.some(
@@ -265,7 +265,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   ) {}
 
   onYearChange(event: any): void {
-    console.log('years changed : ', this.selectedYear);
+    
     if (this.userId) {
       this.ngOnChanges();
     } else {
@@ -284,9 +284,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
               this.totalPercentage = 100;
             }
             this.isLoading = false;
-            console.log('data : ', this.combinedData);
-            console.log('assScore : ', this.assScore);
-            console.log('statusAssessment : ', this.statusAssessment);
+            
+            
+            
           },
         });
     }
@@ -297,26 +297,26 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     if (token) {
       const jwtPayload = this.authService.parseJwt(token);
       this.roles = jwtPayload.roles!;
-      console.log('Roles : ', this.roles);
+      
     }
-    console.log('On init called');
+    
     if (!this.isInDialog) {
       if (!this.userId) {
-        console.log('no user id');
+        
         this.id = this.authService.parseJwt(this.token).sub;
       } else {
         this.id = this.userId;
       }
-      console.log('id : ', this.id);
+      
       this.summaryService.getAllUserAssSummary(this.id).subscribe({
         next: (data) => {
           this.years = data.content.map((item: any) => ({
             label: item.year.toString(),
             value: item.year,
           }));
-          console.log('years : ', this.years);
+          
           this.selectedYear = this.years[this.years.length - 1];
-          console.log('selectedYear : ', this.selectedYear);
+          
           this.summaryService
             .getAssSummaryDetail(this.id, this.selectedYear.value)
             .subscribe({
@@ -331,9 +331,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
                   this.totalPercentage = 100;
                 }
                 this.isLoading = false;
-                console.log('data : ', this.combinedData);
-                console.log('assScore : ', this.assScore);
-                console.log('statusAssessment : ', this.statusAssessment);
+                
+                
+                
               },
             });
         },
@@ -342,12 +342,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    console.log('userId changed : ', this.userId);
+    
     if (this.userId) {
       this.empSuggestService
         .getEmpSuggestByUserIdAndYear(this.userId, this.year!)
         .subscribe((data) => {
-          console.log('data suggesttion : ', data);
+          
           this.suggestions = data;
         });
       this.summaryService
@@ -364,9 +364,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
               this.totalPercentage = 100;
             }
             this.isLoading = false;
-            console.log('data : ', this.combinedData);
-            console.log('assScore : ', this.assScore);
-            console.log('statusAssessment : ', this.statusAssessment);
+            
+            
+            
           },
         });
     }
