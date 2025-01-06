@@ -85,7 +85,35 @@
           Score
           <p-sortIcon field="score"></p-sortIcon>
         </th>
-        <th>status</th>
+        <th style="width: 20%; text-align: center">Status
+          <p-columnFilter
+            field="user.status"
+            matchMode="in"
+            display="menu"
+            [showMatchModes]="false"
+            [showOperator]="false"
+            [showAddButton]="false"
+            [showMatchModes]="false"
+            [showApplyButton]="false"
+            [showClearButton]="false"
+          >
+            <ng-template pTemplate="header">
+              <div class="px-3 pt-3 pb-0">
+                <span class="font-bold">Status Filter</span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="filter" let-filter="filterCallback">
+              <p-multiSelect
+                [options]="statusOptions"
+                [(ngModel)]="status"
+                placeholder="Any"
+                optionLabel="label"
+                optionValue="value"
+                (onChange)="filterStatus($event.value)"
+              ></p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
         @if (roles.includes('SVP')) {
         <th>Approve</th>
         }

@@ -61,8 +61,8 @@ export class EmpTechnicalSkillComponent {
   userData: EmpTechSkillCreateDto[] = [];
   empTechSkills: EmpTechSkillCreateDto[] = [];
 
-  assessmentYears: number[] = [];
-  selectedAssessmentYear: number = new Date().getFullYear();
+  assessmentYears: Set<number>= new Set(); // Array untuk menampung tahun
+  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
 
   isPreviousYearSelected: boolean = false;
 
@@ -89,12 +89,10 @@ export class EmpTechnicalSkillComponent {
     this.empTechSkillService.getAssessmentYears().subscribe(
       (years) => {
         if (years.length > 0) {
-          this.assessmentYears = years;
+          this.assessmentYears.add(new Date().getFullYear());
+          years.forEach(year => this.assessmentYears.add(year));        
         } else {
-          this.assessmentYears = [new Date().getFullYear()];
-        }
-        if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-          this.selectedAssessmentYear = this.assessmentYears[0];
+          this.assessmentYears.add(new Date().getFullYear());
         }
       },
       (error) => {
@@ -244,7 +242,7 @@ export class EmpTechnicalSkillComponent {
             technical_skill: row.technical_skill,
             tech_detail: row.tech_detail,
             score: row.score,
-            assessment_year: this.assessmentYear,
+            assessment_year: this.selectedAssessmentYear,
             status: 'saved',
           };
           this.selectedTechs.push(technical_skill);

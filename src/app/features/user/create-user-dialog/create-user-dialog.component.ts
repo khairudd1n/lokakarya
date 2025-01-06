@@ -130,6 +130,7 @@ export class CreateUserDialogComponent implements OnChanges {
   }
 
   checkUsername(username: string): void {
+    if(username == this.userData.username) return
     const usernameRegex = /^[a-zA-Z0-9_.]+$/;
 
     if (username.trim() === '') {
@@ -150,6 +151,7 @@ export class CreateUserDialogComponent implements OnChanges {
   }
 
   checkEmail(email: string) {
+    if(email == this.userData.email_address) return
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email.trim() === '') {
       this.emailExists = false;

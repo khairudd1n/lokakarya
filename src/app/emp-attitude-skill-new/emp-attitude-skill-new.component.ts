@@ -98,6 +98,9 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
   onAssessmentYearChange(): void {
     this.loadData();
+    if(this.selectedAssessmentYear < this.assessmentYear) {
+      this.isDisabled = true;
+    }
   }
 
   loadData(): void {
