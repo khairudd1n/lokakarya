@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiResponse } from './core/models/api-response.model';
-import { UUID } from 'crypto';
 
 export interface GroupAttitudeSkill {
   id: string;
@@ -20,12 +19,12 @@ export interface CreatedBy {
 }
 
 export interface AttitudeSkill {
-  attitude_skill_name: string; // Add this property to represent the nested object
+  attitude_skill_name: string;
 }
 
 export interface EmpAttitudeSkillDto {
   id: string;
-  attitude_skill: AttitudeSkill; // Change this to use the new interface
+  attitude_skill: AttitudeSkill;
   score: number;
   assessment_year: number;
   enabled: boolean;

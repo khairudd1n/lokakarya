@@ -1,7 +1,6 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="profile-container">
-  <!-- Sidebar -->
   <div class="profile-sidebar">
     <ul>
       <li
@@ -19,9 +18,7 @@
     </ul>
   </div>
 
-  <!-- Content Area -->
   <div class="profile-content">
-    <!-- Profile Tab -->
     @if(selectedTab === 'profile'){
     <div class="profile-tab">
       <div
@@ -53,7 +50,7 @@
           <strong>Join Date:</strong>
           {{ user.join_date | date : "MMM d, yyyy" }}
         </p>
-        <!-- <p><strong>Status:</strong> {{ user.employee_status }}</p> -->
+
         <div class="roles-section">
           <p><strong>Roles:</strong></p>
           <div class="roles-container">
@@ -72,7 +69,6 @@
     <div *ngIf="selectedTab === 'password'">
       <h2>Change Password</h2>
       <form [formGroup]="passwordForm!" (ngSubmit)="onChangePassword()">
-        <!-- Current Password Field -->
         <div class="form-group">
           <label for="currentPassword">Current Password</label>
           <input
@@ -104,7 +100,6 @@
           </div>
         </div>
 
-        <!-- New Password Field -->
         <div class="form-group">
           <label for="newPassword">New Password</label>
           <input
@@ -129,7 +124,6 @@
           } }
         </div>
 
-        <!-- Confirm Password Field -->
         <div class="form-group">
           <label for="confirmPassword">Confirm New Password</label>
           <input

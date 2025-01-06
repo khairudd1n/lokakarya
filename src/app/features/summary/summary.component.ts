@@ -209,7 +209,7 @@ export class SummaryComponent {
       '.p-input-icon-left input'
     ) as HTMLInputElement;
     if (globalSearchInput) {
-      globalSearchInput.value = ''; // Clear the input field
+      globalSearchInput.value = '';
     }
   }
 
@@ -265,7 +265,7 @@ export class SummaryComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isApproving[id] = true; // Mark as approving
+        this.isApproving[id] = true;
 
         this.assSummaryService.updateAssessSumStatusToApprove(id).subscribe(
           (response) => {
@@ -296,7 +296,7 @@ export class SummaryComponent {
             });
           },
           () => {
-            this.isApproving[id] = false; // Reset state after completion
+            this.isApproving[id] = false;
           }
         );
       }
@@ -315,7 +315,7 @@ export class SummaryComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isApproving[id] = true; // Mark as approving
+        this.isApproving[id] = true;
 
         this.assSummaryService.updateAssessSumStatusToUnapprove(id).subscribe(
           (response) => {
@@ -346,7 +346,7 @@ export class SummaryComponent {
             });
           },
           () => {
-            this.isApproving[id] = false; // Reset state after completion
+            this.isApproving[id] = false;
           }
         );
       }

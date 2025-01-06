@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { TableModule } from 'primeng/table'; // For table
-import { InputNumberModule } from 'primeng/inputnumber'; // For number input
+import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import {
   EmpDevPlanService,
@@ -19,15 +17,15 @@ import { forkJoin } from 'rxjs';
 interface Row {
   plan: string;
   plan_detail: string;
-  dev_plan_id?: string; // Mark as optional if it might not be present initially
+  dev_plan_id?: string;
   status: string;
-  [key: string]: any; // Allows additional properties if needed
+  [key: string]: any;
 }
 
 interface Group {
   id: string;
   rows: Row[];
-  [key: string]: any; // Allows additional properties
+  [key: string]: any;
 }
 
 @Component({
@@ -42,17 +40,17 @@ interface Group {
     NavBarComponent,
   ],
   templateUrl: './emp-dev-plan.component.html',
-  styleUrls: ['./emp-dev-plan.component.css'], // Corrected to 'styleUrls'
+  styleUrls: ['./emp-dev-plan.component.css'],
 })
 export class EmpDevPlanComponent implements OnInit {
   empDevPlans: EmpDevPlanCreateDto[] = [];
   groupData: any[] = [];
-  userId: string = ''; // For storing the logged-in userId
+  userId: string = '';
   selectedPlans: EmpDevPlanCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
 
-  assessmentYears: number[] = []; // Array untuk menampung tahun
-  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+  assessmentYears: number[] = [];
+  selectedAssessmentYear: number = new Date().getFullYear();
 
   isPreviousYearSelected: boolean = false;
 
@@ -63,23 +61,9 @@ export class EmpDevPlanComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserId();
-    this.fetchData(); // Call the new method to fetch data
-    this.initializeAssessmentYears(); // Panggil fungsi untuk menginisialisasi tahun
+    this.fetchData();
+    this.initializeAssessmentYears();
   }
-
-  // initializeAssessmentYears(): void {
-  //   this.empDevPlanService.getAssessmentYears().subscribe(
-  //     (years) => {
-  //       this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
-  //       if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-  //         this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching assessment years:', error);
-  //     }
-  //   );
-  // }
 
   initializeAssessmentYears(): void {
     this.empDevPlanService.getAssessmentYears().subscribe(
@@ -102,7 +86,7 @@ export class EmpDevPlanComponent implements OnInit {
   onAssessmentYearChange(): void {
     this.isPreviousYearSelected =
       this.selectedAssessmentYear < this.assessmentYear;
-    this.fetchData(); // Panggil ulang data ketika tahun berubah
+    this.fetchData();
   }
 
   fetchData(): void {
@@ -121,7 +105,6 @@ export class EmpDevPlanComponent implements OnInit {
       next: ([empDevPlans, allDevPlans]) => {
         this.empDevPlans = empDevPlans;
 
-        // Initialize groupData with allDevPlans
         this.groupData = allDevPlans.map((group) => ({
           ...group,
           rows:
@@ -131,22 +114,20 @@ export class EmpDevPlanComponent implements OnInit {
                 row['user_id'] === this.userId &&
                 row['assessment_year'] === this.selectedAssessmentYear
                   ? row.plan_detail
-                  : '', // Check plan_detail based on user_id
-            })) || [], // Ensure rows is an empty array if no rows exist
+                  : '',
+            })) || [],
         }));
 
-        // Structure empDevPlans into groups
         const empDevPlanGroups = this.organizeDataIntoGroups(empDevPlans);
 
-        // Merge empDevPlanGroups into groupData
         empDevPlanGroups.forEach((empGroup) => {
           const existingGroup = this.groupData.find(
             (group) => group.plan === empGroup.plan
           );
           if (existingGroup) {
-            existingGroup.rows = empGroup.rows; // Update existing group with user-specific plans
+            existingGroup.rows = empGroup.rows;
           } else {
-            this.groupData.push(empGroup); // Add new group if it doesn't exist
+            this.groupData.push(empGroup);
           }
         });
 
@@ -165,12 +146,11 @@ export class EmpDevPlanComponent implements OnInit {
       plan_detail: '',
       dev_plan_id: group.id,
       status: 'unsaved',
-    }; // Mark new rows as unsaved
+    };
     console.log('Adding new row:', newRow);
     group.rows.push(newRow);
   }
 
-  // Function to delete a row
   deleteRow(group: any, rowIndex: number): void {
     group.rows.splice(rowIndex, 1);
   }
@@ -180,10 +160,9 @@ export class EmpDevPlanComponent implements OnInit {
 
     if (userToken) {
       try {
-        const payload = JSON.parse(atob(userToken.split('.')[1])); // Decode JWT payload
+        const payload = JSON.parse(atob(userToken.split('.')[1]));
         console.log('Full Token Payload:', payload);
 
-        // Extract userId from the 'sub' key
         this.userId = payload.sub;
         console.log('Logged-in User ID:', this.userId);
       } catch (error) {
@@ -195,9 +174,7 @@ export class EmpDevPlanComponent implements OnInit {
   }
 
   logPlanId(devPlanId: string, plan_detail: string, row: any): void {
-    // Hanya tambahkan ke selectedPlans jika plan_detail tidak kosong
     if (plan_detail.trim() !== '') {
-      // Buat objek plan baru
       const plan: EmpDevPlanCreateDto = {
         user_id: this.userId as UUID,
         plan: row.plan,
@@ -208,7 +185,6 @@ export class EmpDevPlanComponent implements OnInit {
         created_at: new Date(),
       };
 
-      // Cek apakah plan sudah ada di selectedPlans
       const existingPlanIndex = this.selectedPlans.findIndex(
         (plan) =>
           plan.dev_plan_id === row.dev_plan_id &&
@@ -216,25 +192,21 @@ export class EmpDevPlanComponent implements OnInit {
       );
 
       if (existingPlanIndex !== -1) {
-        this.selectedPlans[existingPlanIndex] = plan; // Update existing plan
+        this.selectedPlans[existingPlanIndex] = plan;
         console.log('Updated plan in Selection:', plan);
       } else {
         console.log('Add plan added to Selection:', plan);
-        this.selectedPlans.push(plan); // Add new plan
+        this.selectedPlans.push(plan);
       }
     }
   }
 
   savePlans(): void {
-    // Reset selectedPlans setiap kali simpan dipanggil
     this.selectedPlans = [];
 
-    // Loop melalui semua grup dan baris untuk mengumpulkan rencana yang akan disimpan
     this.groupData.forEach((group: Group) => {
       group.rows.forEach((row: Row) => {
-        // Menambahkan tipe Row di sini
         if (row.plan_detail.trim() !== '' && row.status !== 'saved') {
-          // Cek status
           const plan: EmpDevPlanCreateDto = {
             user_id: this.userId as UUID,
             plan: row.plan,
@@ -261,12 +233,10 @@ export class EmpDevPlanComponent implements OnInit {
         if (result.isConfirmed) {
           console.log('Final data to be saved:', this.selectedPlans);
 
-          // Kirim data ke backend melalui service
           this.empDevPlanService.saveEmpDevPlan(this.selectedPlans).subscribe(
             (response) => {
               console.log('Save successful:', response);
 
-              // Perbarui status di frontend
               this.selectedPlans.forEach((plan) => {
                 const group = this.groupData.find(
                   (grp) => grp.id === plan.dev_plan_id
@@ -276,12 +246,11 @@ export class EmpDevPlanComponent implements OnInit {
                     (r: Row) => r.plan_detail === plan.plan_detail
                   );
                   if (row) {
-                    row.status = 'saved'; // Tandai sebagai "saved"
+                    row.status = 'saved';
                   }
                 }
               });
 
-              // Reset selectedPlans setelah menyimpan
               this.selectedPlans = [];
 
               Swal.fire({
@@ -313,13 +282,12 @@ export class EmpDevPlanComponent implements OnInit {
   organizeDataIntoGroups(data: EmpDevPlanCreateDto[]): any[] {
     const groups: any[] = [];
 
-    // Group data by plan (you can change the criterion if necessary)
     data.forEach((plan) => {
       const group = groups.find((g) => g.plan === plan.plan);
       if (group) {
-        group.rows.push(plan); // Add rows to existing group
+        group.rows.push(plan);
       } else {
-        groups.push({ plan: plan.plan, rows: [plan] }); // Create new group
+        groups.push({ plan: plan.plan, rows: [plan] });
       }
     });
     return groups;

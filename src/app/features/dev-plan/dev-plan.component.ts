@@ -17,7 +17,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 import { ToggleButtonModule } from 'primeng/togglebutton';
@@ -88,7 +87,6 @@ export class DevPlanComponent implements OnInit {
       return;
     }
 
-    // Cek apakah data sudah ada di database
     const existingDevPlan = this.devPlans.find(
       (division) =>
         division.plan.toLowerCase() === this.newDevPlan.plan?.toLowerCase()
@@ -107,7 +105,6 @@ export class DevPlanComponent implements OnInit {
           enabled: 1,
         };
 
-        // Success notification
         Swal.fire({
           icon: 'success',
           title: 'Success!',
@@ -118,7 +115,6 @@ export class DevPlanComponent implements OnInit {
       error: (err) => {
         console.error('Error creating dev plan:', err);
 
-        // Error notification
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -151,7 +147,6 @@ export class DevPlanComponent implements OnInit {
           }
           this.displayEditDialog = false;
 
-          // Success notification
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -162,7 +157,6 @@ export class DevPlanComponent implements OnInit {
         error: (err) => {
           console.error('Error updating dev plan:', err);
 
-          // Error notification
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -185,10 +179,8 @@ export class DevPlanComponent implements OnInit {
       if (result.isConfirmed) {
         this.devPlanService.deleteDevPlan(id).subscribe({
           next: () => {
-            // Remove the deleted group attitude skill from the list
             this.devPlans = this.devPlans.filter((skill) => skill.id !== id);
 
-            // Success notification
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -198,7 +190,6 @@ export class DevPlanComponent implements OnInit {
             console.log(`Deleted Dev Plan with ID: ${id}`);
           },
           error: (err) => {
-            // Error notification
             console.error('Error deleting dev plan:', err);
             Swal.fire({
               icon: 'error',

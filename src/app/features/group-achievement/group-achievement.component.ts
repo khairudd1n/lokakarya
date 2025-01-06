@@ -8,7 +8,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog'; // Add import for DialogModule
+import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -43,13 +43,13 @@ export class GroupAchievementComponent implements OnInit {
   groupAchievements: GroupAchieveDto[] = [];
   isLoading: boolean = true;
   error: string | null = null;
-  displayCreateDialog: boolean = false; // State for the create dialog
+  displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
   newGroupAchievement: Partial<GroupAchieveDto> = {
     group_achievement_name: '',
     percentage: 0,
     enabled: 1,
-  }; // Model for the new group achievement
+  };
   isDuplicate: boolean = false;
   selectedGroupAchievement: Partial<GroupAchieveDto> = {};
 
@@ -73,12 +73,10 @@ export class GroupAchievementComponent implements OnInit {
     });
   }
 
-  // Show the create dialog
   showCreateDialog(): void {
     this.displayCreateDialog = true;
   }
 
-  // Create a new group achievement
   createGroupAchievement(): void {
     if (
       !this.newGroupAchievement.group_achievement_name ||
@@ -87,7 +85,6 @@ export class GroupAchievementComponent implements OnInit {
       return;
     }
 
-    // Cek apakah data sudah ada di database
     const existingGroupAchieve = this.groupAchievements.find(
       (division) =>
         division.group_achievement_name.toLowerCase() ===
@@ -110,7 +107,6 @@ export class GroupAchievementComponent implements OnInit {
             enabled: 1,
           };
 
-          // Success notification
           Swal.fire({
             icon: 'success',
             title: 'Success!',
@@ -122,7 +118,6 @@ export class GroupAchievementComponent implements OnInit {
           console.error('Error creating group achievement:', err);
           this.error = 'Failed to create group achievement';
 
-          // Error notification
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -133,13 +128,11 @@ export class GroupAchievementComponent implements OnInit {
       });
   }
 
-  // Show the edit dialog
   editGroupAchievement(groupAchievement: GroupAchieveDto): void {
     this.selectedGroupAchievement = { ...groupAchievement };
     this.displayEditDialog = true;
   }
 
-  // Update an existing group attitude skill
   updateGroupAchievement(): void {
     if (
       !this.selectedGroupAchievement.id ||
@@ -163,7 +156,7 @@ export class GroupAchievementComponent implements OnInit {
             this.groupAchievements[index] = updatedGroupAchievement;
           }
           this.displayEditDialog = false;
-          // Success notification
+
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -173,7 +166,7 @@ export class GroupAchievementComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating group attitude skill:', err);
-          // Error notification
+
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -184,7 +177,6 @@ export class GroupAchievementComponent implements OnInit {
       });
   }
 
-  // Delete a group attitude skill
   deleteGroupAchievement(id: UUID): void {
     Swal.fire({
       title: 'Are you sure?',
@@ -197,12 +189,10 @@ export class GroupAchievementComponent implements OnInit {
       if (result.isConfirmed) {
         this.groupAchieveService.deleteGroupAchievement(id).subscribe({
           next: () => {
-            // Remove the deleted group achievement from the list
             this.groupAchievements = this.groupAchievements.filter(
               (achievement) => achievement.id !== id
             );
 
-            // Success notification
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -212,7 +202,6 @@ export class GroupAchievementComponent implements OnInit {
             console.log(`Deleted Group Achievement with ID: ${id}`);
           },
           error: (err) => {
-            // Error notification
             console.error('Error deleting group achievement:', err);
             Swal.fire({
               icon: 'error',

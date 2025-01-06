@@ -22,7 +22,7 @@ export interface EmpTechSkillCreateDto {
 })
 export class EmpTechnicalSkillService {
   private apiUrl = 'http://localhost:8080/emp-tech-skill';
-  private apiUrl2 = 'http://localhost:8080/tech-skill/all'; // Backend API endpoint
+  private apiUrl2 = 'http://localhost:8080/tech-skill/all';
   private token = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -41,7 +41,9 @@ export class EmpTechnicalSkillService {
       Authorization: `Bearer ${this.token}`,
     };
     return this.http
-      .get<ApiResponse<any[]>>(`${this.apiUrl2}?enabledOnly=${true}`, { headers })
+      .get<ApiResponse<any[]>>(`${this.apiUrl2}?enabledOnly=${true}`, {
+        headers,
+      })
       .pipe(map((response) => response.content));
   }
 

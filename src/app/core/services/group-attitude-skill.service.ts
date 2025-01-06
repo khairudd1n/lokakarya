@@ -76,7 +76,6 @@ export class GroupAttitudeSkillService {
       .pipe(map((response) => response.content));
   }
 
-  // Update an existing group attitude skill
   updateGroupAttitudeSkill(
     id: UUID,
     data: Partial<GroupAttitudeSkillDto>
@@ -84,12 +83,9 @@ export class GroupAttitudeSkillService {
     const headers = { Authorization: `Bearer ${this.token}` };
     return this.http
       .put<GroupAttitudeSkillDto>(`${this.apiUrl}/${id}`, data, { headers })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 
-  // Delete a group attitude skill by ID
   deleteGroupAttitudeSkill(id: UUID): Observable<void> {
     const headers = {
       Authorization: `Bearer ${this.token}`,

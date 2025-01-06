@@ -11,7 +11,6 @@
   </ng-template>
 
   <div class="grid formgrid p-fluid">
-    <!-- Row 1: Username and Email -->
     <div class="field col-12 md:col-6">
       <label for="username">Username<span class="required">*</span></label>
       <input
@@ -25,7 +24,9 @@
         (blur)="checkUsername(username.value.toLowerCase())"
       />
       @if(!usernameValid && username.touched){
-      <div class="p-error">Usernames can only use letters, numbers, underscores and periods.</div>
+      <div class="p-error">
+        Usernames can only use letters, numbers, underscores and periods.
+      </div>
       }@else if(usernameExists){
       <div class="p-error">Username already exists.</div>
       }@else if(username.invalid && username.touched){
@@ -46,15 +47,14 @@
         (blur)="checkEmail(email.value.toLowerCase())"
       />
       @if(!emailValid && email.touched){
-        <div class="p-error">Email is invalid.</div>
+      <div class="p-error">Email is invalid.</div>
       }@else if(emailExists){
-        <div class="p-error">Email already exists.</div>
+      <div class="p-error">Email already exists.</div>
       }@else if(email.invalid && email.touched){
-        <div class="p-error">Email is required.</div>
+      <div class="p-error">Email is required.</div>
       }
     </div>
 
-    <!-- Row 2: Password and Full Name -->
     @if(!userData){
     <div class="field col-12 md:col-6">
       <label for="password">Password<span class="required">*</span></label>
@@ -103,7 +103,6 @@
       </div>
     </div>
 
-    <!-- Row 3: Position and Status -->
     <div class="field col-12 md:col-6">
       <label for="position">Position<span class="required">*</span></label>
       <input
@@ -149,7 +148,6 @@
       }
     </div>
 
-    <!-- Row 4: Join Date and Enabled -->
     <div class="field col-12 md:col-6">
       <label for="joinDate">Join Date<span class="required">*</span></label>
       <input
@@ -177,7 +175,6 @@
       ></p-toggleButton>
     </div>
 
-    <!-- Row 5: Roles and Division -->
     <div class="field col-12 md:col-6">
       <label for="division">Division<span class="required">*</span></label>
       <p-dropdown

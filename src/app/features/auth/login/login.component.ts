@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -20,10 +20,7 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
     if (this.username && this.password) {
@@ -33,27 +30,25 @@ export class LoginComponent {
           localStorage.setItem('user', JSON.stringify(response.content.user));
           console.log('Login successful:', response);
           this.router.navigate(['/user-profile']);
-          // Handle successful login, e.g., navigate to another page
         },
         (error) => {
           this.onLoginError();
           console.error('Login failed:', error);
-          // Handle login failure
         }
       );
     }
   }
   onLoginError() {
     Swal.fire({
-      position: 'top-end',  // Position the alert in the top right corner
+      position: 'top-end',
       icon: 'error',
       title: 'Invalid username or password',
       showConfirmButton: false,
-      timer: 3000,  // Show for 3 seconds before auto-closing
-      toast: true,  // Makes it a toast-style notification
-      background: '#f8d7da',  // Custom background color for error
-      color: '#721c24',  // Custom color for text
-      timerProgressBar: true,  // Show a progress bar for the timer
+      timer: 3000,
+      toast: true,
+      background: '#f8d7da',
+      color: '#721c24',
+      timerProgressBar: true,
     });
   }
 }

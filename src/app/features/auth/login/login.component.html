@@ -3,7 +3,6 @@
     <div class="card">
       <h2>APLIKASI PENILAIAN KINERJA</h2>
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-        <!-- Username Field -->
         <div class="p-field">
           <label for="username">Username</label>
           <input
@@ -15,7 +14,7 @@
             required
             #usernameInput="ngModel"
           />
-          <!-- Validation Message for Username -->
+
           <small
             class="text-error"
             *ngIf="usernameInput.invalid && usernameInput.touched"
@@ -24,7 +23,6 @@
           </small>
         </div>
 
-        <!-- Password Field -->
         <div class="p-field">
           <label for="password">Password</label>
           <input
@@ -37,7 +35,7 @@
             minlength="8"
             #passwordInput="ngModel"
           />
-          <!-- Validation Messages for Password -->
+
           <small
             class="text-error"
             *ngIf="passwordInput.invalid && passwordInput.touched"
@@ -51,7 +49,6 @@
           </small>
         </div>
 
-        <!-- Login Button -->
         <button
           pButton
           label="Login"

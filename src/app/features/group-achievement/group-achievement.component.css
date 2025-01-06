@@ -22,7 +22,7 @@
 }
 
 .group-column {
-  width: 265px; /* Atur lebar kolom sesuai kebutuhan */
+  width: 265px;
   max-width: 265px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -38,18 +38,18 @@
 }
 
 .action-buttons button {
-  margin-right: 8px; /* Jarak antar tombol */
+  margin-right: 8px;
 }
 
 .action-buttons button:last-child {
-  margin-right: 0; /* Hapus margin pada tombol terakhir */
+  margin-right: 0;
 }
 
 .action-buttons {
   display: flex;
-  justify-content: center; /* Posisi tombol di tengah */
-  align-items: center; /* Pusatkan tombol secara vertikal */
-  gap: 4px; /* Jarak antar tombol */
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
 }
 
 .title {
@@ -107,8 +107,8 @@
 
 .button-container {
   display: flex;
-  justify-content: flex-end; /* Aligns the button to the right */
-  margin-top: 20px; /* Adds some space above the button */
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .column-filter {
@@ -119,5 +119,5 @@
 
 .form-label1 {
   display: block;
-  margin-bottom: 8px; /* Jarak antara label dan input */
+  margin-bottom: 8px;
 }

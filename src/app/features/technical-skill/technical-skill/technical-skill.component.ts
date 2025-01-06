@@ -1,6 +1,5 @@
 import { Component, ViewChild, viewChild } from '@angular/core';
 import { TechnicalSkillService } from '../../../core/services/technical-skill.service';
-import { error } from 'console';
 import { TechnicalSkill } from '../../../core/models/technical-skill.model';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 import { CreateTechSkillDialogComponent } from '../create-tech-skill-dialog/create-tech-skill-dialog.component';
@@ -133,7 +132,7 @@ export class TechnicalSkillComponent {
       '.p-input-icon-left input'
     ) as HTMLInputElement;
     if (globalSearchInput) {
-      globalSearchInput.value = ''; // Clear the input field
+      globalSearchInput.value = '';
     }
   }
 
@@ -170,6 +169,5 @@ export class TechnicalSkillComponent {
         });
       }
     });
-    
   }
 }

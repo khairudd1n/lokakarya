@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, tap, switchMap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
-import { EmpTechSkillCreateDto } from './emp-technical-skill.service';
 import { ApiResponse } from './core/models/api-response.model';
 
 export interface EmpAttitudeSkillCreateDto {
@@ -15,11 +14,11 @@ export interface EmpAttitudeSkillCreateDto {
 }
 
 export interface EmpAttitudeSkillUpdateRequest {
-  id: string; // UUID dari EmpAttitudeSkill yang ingin diperbarui
-  userId?: string; // UUID dari User yang terkait
-  attitudeSkillId: string; // UUID dari AttitudeSkill yang terkait
-  score?: number; // Nilai yang ingin diperbarui
-  assessmentYear?: number; // Tahun penilaian yang ingin diperbarui
+  id: string;
+  userId?: string;
+  attitudeSkillId: string;
+  score?: number;
+  assessmentYear?: number;
 }
 
 @Injectable({
@@ -47,7 +46,6 @@ export class EmpAttitudeSkillNewService {
           {},
           { headers: { Authorization: `Bearer ${this.token}` } }
         )
-        
       )
     );
   }
@@ -78,27 +76,6 @@ export class EmpAttitudeSkillNewService {
         )
       );
   }
-
-  // updateEmpAttitudeSkills(
-  //   payload: EmpAttitudeSkillUpdateRequest[]
-  // ): Observable<EmpAttitudeSkillCreateDto[]> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-
-  //   console.log('Payload untuk update:', payload);
-
-  //   return this.http
-  //     .put<EmpAttitudeSkillCreateDto[]>(`${this.apiUrl}`, payload, {
-  //       headers,
-  //     })
-  //     .pipe(
-  //       tap((updatedSkills) => {
-  //         console.log('Successfully updated skills:', updatedSkills);
-  //       })
-  //     );
-  // }
 
   updateEmpAttitudeSkills(
     payload: {
@@ -217,7 +194,6 @@ export class EmpAttitudeSkillNewService {
     );
   }
 
-  // Delete Emp Attitude Skill by ID
   deleteEmpAttitudeSkill(id: UUID): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
-import { tap } from 'rxjs';
 import { map } from 'rxjs';
-import { AuthService } from './core/services/auth.service';
 import { EmpAchieveService } from './emp-achieve.service';
 import { EmpAttitudeSkillNewService } from './emp-attitude-skill-new.service';
 import { GroupAttitudeSkillService } from './core/services/group-attitude-skill.service';
 import { GroupAchievementsService } from './core/services/group-achievements.service';
-import { GroupedData, GroupedResult } from './core/models/summary.model';
 import { ApiResponse } from './core/models/api-response.model';
 
 export interface GroupAchieveDto {
@@ -105,7 +102,7 @@ export class AssSummaryService {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${this.token}`
-    )
+    );
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
@@ -125,15 +122,13 @@ export class AssSummaryService {
         params = params.append('divisionIds', id);
       });
     }
-    
+
     return this.http
       .get<ApiResponse<any>>(`${this.url}/all`, {
         headers,
         params,
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 
   getAllUserAssSummary(userId: string): Observable<ApiResponse<any[]>> {

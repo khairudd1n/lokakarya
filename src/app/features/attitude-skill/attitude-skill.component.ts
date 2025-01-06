@@ -62,7 +62,7 @@ export class AttitudeSkillComponent implements OnInit {
     group_name: '',
     enabled: 1,
   };
-  currentGroup: string = ''; // Untuk melacak grup saat ini
+  currentGroup: string = '';
   groupIndex: number = 0;
 
   groupAttitudeSkillOptions: { label: string; value: string }[] = [];
@@ -77,9 +77,9 @@ export class AttitudeSkillComponent implements OnInit {
   resetGroupIndex(attitudeSkill: any): number {
     if (this.currentGroup !== attitudeSkill.group_name) {
       this.currentGroup = attitudeSkill.group_name;
-      this.groupIndex = 1; // Reset nomor urut ke 1 untuk grup baru
+      this.groupIndex = 1;
     } else {
-      this.groupIndex++; // Tambahkan nomor urut untuk grup yang sama
+      this.groupIndex++;
     }
     return this.groupIndex;
   }
@@ -89,11 +89,10 @@ export class AttitudeSkillComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt2) {
-      this.dt2.filterGlobal(input, 'contains'); // Pass the input value and match mode
+      this.dt2.filterGlobal(input, 'contains');
     }
   }
 
-  // Method to show detail dialog
   showDetailDialog(division: any) {
     this.selectedDivisionDetail = division;
     this.displayDetailDialog = true;
@@ -113,50 +112,45 @@ export class AttitudeSkillComponent implements OnInit {
     });
   }
 
-  // Show the create dialog
   showCreateDialog(): void {
     this.displayCreateDialog = true;
   }
 
-  // Show the edit dialog and populate it with the selected achievement data
   showEditDialog(attitudeSkill: AttitudeWithGroupNameDto): void {
-    this.editAttitudeSkill = { ...attitudeSkill }; // Create a copy of the achievement to edit
+    this.editAttitudeSkill = { ...attitudeSkill };
     this.displayEditDialog = true;
   }
 
   createAttitudeSkill(): void {
     if (
       this.newAttitudeSkill.attitude_skill_name &&
-      this.newAttitudeSkill.group_attitude_skill_id // Ensure correct property name
+      this.newAttitudeSkill.group_attitude_skill_id
     ) {
       const attitudeSkillData = {
         attitude_skill_name: this.newAttitudeSkill.attitude_skill_name,
         group_attitude_skill_id: this.newAttitudeSkill
-          .group_attitude_skill_id as UUID, // Ensure it's a valid UUID
+          .group_attitude_skill_id as UUID,
         enabled: this.newAttitudeSkill.enabled,
       };
 
-      // Log the payload to ensure it's correct
       console.log(
         'Sending payload for achievement creation:',
         attitudeSkillData
       );
 
-      // Use the service to create a new achievement
       this.attitudeSkillService
         .createAttitudeSkill(attitudeSkillData)
         .subscribe({
           next: (response) => {
             console.log('Attitude Skill created successfully:', response);
-            this.fetchAttitudeSkills(); // Refresh the data table
+            this.fetchAttitudeSkills();
             this.displayCreateDialog = false;
             this.newAttitudeSkill = {
               attitude_skill_name: '',
-              group_attitude_skill_id: '', // Reset correctly
+              group_attitude_skill_id: '',
               enabled: 1,
             };
 
-            // Show success alert using SweetAlert
             Swal.fire({
               icon: 'success',
               title: 'Success',
@@ -169,7 +163,6 @@ export class AttitudeSkillComponent implements OnInit {
               console.error('Backend error message:', err.error.message);
             }
 
-            // Show error alert using SweetAlert
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -180,7 +173,6 @@ export class AttitudeSkillComponent implements OnInit {
     } else {
       console.warn('Please fill in all fields.');
 
-      // Show warning alert using SweetAlert
       Swal.fire({
         icon: 'warning',
         title: 'Incomplete Data',
@@ -189,7 +181,6 @@ export class AttitudeSkillComponent implements OnInit {
     }
   }
 
-  // Function to update the achievement
   updateAttitudeSkill(): void {
     const updatedData = {
       attitude_skill_name: this.editAttitudeSkill.attitude_skill_name,
@@ -203,9 +194,9 @@ export class AttitudeSkillComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Achievement updated successfully:', response);
-          this.fetchAttitudeSkills(); // Refresh the data table
-          this.displayEditDialog = false; // Close the dialog
-          // Success notification
+          this.fetchAttitudeSkills();
+          this.displayEditDialog = false;
+
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -215,7 +206,7 @@ export class AttitudeSkillComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating achievement:', err);
-          // Error notification
+
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -233,7 +224,6 @@ export class AttitudeSkillComponent implements OnInit {
   fetchGroupAttitudeSkillOptions(): void {
     this.attitudeSkillService.getGroupAttitudeSkills().subscribe({
       next: (data) => {
-        // Now the data is in the correct format for the dropdown
         this.groupAttitudeSkillOptions = data;
       },
       error: (err) => {
@@ -243,7 +233,6 @@ export class AttitudeSkillComponent implements OnInit {
   }
 
   deleteAttitudeSkill(id: UUID): void {
-    // Use SweetAlert to ask for confirmation before deleting
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Attitude Skill? This action cannot be undone.',
@@ -254,12 +243,10 @@ export class AttitudeSkillComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Proceed with deletion if user confirms
         this.attitudeSkillService.deleteAttitudeSkill(id).subscribe({
           next: () => {
-            this.fetchAttitudeSkills(); // Refresh the data table
+            this.fetchAttitudeSkills();
 
-            // Show success alert using SweetAlert
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -269,7 +256,6 @@ export class AttitudeSkillComponent implements OnInit {
           error: (err) => {
             console.error('Error deleting achievement:', err);
 
-            // Show error alert using SweetAlert
             Swal.fire({
               icon: 'error',
               title: 'Error',

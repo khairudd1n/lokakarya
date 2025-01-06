@@ -146,8 +146,6 @@ export const routes: Routes = [
   {
     path: 'assessment-form',
     component: EvaluationStepperComponent,
-    // canActivate: [authGuard, roleMenuGuard],
-    // data: { permission: 'ALL_ASSESSMENT_FORM' },
   },
   {
     path: 'sum-with-detail',

@@ -5,7 +5,6 @@
 <div class="container" style="background-color: #f5f5f5">
   <h2 class="title">ACHIEVEMENT</h2>
 
-  <!-- Button to open the create modal -->
   <div class="card flex justify-content-end">
     <p-button
       label="Create"
@@ -14,7 +13,6 @@
     ></p-button>
   </div>
   <br />
-  <!-- PrimeNG Dialog for creating a new group achievement -->
   <p-dialog
     header="Create New Achievement"
     [(visible)]="displayCreateDialog"
@@ -80,7 +78,6 @@
     </p-footer>
   </p-dialog>
 
-  <!-- PrimeNG Dialog for editing an achievement -->
   <p-dialog
     header="Edit Achievement"
     [(visible)]="displayEditDialog"
@@ -159,7 +156,6 @@
       </span>
     </div>
 
-    <!-- Existing Table for Achievements -->
     <div class="card">
       <p-table
         #dt2

@@ -17,7 +17,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
 import { EventEmitter, Output } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
@@ -72,7 +71,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
     this.fetchGroupAttitudeSkills();
   }
 
-  // Method to show detail dialog
   showDetailDialog(division: any) {
     this.selectedDivisionDetail = division;
     this.displayDetailDialog = true;
@@ -92,7 +90,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
     });
   }
 
-  // Show the create dialog
   showCreateDialog(): void {
     this.displayCreateDialog = true;
   }
@@ -105,7 +102,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
       return;
     }
 
-    // Cek apakah data sudah ada di database
     const existingGroupAttitudeSkill = this.groupAttitudeSkills.find(
       (division) =>
         division.group_name.toLowerCase() ===
@@ -128,10 +124,8 @@ export class GroupAttitudeSkillComponent implements OnInit {
             enabled: 1,
           };
 
-          // Emit event dengan nama grup yang baru dibuat
           this.groupCreated.emit(newGroupAttitudeSkill.group_name);
 
-          // Success notification
           Swal.fire({
             icon: 'success',
             title: 'Success!',
@@ -142,7 +136,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
         error: (err) => {
           console.error('Error creating group attitude skill:', err);
 
-          // Error notification
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -153,7 +146,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
       });
   }
 
-  // Show the edit dialog
   editGroupAttitudeSkill(groupAttitudeSkill: GroupAttitudeSkillDto): void {
     this.selectedGroupAttitudeSkill = { ...groupAttitudeSkill };
     this.displayEditDialog = true;
@@ -175,7 +167,7 @@ export class GroupAttitudeSkillComponent implements OnInit {
       )
       .subscribe({
         next: (updatedGroupAttitudeSkill) => {
-          console.log("Group Data: ", updatedGroupAttitudeSkill);
+          console.log('Group Data: ', updatedGroupAttitudeSkill);
           const index = this.groupAttitudeSkills.findIndex(
             (item) => item.id === updatedGroupAttitudeSkill.id
           );
@@ -184,7 +176,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
           }
           this.displayEditDialog = false;
 
-          // Success notification
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -195,7 +186,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
         error: (err) => {
           console.error('Error updating group attitude skill:', err);
 
-          // Error notification
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -218,12 +208,10 @@ export class GroupAttitudeSkillComponent implements OnInit {
       if (result.isConfirmed) {
         this.groupAttitudeSkillService.deleteGroupAttitudeSkill(id).subscribe({
           next: () => {
-            // Remove the deleted group attitude skill from the list
             this.groupAttitudeSkills = this.groupAttitudeSkills.filter(
               (skill) => skill.id !== id
             );
 
-            // Success notification
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -233,7 +221,6 @@ export class GroupAttitudeSkillComponent implements OnInit {
             console.log(`Deleted Group Attitude Skill with ID: ${id}`);
           },
           error: (err) => {
-            // Error notification
             console.error('Error deleting group attitude skill:', err);
             Swal.fire({
               icon: 'error',

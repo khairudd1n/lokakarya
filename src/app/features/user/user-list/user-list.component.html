@@ -13,7 +13,6 @@
   </div>
   <br />
 
-  <!-- user-table.component.html -->
   <p-table
     #dt1
     [value]="users"
@@ -28,7 +27,6 @@
     (onLazyLoad)="loadUsersLazy($event)"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
   >
-    <!-- Caption -->
     <ng-template pTemplate="caption">
       <div class="flex">
         <button
@@ -50,7 +48,6 @@
       </div>
     </ng-template>
 
-    <!-- Header -->
     <ng-template pTemplate="header">
       <tr>
         <th>No.</th>
@@ -62,7 +59,10 @@
           Position
           <p-sortIcon field="position"></p-sortIcon>
         </th>
-        <th pSortableColumn="emailAddress" style="width: 20%; text-align: center">
+        <th
+          pSortableColumn="emailAddress"
+          style="width: 20%; text-align: center"
+        >
           Email
           <p-sortIcon field="emailAddress"></p-sortIcon>
         </th>
@@ -86,7 +86,6 @@
       </tr>
     </ng-template>
 
-    <!-- Body -->
     <ng-template pTemplate="body" let-user let-i="rowIndex">
       <tr [pSelectableRow]="user">
         <td>{{ i + 1 }}</td>
@@ -114,7 +113,6 @@
     </ng-template>
   </p-table>
 
-  <!-- Reusable dialog component -->
   <app-create-user-dialog
     [(visible)]="displayDialog"
     [userData]="selectedUser"

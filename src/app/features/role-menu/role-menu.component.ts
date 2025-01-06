@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RoleMenuService } from '../../core/services/role-menu.service';
 import { MenuService } from '../../core/services/menu.service';
 import { RoleService } from '../../core/services/role.service';
@@ -7,7 +7,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
-import { Menu } from '../../core/models/menu.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -77,7 +76,6 @@ export class RoleMenuComponent implements OnInit {
       const menuToModify = this.menus.find((m) => m.id === menuId);
 
       if (isChecked && menuToModify) {
-        // Add the menu to the current role if it's not already present
         if (!currentRoleMenu.menu.some((m: any) => m.id === menuId)) {
           currentRoleMenu.menu.push(menuToModify);
         }
@@ -89,18 +87,17 @@ export class RoleMenuComponent implements OnInit {
           );
 
           if (isMenuAssignedToOtherRoles) {
-
             currentRoleMenu.menu = currentRoleMenu.menu.filter(
               (m: any) => m.id !== menuId
             );
-          } else {   
+          } else {
             this.checkboxStates[roleId][menuId] = true;
             Swal.fire({
               title: 'Warning!',
               text: 'This menu is not assigned to other roles.',
               icon: 'warning',
               confirmButtonColor: '#3085d6',
-            })          
+            });
             return;
           }
         } else {

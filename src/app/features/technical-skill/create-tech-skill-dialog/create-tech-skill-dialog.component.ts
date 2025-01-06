@@ -3,7 +3,6 @@ import {
   EventEmitter,
   Input,
   Output,
-  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 import { TechnicalSkill } from '../../../core/models/technical-skill.model';
@@ -41,7 +40,7 @@ export class CreateTechSkillDialogComponent {
       } else {
         this.resetForm();
       }
-    }else{
+    } else {
       this.resetForm();
       this.takenNames = this.nameList;
     }
