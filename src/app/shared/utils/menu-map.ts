@@ -1,5 +1,3 @@
-import { MenuItem } from 'primeng/api';
-
 export const MENU_MAP: {
   [key: string]: { label: string; routerLink: string };
 } = {

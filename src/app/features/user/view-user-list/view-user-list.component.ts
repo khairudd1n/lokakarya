@@ -3,18 +3,16 @@ import { UserService } from '../../../core/services/user.service';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import Swal from 'sweetalert2';
-import { UserSummaryComponent } from "../../user-summary/user-summary.component";
+import { UserSummaryComponent } from '../../user-summary/user-summary.component';
 
 @Component({
   selector: 'app-view-user-list',
   standalone: true,
   imports: [SharedModule, TableModule, ButtonModule, UserSummaryComponent],
   templateUrl: './view-user-list.component.html',
-  styleUrl: './view-user-list.component.css'
+  styleUrl: './view-user-list.component.css',
 })
 export class ViewUserListComponent implements OnInit {
-
   users: any[] = [];
 
   filteredUsers: any[] = [];
@@ -22,7 +20,7 @@ export class ViewUserListComponent implements OnInit {
   displayDialog: boolean = false;
   displayDetailDialog: boolean = false;
   displaySummaryDialog: boolean = false;
-  selectedUser: any = null; 
+  selectedUser: any = null;
 
   constructor(private userService: UserService) {}
 
@@ -32,19 +30,19 @@ export class ViewUserListComponent implements OnInit {
 
   loadUsers() {
     this.userService.getAllUser().subscribe((data) => {
-      this.users = data.map(user => ({
+      this.users = data.map((user) => ({
         ...user,
-        employee_status: user.employee_status === 1 
+        employee_status: user.employee_status === 1,
       }));
       this.filteredUsers = [...this.users];
-      console.log(this.users);
+      
     });
   }
 
   onRowSelect(event: any) {
     this.displayDetailDialog = true;
     this.selectedUser = event.data;
-    console.log('Selected user:', this.selectedUser);
+    
   }
 
   clearSelectedUser() {
@@ -67,22 +65,24 @@ export class ViewUserListComponent implements OnInit {
   statusOptions: any[] = [
     { label: 'All', value: null },
     { label: 'Permanent', value: true },
-    { label: 'Contract', value: false }
+    { label: 'Contract', value: false },
   ];
   selectedStatus: any = null;
 
   applyStatusFilter() {
     if (this.selectedStatus !== null) {
-      this.filteredUsers = this.users.filter(user => user.employee_status === this.selectedStatus);
+      this.filteredUsers = this.users.filter(
+        (user) => user.employee_status === this.selectedStatus
+      );
     } else {
       this.loadUsers();
     }
   }
 
   onDialogClose(visible: boolean) {
-    console.log('On Dialog closed is called', visible);
-    if (!visible){
-      console.log('Dialog closed');
+    
+    if (!visible) {
+      
       this.clearSelectedUser();
     }
   }

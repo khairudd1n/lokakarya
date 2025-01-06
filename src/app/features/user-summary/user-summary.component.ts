@@ -16,7 +16,6 @@ import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../core/services/auth.service';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 import { EmpSuggestService } from '../../emp-suggest.service';
-import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import {
@@ -25,11 +24,7 @@ import {
 } from '../../emp-achieve.service';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
-import { EmpAttitudeSkillDto } from '../../sum-with-detail.service';
-import {
-  EmpAttitudeSkillNewService,
-  EmpAttitudeSkillUpdateRequest,
-} from '../../emp-attitude-skill-new.service';
+import { EmpAttitudeSkillNewService } from '../../emp-attitude-skill-new.service';
 
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -114,18 +109,18 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   ];
 
   showEditDialog(emp: any): void {
-    console.log('Editing Emp:', emp);
+    
     if ('achievement' in emp) {
-      console.log('Achievement exists:', emp.achievement);
+      
       this.showEditAchieveDialog(emp);
     } else {
-      console.log('Attitude Skills exists:', emp.attitude_skill);
+      
       this.showEditAttitudeDialog(emp);
     }
   }
 
   showEditAchieveDialog(empAchieve: any): void {
-    console.log('Editing Emp Achieve:', empAchieve);
+    
     this.editEmpAchieve.achievement_id = empAchieve.achievement.id;
     this.editEmpAchieve.user_id = empAchieve.user.id;
     this.editEmpAchieve.notes = empAchieve.notes;
@@ -138,7 +133,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   showEditAttitudeDialog(empAttitude: any): void {
-    console.log('Editing Emp Attitude:', empAttitude);
+    
     this.editEmpAttitude.attitudeSkillId = empAttitude.attitude_skill.id;
     this.editEmpAttitude.userId = empAttitude.user.id;
     this.editEmpAttitude.score = empAttitude.score;
@@ -150,7 +145,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   updateEmpAttitude(): void {
-    console.log('Updating Emp Attitude with ID:', this.editEmpAttitude.id);
+    
     const updatedData = {
       id: this.editEmpAttitude.id,
       user_id: this.editEmpAttitude.userId,
@@ -163,13 +158,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       .updateEmpAttitudeSkill(this.editEmpAttitude.id, updatedData)
       .subscribe({
         next: (response) => {
-          console.log('Emp Attitude updated successfully:', response);
+          
 
-          const index = this.combinedData.findIndex(
-            (item) =>
-              item.items.some(
-                (subItem: SubItem) => subItem.id === this.editEmpAttitude.id
-              ) // Menentukan tipe subItem
+          const index = this.combinedData.findIndex((item) =>
+            item.items.some(
+              (subItem: SubItem) => subItem.id === this.editEmpAttitude.id
+            )
           );
 
           if (index !== -1) {
@@ -178,11 +172,11 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             );
             if (subItemIndex !== -1) {
               this.combinedData[index].items[subItemIndex].score =
-                this.editEmpAttitude.score; // Update the score
+                this.editEmpAttitude.score;
             }
           }
 
-          this.displayEditAttitudeDialog = false; // Close the dialog
+          this.displayEditAttitudeDialog = false;
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -207,7 +201,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   updateEmpAchieve(): void {
-    console.log('Updating Emp Achieve with ID:', this.editEmpAchieve.id);
+    
     const updatedData = {
       user_id: this.editEmpAchieve.user_id,
       notes: this.editEmpAchieve.notes,
@@ -220,13 +214,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       .updateEmpAchieveAndGenerateSummary(this.editEmpAchieve.id, updatedData)
       .subscribe({
         next: (response) => {
-          console.log('Emp Achieve updated successfully:', response);
+          
 
-          const index = this.combinedData.findIndex(
-            (item) =>
-              item.items.some(
-                (subItem: SubItem) => subItem.id === this.editEmpAchieve.id
-              ) // Menentukan tipe subItem
+          const index = this.combinedData.findIndex((item) =>
+            item.items.some(
+              (subItem: SubItem) => subItem.id === this.editEmpAchieve.id
+            )
           );
 
           if (index !== -1) {
@@ -235,11 +228,11 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             );
             if (subItemIndex !== -1) {
               this.combinedData[index].items[subItemIndex].score =
-                this.editEmpAchieve.score; // Update the score
+                this.editEmpAchieve.score;
             }
           }
 
-          this.displayEditAchieveDialog = false; // Close the dialog
+          this.displayEditAchieveDialog = false;
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -272,7 +265,7 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   ) {}
 
   onYearChange(event: any): void {
-    console.log('years changed : ', this.selectedYear);
+    
     if (this.userId) {
       this.ngOnChanges();
     } else {
@@ -291,9 +284,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
               this.totalPercentage = 100;
             }
             this.isLoading = false;
-            console.log('data : ', this.combinedData);
-            console.log('assScore : ', this.assScore);
-            console.log('statusAssessment : ', this.statusAssessment);
+            
+            
+            
           },
         });
     }
@@ -304,26 +297,26 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     if (token) {
       const jwtPayload = this.authService.parseJwt(token);
       this.roles = jwtPayload.roles!;
-      console.log('Roles : ', this.roles);
+      
     }
-    console.log('On init called');
+    
     if (!this.isInDialog) {
       if (!this.userId) {
-        console.log('no user id');
+        
         this.id = this.authService.parseJwt(this.token).sub;
       } else {
         this.id = this.userId;
       }
-      console.log('id : ', this.id);
+      
       this.summaryService.getAllUserAssSummary(this.id).subscribe({
         next: (data) => {
           this.years = data.content.map((item: any) => ({
             label: item.year.toString(),
             value: item.year,
           }));
-          console.log('years : ', this.years);
+          
           this.selectedYear = this.years[this.years.length - 1];
-          console.log('selectedYear : ', this.selectedYear);
+          
           this.summaryService
             .getAssSummaryDetail(this.id, this.selectedYear.value)
             .subscribe({
@@ -338,9 +331,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
                   this.totalPercentage = 100;
                 }
                 this.isLoading = false;
-                console.log('data : ', this.combinedData);
-                console.log('assScore : ', this.assScore);
-                console.log('statusAssessment : ', this.statusAssessment);
+                
+                
+                
               },
             });
         },
@@ -349,12 +342,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    console.log('userId changed : ', this.userId);
+    
     if (this.userId) {
       this.empSuggestService
         .getEmpSuggestByUserIdAndYear(this.userId, this.year!)
         .subscribe((data) => {
-          console.log('data suggesttion : ', data);
+          
           this.suggestions = data;
         });
       this.summaryService
@@ -371,9 +364,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
               this.totalPercentage = 100;
             }
             this.isLoading = false;
-            console.log('data : ', this.combinedData);
-            console.log('assScore : ', this.assScore);
-            console.log('statusAssessment : ', this.statusAssessment);
+            
+            
+            
           },
         });
     }
@@ -395,14 +388,12 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       right: { style: 'thin' as ExcelJS.BorderStyle },
     };
 
-    // Add title and year
     worksheet.addRow(['ASSESSMENT SUMMARY REPORT']);
     worksheet.addRow(['Year:', this.selectedYear.label]);
     worksheet.mergeCells('A1:D1');
     worksheet.getCell('A1').alignment = { horizontal: 'center' };
     worksheet.getCell('A1').font = { bold: true, size: 14 };
 
-    // Define columns
     worksheet.columns = [
       { header: 'Aspect', key: 'aspect', width: 100 },
       { header: 'Avg. Score', key: 'average_score', width: 20 },
@@ -410,7 +401,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       { header: 'ASSESSMENT SUMMARY REPORT', key: 'final_score', width: 15 },
     ];
 
-    // Add explicit headers
     worksheet
       .addRow(['Aspect', 'Average Score', 'Percentage', 'Final Score'])
       .eachCell((cell) => {
@@ -419,7 +409,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         cell.border = borderStyle;
       });
 
-    // Add employee name
     worksheet.addRow([
       'Employee Name:',
       this.combinedData[0]?.items[0]?.user?.full_name || '',
@@ -428,17 +417,15 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     ]);
 
     this.combinedData.forEach((item, index) => {
-      // Check if it's a new section
       if (this.isNewSection(index, item.section)) {
         const sectionRow = worksheet.addRow([item.section, '', '', '']);
         sectionRow.font = { bold: true };
-        sectionRow.getCell(1).alignment = { horizontal: 'center' }; // Center align the section text
+        sectionRow.getCell(1).alignment = { horizontal: 'center' };
         sectionRow.getCell(2).alignment = { horizontal: 'center' };
         sectionRow.getCell(3).alignment = { horizontal: 'center' };
         sectionRow.getCell(4).alignment = { horizontal: 'center' };
       }
 
-      // Add group name row with light gray background
       const finalScore = Math.round(item.total_score * (item.percentage / 100));
       worksheet
         .addRow([
@@ -453,10 +440,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             type: 'pattern',
             pattern: 'solid',
             fgColor: { argb: 'D3D3D3' },
-          }; // Light gray background
+          };
         });
 
-      // Add achievements and attitude skills
       item.items.forEach((subItem: any) => {
         const aspect = `${subItem.achievement?.achievement_name || ''} ${
           subItem.attitude_skill?.attitude_skill_name || ''
@@ -467,7 +453,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       });
     });
 
-    // Add total score row at the bottom
     worksheet
       .addRow(['Total Score:', '', '', this.assScore])
       .eachCell((cell) => {
@@ -475,7 +460,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         cell.font = { bold: true };
       });
 
-    // Save the workbook
     workbook.xlsx.writeBuffer().then((buffer) => {
       const blob = new Blob([buffer], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -498,7 +482,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       });
     });
 
-    // Add full_name and assessment_year at the top
     tableRows.push([
       {
         content: `Employee Name:`,
@@ -523,7 +506,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
     ]);
 
     this.combinedData.forEach((item, index) => {
-      // Check if it's a new section
       if (this.isNewSection(index, item.section)) {
         tableRows.push([
           {
@@ -531,10 +513,9 @@ export class UserSummaryComponent implements OnInit, OnChanges {
             colSpan: 4,
             styles: { halign: 'center', fontStyle: 'bold' },
           },
-        ]); // Add section header
+        ]);
       }
 
-      // Add group name row with light gray background
       tableRows.push([
         {
           content: item.group_name,
@@ -558,7 +539,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
         },
       ]);
 
-      // Add achievements and attitude skills
       item.items.forEach((subItem: any) => {
         tableRows.push([
           `${subItem.achievement?.achievement_name || ''}${
@@ -572,7 +552,6 @@ export class UserSummaryComponent implements OnInit, OnChanges {
       });
     });
 
-    // Add total score row at the bottom
     tableRows.push([
       {
         content: 'Total Score:',

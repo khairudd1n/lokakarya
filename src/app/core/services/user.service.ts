@@ -18,9 +18,7 @@ export class UserService {
       .get<ApiResponse<User[]>>(`${this.url}/all`, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
-      .pipe(
-        map((response) => response.content) // Extract content array
-      );
+      .pipe(map((response) => response.content));
   }
 
   getPaginatedUser(
@@ -59,16 +57,14 @@ export class UserService {
       join_date: user.join_date,
       enabled: Number(user.enabled),
       password: user.password,
-      role: user.selectedRoles, // Keep the role as is, assuming it's already in the right format
-      division_id: user.division, // Map 'division' to 'division_id' for the backend
+      role: user.selectedRoles,
+      division_id: user.division,
     };
     return this.http
       .post<ApiResponse<User>>(`${this.url}/save`, userToSave, {
         headers: { Authorization: `Bearer ${this.token}` },
       })
-      .pipe(
-        map((response) => response.content) // Extract content array
-      );
+      .pipe(map((response) => response.content));
   }
 
   updateUser(user: any): Observable<User> {
@@ -122,12 +118,12 @@ export class UserService {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${this.token}`
-    )
+    );
     const params = new HttpParams().set('username', username);
     return this.http
       .get<boolean>(`${this.url}/check-username`, {
         headers,
-        params
+        params,
       })
       .pipe(map((response) => response));
   }
@@ -136,12 +132,12 @@ export class UserService {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${this.token}`
-    )
+    );
     const params = new HttpParams().set('email', email);
     return this.http
       .get<boolean>(`${this.url}/check-email`, {
         headers,
-        params
+        params,
       })
       .pipe(map((response) => response));
   }

@@ -152,15 +152,6 @@
                 !user.score || isApproving[user.id] || user.status === 1
               "
             ></button>
-            <button
-              pButton
-              icon="pi pi-times"
-              class="p-button-sm p-button-danger"
-              (click)="unapproveAssessmentSummary(user.id)"
-              [disabled]="
-                !user.score || isApproving[user.id] || user.status === 0
-              "
-            ></button>
           </div>
         </td>
         }

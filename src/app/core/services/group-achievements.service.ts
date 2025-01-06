@@ -13,14 +13,13 @@ export interface GroupAchieveDto {
   created_by: UUID;
   updated_at: Date;
   updated_by: UUID;
-  // Tambahkan properti lainnya sesuai dengan DTO
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class GroupAchievementsService {
-  private apiUrl = 'http://localhost:8080/group-achievements'; // Sesuaikan URL backend
+  private apiUrl = 'http://localhost:8080/group-achievements';
   token: string = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -29,9 +28,9 @@ export class GroupAchievementsService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http.get<any[]>(`${this.apiUrl}/count`, { headers }).pipe(
-      map((data) => data)
-    );
+    return this.http
+      .get<any[]>(`${this.apiUrl}/count`, { headers })
+      .pipe(map((data) => data));
   }
 
   getAllGroupAchievements(): Observable<GroupAchieveDto[]> {
@@ -43,7 +42,6 @@ export class GroupAchievementsService {
     });
   }
 
-  // Create a new group achievement
   createGroupAchievement(
     data: Partial<GroupAchieveDto>
   ): Observable<GroupAchieveDto> {
@@ -53,7 +51,6 @@ export class GroupAchievementsService {
     });
   }
 
-  // Update an existing group attitude skill
   updateGroupAchievement(
     id: UUID,
     data: Partial<GroupAchieveDto>
@@ -68,7 +65,6 @@ export class GroupAchievementsService {
       );
   }
 
-  // Delete a group attitude skill by ID
   deleteGroupAchievement(id: UUID): Observable<void> {
     const headers = {
       Authorization: `Bearer ${this.token}`,

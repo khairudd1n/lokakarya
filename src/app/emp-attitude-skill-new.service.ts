@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, tap, switchMap } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { UUID } from 'crypto';
-import { EmpTechSkillCreateDto } from './emp-technical-skill.service';
 import { ApiResponse } from './core/models/api-response.model';
 
 export interface EmpAttitudeSkillCreateDto {
@@ -15,11 +14,11 @@ export interface EmpAttitudeSkillCreateDto {
 }
 
 export interface EmpAttitudeSkillUpdateRequest {
-  id: string; // UUID dari EmpAttitudeSkill yang ingin diperbarui
-  userId?: string; // UUID dari User yang terkait
-  attitudeSkillId: string; // UUID dari AttitudeSkill yang terkait
-  score?: number; // Nilai yang ingin diperbarui
-  assessmentYear?: number; // Tahun penilaian yang ingin diperbarui
+  id: string;
+  userId?: string;
+  attitudeSkillId: string;
+  score?: number;
+  assessmentYear?: number;
 }
 
 @Injectable({
@@ -47,7 +46,6 @@ export class EmpAttitudeSkillNewService {
           {},
           { headers: { Authorization: `Bearer ${this.token}` } }
         )
-        
       )
     );
   }
@@ -60,15 +58,13 @@ export class EmpAttitudeSkillNewService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('Payload untuk update:', payload);
+
     return this.http
       .put<EmpAttitudeSkillCreateDto>(`${this.apiUrl}/${id}`, payload, {
         headers,
       })
       .pipe(
-        tap((updatedSkill) => {
-          console.log('Successfully updated skill:', updatedSkill);
-        }),
+        tap((updatedSkill) => {}),
         switchMap(() =>
           this.http.post<void>(
             `${this.assessSumUrl}/generate/${payload.user_id}/${payload.assessment_year}`,
@@ -78,27 +74,6 @@ export class EmpAttitudeSkillNewService {
         )
       );
   }
-
-  // updateEmpAttitudeSkills(
-  //   payload: EmpAttitudeSkillUpdateRequest[]
-  // ): Observable<EmpAttitudeSkillCreateDto[]> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-
-  //   console.log('Payload untuk update:', payload);
-
-  //   return this.http
-  //     .put<EmpAttitudeSkillCreateDto[]>(`${this.apiUrl}`, payload, {
-  //       headers,
-  //     })
-  //     .pipe(
-  //       tap((updatedSkills) => {
-  //         console.log('Successfully updated skills:', updatedSkills);
-  //       })
-  //     );
-  // }
 
   updateEmpAttitudeSkills(
     payload: {
@@ -114,16 +89,12 @@ export class EmpAttitudeSkillNewService {
       'Content-Type': 'application/json',
     });
 
-    console.log('Payload untuk update:', payload);
-
     return this.http
       .put(`${this.apiUrl}`, payload, {
         headers,
       })
       .pipe(
-        tap((updatedSkills) => {
-          console.log('Successfully updated skills:', updatedSkills);
-        }),
+        tap((updatedSkills) => {}),
         switchMap(() =>
           this.http.post<void>(
             `${this.assessSumUrl}/generate/${payload[0].user_id}/${payload[0].assessment_year}`,
@@ -140,13 +111,7 @@ export class EmpAttitudeSkillNewService {
       'Content-Type': 'application/json',
     });
 
-    return this.http
-      .get<EmpAttitudeSkillCreateDto[]>(this.apiUrl, { headers })
-      .pipe(
-        tap((data) => {
-          console.log('Fetched all Emp Attitude Skills:', data);
-        })
-      );
+    return this.http.get<EmpAttitudeSkillCreateDto[]>(this.apiUrl, { headers });
   }
 
   getAllAttitudeSkillsByUserId(
@@ -156,9 +121,9 @@ export class EmpAttitudeSkillNewService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<any[]>(`${this.apiUrl}/user/${userId}/${year}`, { headers })
-      .pipe(tap((data) => console.log('Fetched Attitude Skills:', data)));
+    return this.http.get<any[]>(`${this.apiUrl}/user/${userId}/${year}`, {
+      headers,
+    });
   }
 
   getAllGroupWithAttitudeSkills(): Observable<any[]> {
@@ -182,11 +147,7 @@ export class EmpAttitudeSkillNewService {
       .get<EmpAttitudeSkillCreateDto[]>(`${this.apiUrl}/user/${userId}`, {
         headers,
       })
-      .pipe(
-        tap((data) => {
-          console.log('Data fetched successfully:', data);
-        })
-      );
+      .pipe(tap((data) => {}));
   }
 
   getAssessmentYears(): Observable<number[]> {
@@ -197,11 +158,7 @@ export class EmpAttitudeSkillNewService {
 
     return this.http
       .get<number[]>(`${this.apiUrl}/assessment-years`, { headers })
-      .pipe(
-        tap((years) => {
-          console.log('Retrieved assessment years:', years);
-        })
-      );
+      .pipe(tap((years) => {}));
   }
 
   getAllUsers(): Observable<any[]> {
@@ -210,23 +167,18 @@ export class EmpAttitudeSkillNewService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get<any[]>(`${this.apiUrl}/user-only`, { headers }).pipe(
-      tap((users) => {
-        console.log('Retrieved users:', users);
-      })
-    );
+    return this.http
+      .get<any[]>(`${this.apiUrl}/user-only`, { headers })
+      .pipe(tap((users) => {}));
   }
 
-  // Delete Emp Attitude Skill by ID
   deleteEmpAttitudeSkill(id: UUID): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers }).pipe(
-      tap((response) => {
-        console.log('Successfully deleted Emp Attitude Skill:', response);
-      })
-    );
+    return this.http
+      .delete<any>(`${this.apiUrl}/${id}`, { headers })
+      .pipe(tap((response) => {}));
   }
 }

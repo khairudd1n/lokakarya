@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UUID } from 'crypto';
-import { tap } from 'rxjs';
 import { map } from 'rxjs';
-import { AuthService } from './core/services/auth.service';
 import { EmpAchieveService } from './emp-achieve.service';
 import { EmpAttitudeSkillNewService } from './emp-attitude-skill-new.service';
 import { GroupAttitudeSkillService } from './core/services/group-attitude-skill.service';
 import { GroupAchievementsService } from './core/services/group-achievements.service';
-import { GroupedData, GroupedResult } from './core/models/summary.model';
 import { ApiResponse } from './core/models/api-response.model';
 
 export interface GroupAchieveDto {
@@ -41,7 +38,7 @@ export class AssSummaryService {
   ) {}
 
   saveAssSummary(userId: string, score: number, year: number): Observable<any> {
-    console.log('saving ass summary');
+    
     const currentYear = new Date().getFullYear();
     const data = {
       user_id: userId,
@@ -57,7 +54,7 @@ export class AssSummaryService {
   }
 
   generateAssSummary(userId: string, year: number): Observable<any> {
-    console.log('generating ass summary');
+    
     return this.http
       .post(
         `${this.url}/generate/${userId}/${year}`,
@@ -68,7 +65,7 @@ export class AssSummaryService {
   }
 
   getAssessmentSummary(userId: string, year: number): Observable<any> {
-    console.log('Fetching assessment summary');
+    
     return this.http
       .get(`${this.url}/summary`, {
         headers: { Authorization: `Bearer ${this.token}` },
@@ -106,7 +103,7 @@ export class AssSummaryService {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${this.token}`
-    )
+    );
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
@@ -136,9 +133,7 @@ export class AssSummaryService {
         headers,
         params,
       })
-      .pipe(
-        map((response) => response)
-      );
+      .pipe(map((response) => response));
   }
 
   getAllUserAssSummary(userId: string): Observable<ApiResponse<any[]>> {
@@ -159,7 +154,7 @@ export class AssSummaryService {
   }
 
   updateAssessSumStatusToApprove(id: string): Observable<ApiResponse<any>> {
-    console.log(`Updating assessment summary status to approve for ID: ${id}`);
+    
     return this.http
       .patch<ApiResponse<any>>(
         `${this.url}/update-status-to-approve/${id}`,
@@ -172,9 +167,7 @@ export class AssSummaryService {
   }
 
   updateAssessSumStatusToUnapprove(id: string): Observable<ApiResponse<any>> {
-    console.log(
-      `Updating assessment summary status to unapprove for ID: ${id}`
-    );
+    
     return this.http
       .patch<ApiResponse<any>>(
         `${this.url}/update-status-to-unapprove/${id}`,

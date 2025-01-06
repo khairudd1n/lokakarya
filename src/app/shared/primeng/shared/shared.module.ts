@@ -5,12 +5,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { ColumnFilter, TableModule } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DropdownModule } from 'primeng/dropdown';
 import { NavBarComponent } from '../../../features/nav-bar/nav-bar/nav-bar.component';
-
-
 
 @NgModule({
   declarations: [],
@@ -23,8 +21,8 @@ import { NavBarComponent } from '../../../features/nav-bar/nav-bar/nav-bar.compo
     DialogModule,
     ToggleButtonModule,
     DropdownModule,
-    NavBarComponent
-  ], 
+    NavBarComponent,
+  ],
   exports: [
     ButtonModule,
     InputTextModule,
@@ -35,8 +33,7 @@ import { NavBarComponent } from '../../../features/nav-bar/nav-bar/nav-bar.compo
     TableModule,
     ToggleButtonModule,
     DropdownModule,
-    NavBarComponent
+    NavBarComponent,
   ],
-
 })
-export class SharedModule { }
+export class SharedModule {}

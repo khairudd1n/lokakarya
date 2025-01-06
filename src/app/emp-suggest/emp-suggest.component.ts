@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpSuggestService, EmpSuggestDto } from '../emp-suggest.service';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { TableModule } from 'primeng/table'; // For table
-import { InputNumberModule } from 'primeng/inputnumber'; // For number input
+import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
@@ -34,11 +31,10 @@ export class EmpSuggestComponent implements OnInit {
   userId: string = '';
   assessmentYear: number = new Date().getFullYear();
   selectedSuggest: EmpSuggestDto[] = [];
-  assessmentYears: number[] = []; // Array untuk menampung tahun
-  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+  assessmentYears: number[] = [];
+  selectedAssessmentYear: number = new Date().getFullYear();
   isPreviousYearSelected: boolean = false;
-
-  editedSuggests: Set<string> = new Set(); // Menyimpan ID skill yang telah diedit
+  editedSuggests: Set<string> = new Set();
   isDisabled: boolean = false;
 
   constructor(
@@ -50,7 +46,7 @@ export class EmpSuggestComponent implements OnInit {
     this.getUserId();
     this.initializeGroupData();
     this.loadSavedSuggestions();
-    this.initializeAssessmentYears(); // Panggil fungsi untuk menginisialisasi tahun
+    this.initializeAssessmentYears();
   }
 
   initializeAssessmentYears(): void {
@@ -74,7 +70,7 @@ export class EmpSuggestComponent implements OnInit {
   onAssessmentYearChange(): void {
     this.isPreviousYearSelected =
       this.selectedAssessmentYear < this.assessmentYear;
-    this.loadSavedSuggestions(); // Panggil ulang data ketika tahun berubah
+    this.loadSavedSuggestions();
   }
 
   getUserId(): void {
@@ -82,7 +78,7 @@ export class EmpSuggestComponent implements OnInit {
 
     if (userToken) {
       try {
-        const payload = JSON.parse(atob(userToken.split('.')[1])); // Decode JWT payload
+        const payload = JSON.parse(atob(userToken.split('.')[1]));
         this.userId = payload.sub;
       } catch (error) {
         console.error('Error decoding token:', error);
@@ -104,16 +100,14 @@ export class EmpSuggestComponent implements OnInit {
           this.groupData[0].rows = data.map((item) => ({
             suggestion: item.suggestion,
             id: item.id,
-            saved: true, // Tandai sebagai data tersimpan
+            saved: true,
           }));
 
-          // Call getAssessmentSummary after loading suggestions
           this.assSummaryService
             .getAssessmentSummary(this.userId, this.selectedAssessmentYear)
             .subscribe((assessmentSummary) => {
-              // Now assessmentSummary can be processed after loadData is complete
               this.isDisabled = assessmentSummary?.status === 1;
-              console.log('Updated isDisabled:', this.isDisabled);
+              
             });
         },
         (error) => {
@@ -126,9 +120,7 @@ export class EmpSuggestComponent implements OnInit {
     const newRows = this.groupData[0].rows.filter((row: any) => !row.saved);
     const updatedRows = this.groupData[0].rows.filter((row: any) => row.saved);
 
-    // Check for empty suggestions in new rows
     const hasEmptyNewRows = newRows.some((row: any) => !row.suggestion.trim());
-    // Check for empty suggestions in updated rows
     const hasEmptyUpdatedRows = updatedRows.some(
       (row: any) => !row.suggestion.trim()
     );
@@ -147,7 +139,6 @@ export class EmpSuggestComponent implements OnInit {
       return;
     }
 
-    // Tampilkan dialog konfirmasi
     Swal.fire({
       title: 'Confirmation',
       text: 'Are you sure you want to save?',
@@ -165,7 +156,7 @@ export class EmpSuggestComponent implements OnInit {
 
         this.empSuggestService.saveEmpSuggest(payload).subscribe(
           (response) => {
-            console.log('New data saved successfully:', response);
+            
             newRows.forEach((row: any) => (row.saved = true));
             Swal.fire(
               'Success',
@@ -189,7 +180,7 @@ export class EmpSuggestComponent implements OnInit {
         if (updatePayload.length > 0) {
           this.empSuggestService.updateEmpSuggest(updatePayload).subscribe(
             (response) => {
-              console.log('Updated data successfully:', response);
+              
               Swal.fire(
                 'Success',
                 'Updated data has been submitted successfully!',
@@ -218,8 +209,8 @@ export class EmpSuggestComponent implements OnInit {
       if (result.isConfirmed) {
         this.empSuggestService.deleteEmpSuggest(id).subscribe(
           (response) => {
-            console.log('Suggestion deleted successfully:', response);
-            this.loadSavedSuggestions(); // Reload suggestions after deletion
+            
+            this.loadSavedSuggestions();
             Swal.fire(
               'Deleted!',
               'Your suggestion has been deleted.',

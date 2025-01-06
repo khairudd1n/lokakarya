@@ -10,12 +10,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { InputText, InputTextModule } from 'primeng/inputtext';
-import { User } from '../../../core/models/user.model';
+import { InputTextModule } from 'primeng/inputtext';
 import { RoleService } from '../../../core/services/role.service';
 import { Role } from '../../../core/models/role.model';
 import { CheckboxModule } from 'primeng/checkbox';
-import { Division } from '../../../core/models/division.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
@@ -78,7 +76,6 @@ export class CreateUserDialogComponent implements OnChanges {
     if (!this.user.selectedRoles) {
       this.user.selectedRoles = [];
     }
-    console.log(this.divisions);
   }
 
   user: any = {
@@ -97,7 +94,6 @@ export class CreateUserDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['userData']) {
       if (this.userData) {
-        console.log('user data : ', this.userData);
         this.user = { ...this.userData };
         this.user.selectedRoles =
           this.userData.role?.map((role: any) => role.id) || [];
@@ -129,31 +125,30 @@ export class CreateUserDialogComponent implements OnChanges {
 
   saveUser() {
     this.userSaved.emit(this.user);
-    console.log(this.user);
+
     this.closeDialog();
   }
 
   checkUsername(username: string): void {
     if(username == this.userData.username) return
     const usernameRegex = /^[a-zA-Z0-9_.]+$/;
-  
+
     if (username.trim() === '') {
       this.usernameValid = false;
       this.usernameExists = false;
       return;
     }
-  
+
     this.usernameValid = usernameRegex.test(username);
-  
+
     if (!this.usernameValid) {
-      return; 
+      return;
     }
-  
+
     this.userService.checkUsernameExists(username).subscribe((response) => {
       this.usernameExists = response;
     });
   }
-  
 
   checkEmail(email: string) {
     if(email == this.userData.email_address) return
@@ -162,16 +157,15 @@ export class CreateUserDialogComponent implements OnChanges {
       this.emailExists = false;
       this.emailValid = true;
       return;
-    }  
-    this.emailValid = emailRegex.test(email);  
+    }
+    this.emailValid = emailRegex.test(email);
     if (!this.emailValid) {
-      return; 
-    }  
+      return;
+    }
     this.userService.checkEmailExists(email).subscribe((response) => {
       this.emailExists = response;
     });
   }
-  
 
   closeDialog() {
     this.visibleChange.emit(false);
@@ -202,7 +196,6 @@ export class CreateUserDialogComponent implements OnChanges {
 
   resetPassword() {
     this.userService.resetPassword(this.user.id).subscribe((response) => {
-      console.log(response);
       Swal.fire({
         title: 'Success',
         text: 'New Password : ' + response,

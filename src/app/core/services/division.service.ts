@@ -24,9 +24,7 @@ export class DivisionService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .get<DivisionDto[]>(`${this.apiUrl}`, { headers })
-      .pipe(tap((data) => console.log('Fetched Divisions:', data)));
+    return this.http.get<DivisionDto[]>(`${this.apiUrl}`, { headers });
   }
 
   getDivisionList(): Observable<DivisionDto[]> {
@@ -50,19 +48,15 @@ export class DivisionService {
     data: Partial<DivisionDto>
   ): Observable<DivisionDto> {
     const headers = { Authorization: `Bearer ${this.token}` };
-    return this.http
-      .put<DivisionDto>(`${this.apiUrl}/${id}`, data, { headers })
-      .pipe(
-        tap((updatedData) => console.log('Updated Division:', updatedData))
-      );
+    return this.http.put<DivisionDto>(`${this.apiUrl}/${id}`, data, {
+      headers,
+    });
   }
 
   deleteDivision(id: UUID): Observable<void> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .delete<void>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(tap(() => console.log(`Deleted Division with ID: ${id}`)));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

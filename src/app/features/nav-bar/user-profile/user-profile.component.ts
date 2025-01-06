@@ -3,16 +3,13 @@ import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 import { TabViewModule } from 'primeng/tabview';
 import {
   AbstractControl,
-  FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { error } from 'console';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -27,7 +24,7 @@ export class UserProfileComponent implements OnInit {
     this.authService.logout();
   }
 
-  selectedTab = 'profile'; // Default tab
+  selectedTab = 'profile';
   passwordForm?: FormGroup;
   userId: string = '';
   token: string = '';
@@ -62,7 +59,12 @@ export class UserProfileComponent implements OnInit {
           Validators.minLength(8),
         ]),
       },
-      { validators: Validators.compose([this.passwordsDiffer, this.passwordsMatch]) }, // Apply custom validators this.passwordsMatch },
+      {
+        validators: Validators.compose([
+          this.passwordsDiffer,
+          this.passwordsMatch,
+        ]),
+      }
     );
   }
 
@@ -90,7 +92,6 @@ export class UserProfileComponent implements OnInit {
       const newPassword = this.passwordForm!.value.newPassword;
       const confirmPassword = this.passwordForm!.value.confirmPassword;
 
-      // Handle password change logic here
       console.log('Password changed:', {
         currentPassword,
         newPassword,
@@ -107,10 +108,10 @@ export class UserProfileComponent implements OnInit {
               text: 'Password changed successfully.',
               icon: 'success',
               confirmButtonColor: '#3085d6',
-            })
+            });
           },
           (error) => {
-            let message = 'Failed to change password'; // Default message
+            let message = 'Failed to change password';
 
             if (error.error.info.detailMessage.includes('Incorrect password')) {
               message = 'Incorrect password';

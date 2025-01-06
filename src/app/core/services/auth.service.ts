@@ -45,21 +45,15 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // Check if the token is expired and return null if expired
   checkTokenExpiration(): string | null {
     const token = this.getToken();
 
-    console.log('Token:', token);
-
     if (token) {
       const decodedToken = this.parseJwt(token);
-      const expirationTime = decodedToken.exp * 1000; // exp is in seconds, multiply by 1000 to get milliseconds
+      const expirationTime = decodedToken.exp * 1000;
       const currentTime = Date.now();
 
-      // Check if the token is expired
       if (currentTime > expirationTime) {
-        // Token is expired, remove it and return null
-        console.log('Token is expired');
         this.logout();
         return null;
       }
@@ -68,11 +62,9 @@ export class AuthService {
     return null;
   }
 
-  // Log the user out by removing the token and redirecting to login
   logout(): void {
     localStorage.clear();
-    // Redirect to login page
-    window.location.href = '/login'; // Replace with your actual login URL
+    window.location.href = '/login';
   }
 
   parseJwt(token: string): any {

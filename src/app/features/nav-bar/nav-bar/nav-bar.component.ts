@@ -50,20 +50,18 @@ export class NavBarComponent implements OnInit {
     }
     this.menuService.getMenuByUserId(this.userId).subscribe((data) => {
       this.userMenu = data;
-      console.log(this.userMenu);
+
       this.userMenuItems = this.userMenu
-        .map((menu) => MENU_MAP[menu.menu_name]) // Use MENU_MAP to find matching menu item
-        .filter((menu) => menu !== undefined); // Remove undefined items (if API has extra menus not in MENU_MAP)
+        .map((menu) => MENU_MAP[menu.menu_name])
+        .filter((menu) => menu !== undefined);
 
       this.menuItems = this.groupMenus(this.userMenuItems);
-      console.log(this.menuItems);
     });
   }
 
   groupMenus(menuItems: MenuItem[]): MenuItem[] {
     const groupedMenus: MenuItem[] = [];
 
-    // Dynamically add the 'User' group if any "User" item exists
     const userItems = menuItems.filter((item) =>
       ['/user', '/view-user'].includes(item.routerLink!)
     );
@@ -87,7 +85,6 @@ export class NavBarComponent implements OnInit {
       groupedMenus.push(roleMenuItems[0]);
     }
 
-    // Dynamically add the 'Attitude' group if any relevant "Attitude" items exist
     const attitudeItems = menuItems.filter((item) =>
       ['/attitude-skill', '/group-attitude-skill'].includes(item.routerLink!)
     );
@@ -102,7 +99,6 @@ export class NavBarComponent implements OnInit {
       groupedMenus.push(technicalItems[0]);
     }
 
-    // Dynamically add the 'Dev Plan' group if any relevant "Dev Plan" items exist
     const devPlanItems = menuItems.filter(
       (item) => item.routerLink === '/dev-plan'
     );
@@ -110,7 +106,6 @@ export class NavBarComponent implements OnInit {
       groupedMenus.push(devPlanItems[0]);
     }
 
-    // Dynamically add the 'Achievement' group if any relevant "Achievement" items exist
     const achievementItems = menuItems.filter((item) =>
       ['/achievement', '/group-achievement', '/emp-achievement'].includes(
         item.routerLink!

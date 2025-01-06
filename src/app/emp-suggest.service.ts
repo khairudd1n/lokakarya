@@ -31,11 +31,7 @@ export class EmpSuggestService {
 
     return this.http
       .post<any>(`${this.apiUrl}/create`, payload, { headers })
-      .pipe(
-        tap((data) => {
-          console.log('Data stored successfully:', data);
-        })
-      );
+      .pipe(tap((data) => {}));
   }
 
   updateEmpSuggest(
@@ -51,17 +47,11 @@ export class EmpSuggestService {
       'Content-Type': 'application/json',
     });
 
-    console.log('Payload untuk update:', payload);
-
     return this.http
       .put(`${this.apiUrl}`, payload, {
         headers,
       })
-      .pipe(
-        tap((updatedSuggests) => {
-          console.log('Successfully updated suggests:', updatedSuggests);
-        })
-      );
+      .pipe(tap((updatedSuggests) => {}));
   }
 
   getEmpSuggestByUserId(userId: string): Observable<EmpSuggestDto[]> {
@@ -98,19 +88,13 @@ export class EmpSuggestService {
 
     return this.http
       .get<number[]>(`${this.apiUrl}/assessment-years`, { headers })
-      .pipe(
-        tap((years) => {
-          console.log('Retrieved assessment years:', years);
-        })
-      );
+      .pipe(tap((years) => {}));
   }
 
   deleteEmpSuggest(id: UUID): Observable<void> {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    return this.http
-      .delete<void>(`${this.apiUrl}/delete/${id}`, { headers })
-      .pipe(tap(() => console.log(`Deleted Emp suggest with ID: ${id}`)));
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers });
   }
 }

@@ -28,7 +28,7 @@ export class SumWithDetailComponent {
 
   ngOnInit(): void {
     this.getUserId();
-    // Fetch skills only if userId is available
+
     if (this.userId) {
       this.fetchEmpAttitudeSkills();
     } else {
@@ -41,10 +41,9 @@ export class SumWithDetailComponent {
 
     if (userToken) {
       try {
-        const payload = JSON.parse(atob(userToken.split('.')[1])); // Decode JWT payload
+        const payload = JSON.parse(atob(userToken.split('.')[1]));
         console.log('Full Token Payload:', payload);
 
-        // Extract userId from the 'sub' key
         this.userId = payload.sub;
         console.log('Logged-in User ID:', this.userId);
       } catch (error) {
@@ -55,31 +54,15 @@ export class SumWithDetailComponent {
     }
   }
 
-  // fetchEmpAttitudeSkills(): void {
-  //   this.sumWithDetailService
-  //     .getEmpAttSkillByUserId(this.userId, this.year)
-  //     .subscribe({
-  //       next: (response) => {
-  //         console.log('Response received:', response); // Log the entire response
-  //         this.empAttitudeSkills = response.content; // Directly assign data
-  //         console.log('Employee Attitude Skills:', this.empAttitudeSkills); // Log the assigned data
-  //       },
-  //       error: (err) => {
-  //         this.errorMessage = `Error fetching data: ${err.message}`;
-  //         console.error(this.errorMessage); // Log the error message
-  //       },
-  //     });
-  // }
-
   fetchEmpAttitudeSkills(): void {
     this.sumWithDetailService
       .getEmpAttSkillByUserId(this.userId, this.year)
       .subscribe({
         next: (response) => {
-          console.log('Response received:', response); // Log the entire response
-          // Check if response.content is defined and is an array
+          console.log('Response received:', response);
+
           if (response && response.content) {
-            console.log('Content:', response.content); // Log the content specifically
+            console.log('Content:', response.content);
             if (
               Array.isArray(response.content) &&
               response.content.length > 0
@@ -119,7 +102,7 @@ export class SumWithDetailComponent {
   groupSkillsByGroupName(): void {
     if (!this.empAttitudeSkills || !Array.isArray(this.empAttitudeSkills)) {
       console.error('empAttitudeSkills is not defined or not an array');
-      return; // Exit the method if empAttitudeSkills is not valid
+      return;
     }
 
     const grouped: {
@@ -127,7 +110,7 @@ export class SumWithDetailComponent {
     } = {};
 
     this.empAttitudeSkills.forEach((skill) => {
-      const groupName = skill.group_attitude_skill.group_name; // Accessing group_name from group_attitude_skill
+      const groupName = skill.group_attitude_skill.group_name;
       if (!grouped[groupName]) {
         grouped[groupName] = [];
       }

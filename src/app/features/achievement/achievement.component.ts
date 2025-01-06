@@ -62,24 +62,24 @@ export class AchievementComponent implements OnInit {
     group_achievement_name: '',
     enabled: 1,
   };
-  currentGroup: string = ''; // Untuk melacak grup saat ini
+  currentGroup: string = '';
   groupIndex: number = 0;
 
-  groupAchievementOptions: { label: string; value: string }[] = []; // Populate with your actual options
+  groupAchievementOptions: { label: string; value: string }[] = [];
 
   constructor(private achieveService: AchievementService) {}
 
   ngOnInit(): void {
     this.fetchAchievements();
-    this.fetchGroupAchievementOptions(); // Fetch options from the service
+    this.fetchGroupAchievementOptions();
   }
 
   resetGroupIndex(achievement: any): number {
     if (this.currentGroup !== achievement.group_achievement_name) {
       this.currentGroup = achievement.group_achievement_name;
-      this.groupIndex = 1; // Reset nomor urut ke 1 untuk grup baru
+      this.groupIndex = 1;
     } else {
-      this.groupIndex++; // Tambahkan nomor urut untuk grup yang sama
+      this.groupIndex++;
     }
     return this.groupIndex;
   }
@@ -89,7 +89,7 @@ export class AchievementComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt2) {
-      this.dt2.filterGlobal(input, 'contains'); // Pass the input value and match mode
+      this.dt2.filterGlobal(input, 'contains');
     }
   }
 
@@ -107,44 +107,39 @@ export class AchievementComponent implements OnInit {
     });
   }
 
-  // Show the create dialog
   showCreateDialog(): void {
     this.displayCreateDialog = true;
   }
 
   showEditDialog(achievement: AchieveWithGroupNameDto): void {
-    // Populate the editAchievement object with selected achievement data
     this.editAchievement = { ...achievement };
     this.displayEditDialog = true;
   }
 
-  // Function to handle creating a new achievement
   createAchievement(): void {
     if (
       this.newAchievement.achievement_name &&
-      this.newAchievement.group_achievement_id // Use the correct property name here
+      this.newAchievement.group_achievement_id
     ) {
       const achievementData = {
         achievement_name: this.newAchievement.achievement_name,
-        group_achievement_id: this.newAchievement.group_achievement_id as UUID, // Ensure it's a valid UUID
+        group_achievement_id: this.newAchievement.group_achievement_id as UUID,
         enabled: this.newAchievement.enabled,
       };
 
-      // Log the payload to make sure it's correct
       console.log('Sending payload for achievement creation:', achievementData);
 
-      // Use the service to create a new achievement
       this.achieveService.createAchievement(achievementData).subscribe({
         next: (response) => {
           console.log('Achievement created successfully:', response);
-          this.fetchAchievements(); // Refresh the data table
+          this.fetchAchievements();
           this.displayCreateDialog = false;
           this.newAchievement = {
             achievement_name: '',
-            group_achievement_id: '', // Reset correctly
+            group_achievement_id: '',
             enabled: 1,
           };
-          // Show success alert using SweetAlert
+
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -153,11 +148,11 @@ export class AchievementComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error creating achievement:', err);
-          // Log the backend's response if available
+
           if (err.error && err.error.message) {
             console.error('Backend error message:', err.error.message);
           }
-          // Show error alert using SweetAlert
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -182,9 +177,9 @@ export class AchievementComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Achievement updated successfully:', response);
-          this.fetchAchievements(); // Refresh the data table
-          this.displayEditDialog = false; // Close the dialog
-          // Success notification
+          this.fetchAchievements();
+          this.displayEditDialog = false;
+
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -194,7 +189,7 @@ export class AchievementComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating achievement:', err);
-          // Error notification
+
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -212,7 +207,6 @@ export class AchievementComponent implements OnInit {
   fetchGroupAchievementOptions(): void {
     this.achieveService.getGroupAchievements().subscribe({
       next: (data) => {
-        // Now the data is in the correct format for the dropdown
         this.groupAchievementOptions = data;
       },
       error: (err) => {
@@ -233,7 +227,6 @@ export class AchievementComponent implements OnInit {
   }
 
   deleteAchievement(id: UUID): void {
-    // Use SweetAlert to ask for confirmation before deleting
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Achievement? This action cannot be undone.',
@@ -244,12 +237,10 @@ export class AchievementComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Proceed with deletion if user confirms
         this.achieveService.deleteAchievement(id).subscribe({
           next: () => {
-            this.fetchAchievements(); // Refresh the data table
+            this.fetchAchievements();
 
-            // Show success alert using SweetAlert
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -259,7 +250,6 @@ export class AchievementComponent implements OnInit {
           error: (err) => {
             console.error('Error deleting achievement:', err);
 
-            // Show error alert using SweetAlert
             Swal.fire({
               icon: 'error',
               title: 'Error',

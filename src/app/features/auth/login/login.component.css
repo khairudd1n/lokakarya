@@ -6,20 +6,20 @@
 
 .login-background {
   background-image: url("/assets/images/loginbg.jpg");
-  background-size: cover; /* Ensures the image covers the entire area */
-  background-position: center center; /* Centers the image */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
-  height: 100vh; /* Makes the background cover the full viewport height */
-  display: flex; /* Allows for centering the login form */
-  justify-content: center; /* Horizontally centers the login container */
-  align-items: center; /* Vertically centers the login container */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   padding: 20px;
   opacity: 0.95;
 }
@@ -81,8 +81,8 @@ button {
 }
 
 .text-error {
-  color: #ff4d4f; /* Bright red for errors */
-  font-size: 0.9rem; /* Slightly smaller than normal text for subtlety */
+  color: #ff4d4f;
+  font-size: 0.9rem;
   margin-top: 5px;
   display: block;
 }

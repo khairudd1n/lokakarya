@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  GroupAttitudeSkillService,
-  GroupAttWithAttDto,
-} from '../core/services/group-attitude-skill.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { TableModule } from 'primeng/table'; // For table
-import { InputNumberModule } from 'primeng/inputnumber'; // For number input
+import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import {
   EmpAttitudeSkillNewService,
@@ -54,15 +48,15 @@ interface AttitudeSkill {
 export class EmpAttitudeSkillNewComponent implements OnInit {
   empAttSkills: EmpAttitudeSkillCreateDto[] = [];
   groupData: any[] = [];
-  userId: string = ''; // For storing the logged-in userId
+  userId: string = '';
   selectedSkills: EmpAttitudeSkillCreateDto[] = [];
   assessmentYear: number = new Date().getFullYear();
   disabledSkills: Set<string> = new Set();
 
-  assessmentYears: Set<number>= new Set(); // Array untuk menampung tahun
-  selectedAssessmentYear: number = new Date().getFullYear(); // Tahun yang dipilih
+  assessmentYears: Set<number> = new Set();
+  selectedAssessmentYear: number = new Date().getFullYear();
 
-  editedSkills: Set<string> = new Set(); // Menyimpan ID skill yang telah diedit
+  editedSkills: Set<string> = new Set();
 
   isDisabled: boolean = false;
 
@@ -91,13 +85,10 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       (years) => {
         if (years.length > 0) {
           this.assessmentYears.add(new Date().getFullYear());
-          years.forEach(year => this.assessmentYears.add(year));
+          years.forEach((year) => this.assessmentYears.add(year));
         } else {
           this.assessmentYears.add(new Date().getFullYear());
         }
-        // if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-        //   this.selectedAssessmentYear = this.assessmentYears[0];
-        // }
       },
       (error) => {
         console.error('Error fetching assessment years:', error);
@@ -106,7 +97,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   onAssessmentYearChange(): void {
-    this.loadData(); // Panggil ulang data ketika tahun berubah
+    this.loadData();
     if(this.selectedAssessmentYear < this.assessmentYear) {
       this.isDisabled = true;
     }
@@ -123,13 +114,11 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         : [],
     })
       .pipe(
-        // Setelah forkJoin selesai, kita melanjutkan dengan 'assessmentSummary' menggunakan concatMap
         concatMap(({ groupData, userSkills }) => {
           this.groupData = groupData;
-          console.log('Group Data:', this.groupData);
-          console.log('User Skills:', userSkills);
+          
+          
 
-          // Populate scores in groupData with userSkills
           if (userSkills.length > 0) {
             this.disabledSkills = new Set(
               userSkills.map((skill) => skill.attitude_skill.id)
@@ -144,12 +133,11 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
                   skill.empAttitudeSkillId = matchedSkill.id;
                 }
               });
-            });          
+            });
           }
 
-          console.log('Synchronized Data:', this.groupData);
+          
 
-          // Lanjutkan dengan mengambil assessment summary setelah loadData selesai
           return this.assSummaryService.getAssessmentSummary(
             this.userId,
             this.selectedAssessmentYear
@@ -157,9 +145,8 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
         })
       )
       .subscribe((assessmentSummary) => {
-        // Sekarang assessmentSummary bisa diproses setelah loadData selesai
         this.isDisabled = assessmentSummary?.status === 1;
-        console.log('Updated isDisabled:', this.isDisabled);
+        
       });
   }
 
@@ -168,12 +155,11 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
 
     if (userToken) {
       try {
-        const payload = JSON.parse(atob(userToken.split('.')[1])); // Decode JWT payload
-        console.log('Full Token Payload:', payload);
+        const payload = JSON.parse(atob(userToken.split('.')[1]));
+        
 
-        // Extract userId from the 'sub' key
         this.userId = payload.sub;
-        console.log('Logged-in User ID:', this.userId);
+        
       } catch (error) {
         console.error('Error decoding token:', error);
       }
@@ -187,34 +173,31 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     score: number,
     empAttitudeSkillId: string
   ): void {
-    console.log('Selected Emp Attitude Skill ID:', empAttitudeSkillId);
-    console.log('Selected Attitude Skill ID:', attitudeSkillId);
-    console.log('Selected Score:', score);
+    
+    
+    
 
     const existingSkillIndex = this.selectedSkills.findIndex(
       (skill) => skill.attitude_skill_id === attitudeSkillId
     );
 
     if (existingSkillIndex !== -1) {
-      // Update score jika nilai berbeda
       if (this.selectedSkills[existingSkillIndex].score !== score) {
         this.selectedSkills[existingSkillIndex].score = score;
-        this.editedSkills.add(attitudeSkillId); // Tandai sebagai diedit
+        this.editedSkills.add(attitudeSkillId);
       }
     } else {
-      // Tambahkan skill baru jika belum ada
       const skill: EmpAttitudeSkillCreateDto = {
         user_id: this.userId as UUID,
         attitude_skill_id: attitudeSkillId as UUID,
         score,
-        assessment_year: this.selectedAssessmentYear,
-        id: empAttitudeSkillId as UUID, // Menambahkan ID EmpAttitudeSkill ke objek skill
+        assessment_year: this.assessmentYear,
+        id: empAttitudeSkillId as UUID,
       };
       this.selectedSkills.push(skill);
-      this.editedSkills.add(attitudeSkillId); // Tandai sebagai diedit
+      this.editedSkills.add(attitudeSkillId);
     }
 
-    // Update groupData
     this.groupData.forEach((group) => {
       group.attitude_skills.forEach((skill: AttitudeSkill) => {
         if (skill.id === attitudeSkillId) {
@@ -229,10 +212,10 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
       this.editedSkills.has(skill.attitude_skill_id)
     );
 
-    console.log('Updated skills:', updatedSkills);
+    
 
     if (updatedSkills.length === 0) {
-      console.log('No changes detected.');
+      
       Swal.fire('Info', 'No changes detected.', 'info');
       return;
     }
@@ -253,19 +236,18 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           this.disabledSkills.has(skill.attitude_skill_id)
         );
 
-        console.log('New skills:', newSkills);
-        console.log('Existing skills:', existingSkills);
+        
+        
 
         const saveNewSkills$ = newSkills.length
           ? this.empAttitudeSkillService.saveEmpAttitudeSkills(newSkills)
           : null;
 
-        // Membuat payload untuk update skills dalam snake_case
         const updatePayload = existingSkills.map((skill) => ({
           id: skill.id,
-          attitude_skill_id: skill.attitude_skill_id, // Tetap snake_case
-          user_id: skill.user_id, // Tetap snake_case
-          assessment_year: skill.assessment_year, // Tetap snake_case
+          attitude_skill_id: skill.attitude_skill_id,
+          user_id: skill.user_id,
+          assessment_year: skill.assessment_year,
           score: skill.score,
         }));
 
@@ -273,21 +255,21 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           ? this.empAttitudeSkillService.updateEmpAttitudeSkills(updatePayload)
           : null;
 
-        console.log('Save new skills observable:', saveNewSkills$);
-        console.log('Update skills payload:', updatePayload);
+        
+        
 
         forkJoin(
           [saveNewSkills$, updateSkills$].filter((obs) => obs !== null)
         ).subscribe(
           () => {
-            console.log('Changes saved successfully.');
+            
             Swal.fire(
               'Success',
               'Changes have been successfully saved!',
               'success'
             );
-            this.loadData(); // Refresh data
-            this.editedSkills.clear(); // Reset edited skills
+            this.loadData();
+            this.editedSkills.clear();
           },
           (error) => {
             console.error('Failed to save changes:', error);
@@ -295,7 +277,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
           }
         );
       } else {
-        console.log('User cancelled the confirmation dialog.');
+        
       }
     });
   }
@@ -324,7 +306,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
   }
 
   isSaveDisabled(): boolean {
-    // Periksa apakah semua skill dalam group memiliki nilai 'score' yang valid
     return this.groupData.some((group) =>
       group.attitude_skills.some(
         (skill: AttitudeSkill) =>
@@ -333,7 +314,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     );
   }
 
-  // Function to calculate the total score for a group
   getTotalScore(group: any): number {
     return group.attitude_skills.reduce(
       (total: number, skill: AttitudeSkill) => total + (skill.score || 0),

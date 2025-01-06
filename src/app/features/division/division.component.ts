@@ -17,7 +17,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
 import Swal from 'sweetalert2';
 import { NavBarComponent } from '../nav-bar/nav-bar/nav-bar.component';
 
@@ -65,7 +64,6 @@ export class DivisionComponent implements OnInit {
     this.fetchDivisions();
   }
 
-  // Method to show detail dialog
   showDetailDialog(division: any) {
     this.selectedDivisionDetail = division;
     this.displayDetailDialog = true;
@@ -94,7 +92,6 @@ export class DivisionComponent implements OnInit {
       return;
     }
 
-    // Cek apakah data sudah ada di database
     const existingDivision = this.divisions.find(
       (division) =>
         division.division_name.toLowerCase() ===
@@ -115,7 +112,6 @@ export class DivisionComponent implements OnInit {
         };
         this.isDuplicate = false;
 
-        // Success notification
         Swal.fire({
           icon: 'success',
           title: 'Success!',
@@ -126,7 +122,6 @@ export class DivisionComponent implements OnInit {
       error: (err) => {
         console.error('Error creating division:', err);
 
-        // Error notification
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -162,7 +157,6 @@ export class DivisionComponent implements OnInit {
           }
           this.displayEditDialog = false;
 
-          // Success notification
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
@@ -173,7 +167,6 @@ export class DivisionComponent implements OnInit {
         error: (err) => {
           console.error('Error updating division skill:', err);
 
-          // Error notification
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -196,10 +189,8 @@ export class DivisionComponent implements OnInit {
       if (result.isConfirmed) {
         this.divisionService.deleteDivision(id).subscribe({
           next: () => {
-            // Remove the deleted group attitude skill from the list
             this.divisions = this.divisions.filter((skill) => skill.id !== id);
 
-            // Success notification
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -209,7 +200,6 @@ export class DivisionComponent implements OnInit {
             console.log(`Deleted Division with ID: ${id}`);
           },
           error: (err) => {
-            // Error notification
             console.error('Error deleting division:', err);
             Swal.fire({
               icon: 'error',

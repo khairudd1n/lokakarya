@@ -8,7 +8,7 @@
 }
 
 .division-column {
-  width: 180px; /* Atur lebar kolom sesuai kebutuhan */
+  width: 180px;
   max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -16,7 +16,7 @@
 }
 
 .year-column {
-  width: 220px; /* Atur lebar kolom sesuai kebutuhan */
+  width: 220px;
   max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -32,11 +32,11 @@
 }
 
 .action-buttons button {
-  margin-right: 8px; /* Jarak antar tombol */
+  margin-right: 8px;
 }
 
 .action-buttons button:last-child {
-  margin-right: 0; /* Hapus margin pada tombol terakhir */
+  margin-right: 0;
 }
 
 .title {
@@ -94,5 +94,5 @@
 
 .form-label1 {
   display: block;
-  margin-bottom: 8px; /* Jarak antara label dan input */
+  margin-bottom: 8px;
 }

@@ -1,8 +1,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full viewport height */
-  box-sizing: border-box; /* Include padding and border in height */
+  height: 100vh;
+  box-sizing: border-box;
 }
 
 :host ::ng-deep .profile-container {
@@ -15,11 +15,11 @@
 
 :host ::ng-deep .profile-sidebar {
   width: 240px;
-  background-color: #ffffff; /* White background */
-  color: #333; /* Adjusted text color for contrast */
+  background-color: #ffffff;
+  color: #333;
   padding-top: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow for separation */
-  border-radius: 12px 0 0 12px; /* Rounded corners */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 12px 0 0 12px;
 }
 
 :host ::ng-deep .profile-sidebar ul {
@@ -38,13 +38,13 @@
 
 :host ::ng-deep .profile-sidebar li:hover {
   border-radius: 4px;
-  background-color: #f0f0f0; /* Lighter background on hover */
+  background-color: #f0f0f0;
 }
 
 :host ::ng-deep .profile-sidebar li.active {
   border-radius: 4px;
-  background-color: #007bff; /* Highlight active tab */
-  color: white; /* Active text color */
+  background-color: #007bff;
+  color: white;
   font-weight: bold;
 }
 
@@ -110,9 +110,9 @@
 }
 
 :host ::ng-deep .logout-container {
-  margin-top: auto; /* Push the logout button to the bottom */
+  margin-top: auto;
   display: flex;
-  justify-content: flex-end; /* Align to the right */
+  justify-content: flex-end;
 }
 
 :host ::ng-deep .logout-button {
@@ -131,9 +131,9 @@
 
 :host ::ng-deep .profile-info {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Divide into two columns of equal width */
-  gap: 10px; /* Space between columns */
-  text-align: left; /* Ensure text is aligned to the left */
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  text-align: left;
   font-size: 16px;
 }
 
@@ -148,8 +148,8 @@
 
 :host ::ng-deep .roles-container {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping if the roles don't fit */
-  margin-left: 10px; /* Space between label and roles */
+  flex-wrap: wrap;
+  margin-left: 10px;
 }
 
 :host ::ng-deep .role-badge {
@@ -158,24 +158,24 @@
   border-radius: 16px;
   font-size: 14px;
   color: #495057;
-  margin-right: 8px; /* Space between each role */
-  margin-bottom: 8px; /* Add space at the bottom if wrapping occurs */
-  display: inline-block; /* Ensure roles appear next to each other */
+  margin-right: 8px;
+  margin-bottom: 8px;
+  display: inline-block;
 }
 
 :host ::ng-deep .profile-tab {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center horizontally */
-  text-align: center; /* Ensure text is centered */
-  width: 100%; /* Ensure it takes full width of the parent container */
-  max-width: 600px; /* Optional: set a max width to prevent it from stretching too much */
-  margin: 0 auto; /* Centers the profile-tab div itself horizontally */
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .text-danger {
-  color: #ff4d4f; /* Bright red for errors */
-  font-size: 0.9rem; /* Slightly smaller than normal text for subtlety */
+  color: #ff4d4f;
+  font-size: 0.9rem;
   margin-top: 5px;
   display: block;
 }

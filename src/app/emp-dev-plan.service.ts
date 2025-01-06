@@ -19,9 +19,9 @@ export interface EmpDevPlanCreateDto {
   providedIn: 'root',
 })
 export class EmpDevPlanService {
-  private apiUrl = 'http://localhost:8080/emp-dev-plan'; // untuk insert emp dev plan
-  private apiUrl2 = 'http://localhost:8080/emp-dev-plan/user'; // untuk get data keterangan user yang telah mereka input by userId
-  private apiUrl3 = 'http://localhost:8080/dev-plan'; // untuk get plan (group.plan) dari tabel dev plan
+  private apiUrl = 'http://localhost:8080/emp-dev-plan';
+  private apiUrl2 = 'http://localhost:8080/emp-dev-plan/user';
+  private apiUrl3 = 'http://localhost:8080/dev-plan';
   private token = localStorage.getItem('token') || '';
 
   constructor(private http: HttpClient) {}
@@ -47,7 +47,7 @@ export class EmpDevPlanService {
       })
       .pipe(
         tap((data) => {
-          console.log('Data fetched successfully:', data);
+          
         })
       );
   }
@@ -66,7 +66,7 @@ export class EmpDevPlanService {
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
-    // const url = `${this.apiUrl}/getByUserIdAndYear?userId=${userId}&year=${year}`;
+
     return this.http.get<EmpDevPlanCreateDto[]>(
       `${this.apiUrl}/getByUserIdAndYear?userId=${userId}&assessmentYear=${assessmentYear}`,
       { headers }
@@ -83,7 +83,7 @@ export class EmpDevPlanService {
       .get<number[]>(`${this.apiUrl}/assessment-years`, { headers })
       .pipe(
         tap((years) => {
-          console.log('Retrieved assessment years:', years);
+          
         })
       );
   }

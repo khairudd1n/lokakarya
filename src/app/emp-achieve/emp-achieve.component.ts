@@ -15,7 +15,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UUID } from 'crypto';
 import { DialogModule } from 'primeng/dialog';
 import Swal from 'sweetalert2';
-
 import { NavBarComponent } from '../features/nav-bar/nav-bar/nav-bar.component';
 import { AssSummaryService } from '../ass-summary.service';
 import { UserService } from '../core/services/user.service';
@@ -39,7 +38,7 @@ import { SharedModule } from '../shared/primeng/shared/shared.module';
     ReactiveFormsModule,
     DialogModule,
     NavBarComponent,
-    SharedModule
+    SharedModule,
   ],
   templateUrl: './emp-achieve.component.html',
   styleUrl: './emp-achieve.component.css',
@@ -100,18 +99,12 @@ export class EmpAchieveComponent implements OnInit {
       .getPaginatedUser('', page, this.rows, this.sortField, this.sortOrder)
       .subscribe((data) => {
         this.users = data.content;
-        console.log('Received Data: ', this.users);
+
         this.totalRecords = data.page_info.totalElements;
       });
   }
 
   onRowExpand(event: TableRowExpandEvent): void {
-    console.log('Row expanded:', event.data);
-    console.log('ExpandedRows:', this.expandedRows);
-    console.log(
-      'Users:',
-      this.users.map((user) => user.id)
-    );
     const userId: string = event.data.id;
     event.data.loading = true;
     this.expandedRows[userId] = true;
@@ -120,11 +113,10 @@ export class EmpAchieveComponent implements OnInit {
       .getAllEmpAchieveByUserId(userId)
       .subscribe((achievements) => {
         const user = this.users.find((user) => user.id === userId);
-        console.log('Received Achi:', achievements);
+
         if (user) {
           user.achievements = achievements;
         }
-        // Update the loading state
         event.data.loading = false;
       });
   }
@@ -140,7 +132,7 @@ export class EmpAchieveComponent implements OnInit {
       .getPaginatedUser(searchTerm, page, size, sortBy, sortDirection)
       .subscribe((data) => {
         this.users = data.content;
-        console.log('Received Data: ', this.users);
+
         this.totalRecords = data.page_info.totalElements;
       });
   }
@@ -163,14 +155,14 @@ export class EmpAchieveComponent implements OnInit {
     this.displayCreateDialog = true;
   }
 
-  showEditDialog(empAchieve:any): void {
-    // Populate the editAchievement object with selected achievement data
+  showEditDialog(empAchieve: any): void {
     this.editEmpAchieve.achievement_id = empAchieve.achievement.id;
     this.editEmpAchieve.user_id = empAchieve.user.id;
     this.editEmpAchieve.notes = empAchieve.notes;
     this.editEmpAchieve.score = empAchieve.score;
     this.editEmpAchieve.assessment_year = empAchieve.assessment_year;
-    this.editEmpAchieve.achievement_name = empAchieve.achievement.achievement_name;
+    this.editEmpAchieve.achievement_name =
+      empAchieve.achievement.achievement_name;
     this.editEmpAchieve.id = empAchieve.id;
     this.displayEditDialog = true;
   }
@@ -180,7 +172,13 @@ export class EmpAchieveComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt2) {
-      this.loadPaginatedUsers(input, 0, this.rows, this.sortField, this.sortOrder);
+      this.loadPaginatedUsers(
+        input,
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
     }
   }
 
@@ -200,13 +198,8 @@ export class EmpAchieveComponent implements OnInit {
         assessment_year: this.newEmpAchieve.assessment_year,
       };
 
-      // Log the payload to make sure it's correct
-      console.log('Sending payload for emp achieve creation:', empAchieveData);
-
-      // Use the service to create a new achievement
       this.empAchieveService.createEmpAchieve(empAchieveData).subscribe({
         next: (response) => {
-          console.log('Emp achieve created successfully:', response);
           this.assSummaryService
             .generateAssSummary(
               this.newEmpAchieve.user_id as UUID,
@@ -222,7 +215,6 @@ export class EmpAchieveComponent implements OnInit {
             score: 0,
             assessment_year: 0,
           };
-          // Show success alert using SweetAlert
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -231,11 +223,9 @@ export class EmpAchieveComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error creating emp achieve:', err);
-          // Log the backend's response if available
           if (err.error && err.error.message) {
             console.error('Backend error message:', err.error.message);
           }
-          // Show error alert using SweetAlert
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -261,23 +251,21 @@ export class EmpAchieveComponent implements OnInit {
       .updateEmpAchieve(this.editEmpAchieve.id, updatedData)
       .subscribe({
         next: (response) => {
-          console.log('Emp Achieve updated successfully:', response);
-          this.displayEditDialog = false; // Close the dialog
+          this.displayEditDialog = false;
           Swal.fire({
             icon: 'success',
             title: 'Updated!',
             text: 'Emp Achieve updated successfully.',
             confirmButtonText: 'OK',
           });
-          console.log('Userss : ', this.users);
+
           const user_id = this.editEmpAchieve.user_id;
-          const user = this.users.find((user) => user.id === user_id);          
+          const user = this.users.find((user) => user.id === user_id);
           if (user) {
             const event = {
               data: user,
             } as TableRowExpandEvent;
-    
-            // Call onRowExpand to reload the data
+
             this.onRowExpand(event);
           }
         },
@@ -301,8 +289,7 @@ export class EmpAchieveComponent implements OnInit {
   fetchUserOptions(): void {
     this.empAchieveService.getUsers().subscribe({
       next: (data) => {
-        this.userOptions = data; // Populate user dropdown
-        console.log('User options:', this.userOptions);
+        this.userOptions = data;
       },
       error: (err) => {
         console.error('Error fetching user options:', err);
@@ -313,7 +300,6 @@ export class EmpAchieveComponent implements OnInit {
   fetchAchievementOptions(): void {
     this.empAchieveService.getAchievements().subscribe({
       next: (data) => {
-        // Now the data is in the correct format for the dropdown
         this.achievementOptions = data;
       },
       error: (err) => {
@@ -322,18 +308,11 @@ export class EmpAchieveComponent implements OnInit {
     });
   }
 
-  onUserChange(event: any): void {
-    console.log('Selected user_id:', this.newEmpAchieve.user_id);
-    console.log('Selected user_id:', this.editEmpAchieve.user_id);
-  }
+  onUserChange(event: any): void {}
 
-  onAchievementChange(event: any): void {
-    console.log('Selected achievement_id:', this.newEmpAchieve.achievement_id);
-    console.log('Selected achievement_id:', this.editEmpAchieve.achievement_id);
-  }
+  onAchievementChange(event: any): void {}
 
   deleteEmpAchieve(id: UUID, user_id: UUID, assessment_year: number): void {
-    // Use SweetAlert to ask for confirmation before deleting
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Emp Achieve? This action cannot be undone.',
@@ -344,16 +323,14 @@ export class EmpAchieveComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Proceed with deletion if user confirms
         this.empAchieveService.deleteEmpAchieve(id).subscribe({
           next: () => {
             this.assSummaryService
               .generateAssSummary(user_id, assessment_year)
               .subscribe();
 
-            this.fetchEmpAchieve(); // Refresh the data table
+            this.fetchEmpAchieve();
 
-            // Show success alert using SweetAlert
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -363,7 +340,6 @@ export class EmpAchieveComponent implements OnInit {
           error: (err) => {
             console.error('Error deleting emp achieve:', err);
 
-            // Show error alert using SweetAlert
             Swal.fire({
               icon: 'error',
               title: 'Error',

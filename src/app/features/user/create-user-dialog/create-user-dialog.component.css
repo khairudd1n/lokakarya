@@ -1,12 +1,12 @@
 .p-field {
-  margin-bottom: 1rem; /* Adds spacing between rows */
+  margin-bottom: 1rem;
 }
 
 .p-field label {
-  font-weight: bold; /* Makes labels stand out */
+  font-weight: bold;
 }
 
-:host ::ng-deep .p-dialog-mask{
+:host ::ng-deep .p-dialog-mask {
   z-index: 1000 !important;
 }
 
@@ -28,5 +28,3 @@
   color: red;
   font-weight: bold;
 }
-
-  

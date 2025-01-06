@@ -86,10 +86,10 @@ export class SummaryComponent {
     if (token) {
       const jwtPayload = this.authService.parseJwt(token);
       this.roles = jwtPayload.roles!;
-      console.log('Roles : ', this.roles);
+      
     }
     this.loginUser = JSON.parse(localStorage.getItem('user')!);
-    console.log(this.loginUser);
+    
     this.divisionSummary.getDivisionList().subscribe((data) => {
       this.divisionOptions = data.map((division) => {
         return { label: division.division_name, value: division.id };
@@ -108,7 +108,7 @@ export class SummaryComponent {
       );
     } else {
       this.selectedDivision = [this.loginUser.division.id];
-      console.log('DIVISION_ID : ', this.selectedDivision);
+      
       this.getPaginatedAssessmentSummaries(
         '',
         this.selectedYear.value,
@@ -156,7 +156,7 @@ export class SummaryComponent {
 
   openSummaryDialog() {
     this.displaySummaryDialog = true;
-    console.log('Selected User ID:', this.selectedUser.id);
+    
   }
 
   getPaginatedAssessmentSummaries(
@@ -182,7 +182,7 @@ export class SummaryComponent {
       )
       .subscribe((data) => {
         this.assSummary = data.content.assess_sums;
-        console.log('Assessment Summary:', this.assSummary);
+        
 
         this.totalRecords = data.page_info.totalElements;
 
@@ -221,7 +221,7 @@ export class SummaryComponent {
       '.p-input-icon-left input'
     ) as HTMLInputElement;
     if (globalSearchInput) {
-      globalSearchInput.value = ''; // Clear the input field
+      globalSearchInput.value = '';
     }
   }
 
@@ -244,7 +244,7 @@ export class SummaryComponent {
   }
 
   filterDivision(selectedValues: any[]) {
-    console.log('Filter called with:', selectedValues);
+    
     if (this.dt1) {
       this.getPaginatedAssessmentSummaries(
         '',
@@ -277,9 +277,9 @@ export class SummaryComponent {
   }
 
   onDialogClose(visible: boolean) {
-    console.log('On Dialog closed is called', visible);
+    
     if (!visible) {
-      console.log('Dialog closed');
+      
       this.clearSelectedUser();
     }
   }
@@ -296,11 +296,11 @@ export class SummaryComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isApproving[id] = true; // Mark as approving
+        this.isApproving[id] = true;
 
         this.assSummaryService.updateAssessSumStatusToApprove(id).subscribe(
           (response) => {
-            console.log('Successfully updated status:', response);
+            
             Swal.fire({
               icon: 'success',
               title: 'Approved!',
@@ -328,7 +328,7 @@ export class SummaryComponent {
             });
           },
           () => {
-            this.isApproving[id] = false; // Reset state after completion
+            this.isApproving[id] = false;
           }
         );
       }
@@ -347,11 +347,11 @@ export class SummaryComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isApproving[id] = true; // Mark as approving
+        this.isApproving[id] = true;
 
         this.assSummaryService.updateAssessSumStatusToUnapprove(id).subscribe(
           (response) => {
-            console.log('Successfully updated status:', response);
+            
             Swal.fire({
               icon: 'success',
               title: 'Unapproved!',
@@ -379,7 +379,7 @@ export class SummaryComponent {
             });
           },
           () => {
-            this.isApproving[id] = false; // Reset state after completion
+            this.isApproving[id] = false;
           }
         );
       }

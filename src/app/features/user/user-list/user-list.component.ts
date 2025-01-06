@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
-import { User } from '../../../core/models/user.model';
 import { SharedModule } from '../../../shared/primeng/shared/shared.module';
 import { Table, TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
 import { CreateUserDialogComponent } from '../create-user-dialog/create-user-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import Swal from 'sweetalert2';
@@ -30,7 +28,7 @@ export class UserListComponent implements OnInit {
 
   displayDialog: boolean = false;
   displayDetailDialog: boolean = false;
-  selectedUser: any = null; // Holds data for the user being edited
+  selectedUser: any = null;
 
   constructor(
     private userService: UserService,
@@ -38,7 +36,7 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadPaginatedUsers("",0, 10, this.sortField, this.sortOrder);
+    this.loadPaginatedUsers('', 0, 10, this.sortField, this.sortOrder);
   }
 
   loadUsersLazy(event: any): void {
@@ -47,21 +45,26 @@ export class UserListComponent implements OnInit {
     this.sortField = event.sortField || 'joinDate';
     this.sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
     this.userService
-      .getPaginatedUser( "",page, this.rows, this.sortField, this.sortOrder)
+      .getPaginatedUser('', page, this.rows, this.sortField, this.sortOrder)
       .subscribe((data) => {
         this.users = data.content;
-        console.log("Received Data: ", this.users);
+        
         this.totalRecords = data.page_info.totalElements;
       });
   }
-  
 
-  loadPaginatedUsers(searchTerm: string, page: number, size: number, sortBy: string, sortDirection: string) {
+  loadPaginatedUsers(
+    searchTerm: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ) {
     this.userService
-      .getPaginatedUser( searchTerm,page, size, sortBy, sortDirection)
+      .getPaginatedUser(searchTerm, page, size, sortBy, sortDirection)
       .subscribe((data) => {
         this.users = data.content;
-        console.log("Received Data: ", this.users);
+        
         this.totalRecords = data.page_info.totalElements;
       });
   }
@@ -81,7 +84,7 @@ export class UserListComponent implements OnInit {
   }
 
   openCreateDialog() {
-    console.log('Opening create dialog');
+    
     this.selectedUser = null;
     this.displayDialog = true;
   }
@@ -93,7 +96,6 @@ export class UserListComponent implements OnInit {
 
   onUserSaved(user: any) {
     if (this.selectedUser) {
-      // Compare each field and set to null if the value is unchanged
       if (user.employee_status == true) {
         user.employee_status = 1;
       }
@@ -128,10 +130,10 @@ export class UserListComponent implements OnInit {
       if (areRoleEqual(user, this.selectedUser)) {
         user.selectedRoles = null;
       }
-      console.log('Updated user data:', user);
+      
       this.userService.updateUser(user).subscribe({
         next: (data) => {
-          console.log('Updated : ', data);
+          
           Swal.fire({
             title: 'Success!',
             text: 'User updated successfully.',
@@ -150,16 +152,14 @@ export class UserListComponent implements OnInit {
           });
         },
       });
-      // Call update API or handle the updated user data
     } else {
-      console.log('User created : ', user);
+      
       this.userService.saveUser(user).subscribe({
         next: (data) => {
-          console.log('Saved : ', data);
-          this.assSummaryService.generateAssSummary(
-            data.id,
-            new Date().getFullYear()
-          ).subscribe();
+          
+          this.assSummaryService
+            .generateAssSummary(data.id, new Date().getFullYear())
+            .subscribe();
           Swal.fire({
             title: 'Success!',
             text: 'User created successfully.',
@@ -224,7 +224,7 @@ export class UserListComponent implements OnInit {
   onRowSelect(event: any) {
     this.displayDetailDialog = true;
     this.selectedUser = event.data;
-    console.log('Selected user:', this.selectedUser);
+    
   }
 
   clearSelectedUser() {
@@ -237,7 +237,7 @@ export class UserListComponent implements OnInit {
       '.p-input-icon-left input'
     ) as HTMLInputElement;
     if (globalSearchInput) {
-      globalSearchInput.value = ''; // Clear the input field
+      globalSearchInput.value = '';
     }
   }
 
@@ -246,7 +246,13 @@ export class UserListComponent implements OnInit {
   onGlobalSearch(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
     if (this.dt1) {
-      this.loadPaginatedUsers(input, 0, this.rows, this.sortField, this.sortOrder);
+      this.loadPaginatedUsers(
+        input,
+        0,
+        this.rows,
+        this.sortField,
+        this.sortOrder
+      );
     }
   }
 
@@ -268,9 +274,9 @@ export class UserListComponent implements OnInit {
   }
 
   onDialogClose(visible: boolean) {
-    console.log('On Dialog closed is called', visible);
+    
     if (!visible) {
-      console.log('Dialog closed');
+      
       this.clearSelectedUser();
     }
   }

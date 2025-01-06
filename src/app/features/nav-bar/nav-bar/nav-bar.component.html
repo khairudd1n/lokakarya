@@ -9,9 +9,7 @@
       "
       (click)="goToUserProfile()"
     >
-      <!-- Profile Picture and Info -->
       <div class="profile-section" style="display: flex; align-items: center">
-        <!-- Profile Picture -->
         <div
           style="
             width: 40px;
@@ -29,13 +27,12 @@
         >
           {{ (currentUser.username || "").charAt(0).toUpperCase() }}
         </div>
-  
-        <!-- User Info (Username and Role) -->
+
         <div class="user-info" style="margin: 0">
           <h3 style="margin: 0; font-size: 14px">{{ currentUser.username }}</h3>
           <p style="margin: 0; font-size: 12px">
             <span *ngFor="let r of role; let isLast = last">
-              {{ r.toLowerCase() }}<span *ngIf="!isLast">  </span>
+              {{ r.toLowerCase() }}<span *ngIf="!isLast"> </span>
             </span>
           </p>
         </div>
@@ -43,4 +40,3 @@
     </div>
   </p-menubar>
 </div>
-  

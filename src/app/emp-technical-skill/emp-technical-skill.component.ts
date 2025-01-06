@@ -81,23 +81,9 @@ export class EmpTechnicalSkillComponent {
 
   ngOnInit(): void {
     this.getUserId();
-    this.fetchData(); // Call the new method to fetch data
+    this.fetchData();
     this.initializeAssessmentYears();
   }
-
-  // initializeAssessmentYears(): void {
-  //   this.empTechSkillService.getAssessmentYears().subscribe(
-  //     (years) => {
-  //       this.assessmentYears = years; // Isi dropdown dengan tahun yang diterima
-  //       if (!this.assessmentYears.includes(this.selectedAssessmentYear)) {
-  //         this.selectedAssessmentYear = this.assessmentYears[0]; // Default ke tahun pertama jika tidak ada kecocokan
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching assessment years:', error);
-  //     }
-  //   );
-  // }
 
   initializeAssessmentYears(): void {
     this.empTechSkillService.getAssessmentYears().subscribe(
@@ -151,7 +137,7 @@ export class EmpTechnicalSkillComponent {
         }));
 
         const empTechSkillGroups = this.organizeDataIntoGroups(empTechSkills);
-        console.log('empTechSkillGroups:', empTechSkillGroups);
+        
 
         empTechSkillGroups.forEach((empGroup) => {
           const existingGroup = this.groupData.find(
@@ -163,8 +149,8 @@ export class EmpTechnicalSkillComponent {
             this.groupData.push(empGroup);
           }
         });
-        console.log('Fetched EmpTechSkills:', this.empTechSkills);
-        console.log('Fetched All Tech Skills:', this.groupData);
+        
+        
       },
       error: (err) => {
         console.error('Error fetching data', err);
@@ -217,9 +203,9 @@ export class EmpTechnicalSkillComponent {
 
       if (existingPlanIndex !== -1) {
         this.selectedTechs[existingPlanIndex] = technical_skill;
-        console.log('Updated Plan in Selection:', technical_skill);
+        
       } else {
-        console.log('Adding Plan to Selection:', technical_skill);
+        
         this.selectedTechs.push(technical_skill);
       }
     }
@@ -241,10 +227,8 @@ export class EmpTechnicalSkillComponent {
   }
 
   saveTechs(): void {
-    // Reset selectedTechs setiap kali simpan dipanggil
     this.selectedTechs = [];
 
-    // Loop melalui semua grup dan baris untuk mengumpulkan rencana yang akan disimpan
     this.groupData.forEach((group: Group) => {
       group.rows.forEach((row: Row) => {
         if (
@@ -276,13 +260,13 @@ export class EmpTechnicalSkillComponent {
         cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log('Final data to be saved:', this.selectedTechs);
+          
           this.empTechSkillService
             .saveEmpTechSkill(this.selectedTechs)
             .subscribe(
               (response) => {
-                console.log('Save successful:', response);
-                // Update status in frontend
+                
+
                 this.selectedTechs.forEach((technical_skill) => {
                   const group = this.groupData.find(
                     (grp) => grp.id === technical_skill.tech_skill_id
@@ -294,11 +278,11 @@ export class EmpTechnicalSkillComponent {
                         r.score === technical_skill.score
                     );
                     if (row) {
-                      row.status = 'saved'; // Mark as "saved"
+                      row.status = 'saved';
                     }
                   }
                 });
-                this.selectedTechs = []; // Reset selected plans after saving
+                this.selectedTechs = [];
                 Swal.fire({
                   icon: 'success',
                   title: 'Success!',
@@ -331,9 +315,9 @@ export class EmpTechnicalSkillComponent {
       tech_detail: '',
       score: '',
       tech_skill_id: group.id,
-      status: 'unsaved', // Mark new rows as unsaved
+      status: 'unsaved',
     };
-    console.log('Adding new row:', newRow);
+    
     group.rows.push(newRow);
   }
 
