@@ -41,6 +41,7 @@
             <textarea
               pInputTextarea
               [(ngModel)]="row.suggestion"
+              (ngModelChange)="onSuggestionChange(row)"
               class="textarea-field"
               rows="3"
               [disabled]="isDisabled"

@@ -115,8 +115,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
     })
       .pipe(
         concatMap(({ groupData, userSkills }) => {
-          this.groupData = groupData;
-          
+          this.groupData = groupData;         
           
 
           if (userSkills.length > 0) {
@@ -268,6 +267,7 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
               'Changes have been successfully saved!',
               'success'
             );
+            this.selectedSkills = [];
             this.loadData();
             this.editedSkills.clear();
           },
@@ -276,8 +276,6 @@ export class EmpAttitudeSkillNewComponent implements OnInit {
             Swal.fire('Error', 'Failed to save changes.', 'error');
           }
         );
-      } else {
-        
       }
     });
   }
